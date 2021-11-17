@@ -1,0 +1,39 @@
+{
+  "name": "privance",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "email": "ch.von.pa@gmail.com",
+    "name": "Christian Pannwitz",
+    "url": "https://pnwtz.me"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fast-csv/parse": "~4.3.6",
+    "@mantine/core": "~3.1.9",
+    "@mantine/dates": "~3.1.9",
+    "@mantine/dropzone": "~3.1.9",
+    "@mantine/hooks": "~3.1.9",
+    "@mantine/notifications": "~3.1.9",
+    "@modulz/radix-icons": "~4.0.0",
+    "@prisma/client": "~3.5.0",
+    "axios": "~0.24.0",
+    "csv-parse": "~5.0.1",
+    "dayjs": "~1.10.7",
+    "next": "12.0.4",
+    "react": "17.0.2",
+    "react-dom": "17.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "16.11.7",
+    "@types/react": "17.0.35",
+    "eslint": "~7.32.0",
+    "eslint-config-next": "12.0.4",
+    "typescript": "4.4.4"
+  }
+}
