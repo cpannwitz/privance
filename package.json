@@ -11,7 +11,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "watch": "concurrently \"npx prisma generate --watch\" \"npx prisma studio\" \"npm run dev\""
   },
   "dependencies": {
     "@fast-csv/parse": "~4.3.6",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@types/node": "16.11.7",
     "@types/react": "17.0.35",
+    "concurrently": "~6.4.0",
     "eslint": "~7.32.0",
     "eslint-config-next": "12.0.4",
     "typescript": "4.4.4"
