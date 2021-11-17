@@ -4,13 +4,13 @@
 - `npx prisma migrate dev` - apply all migrations to local database
 
 ## Todo's
-[x] Add mechanic to upload csv files
-[x] Add local database and base models
-[] Add simple data view
-[] Add mechanic to manage and assign categories
-[] Convert into Electron app (https://github.com/saltyshiomix/nextron)
-[] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
-[] Add Login functionality
+- [x] Add mechanic to upload csv files
+- [x] Add local database and base models
+- [ ] Add simple data view
+- [ ] Add mechanic to manage and assign categories
+- [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
+- [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
+- [ ] Add Login functionality
 
 ---
 
