@@ -23,7 +23,7 @@ model AccountChange {
   balance   Float?
   amount    Float?
   currency  String?
-  Category  Category[] @relation("AccountChangeCategories", references: [id])
+  categories  Category[] @relation("AccountChangeCategories", references: [id])
 }
 
 model Category {
