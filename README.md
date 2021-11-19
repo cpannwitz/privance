@@ -6,8 +6,17 @@
 ## Todo's
 - [x] Add mechanic to upload csv files
 - [x] Add local database and base models
-- [ ] Add simple data view
+- [x] Add simple data view
 - [ ] Add mechanic to manage and assign categories
+  - [ ] Split app into pages (home -> simple data view, category management, upload)
+  - [ ] Add category CRUD logic
+  - [ ] Add category management handles
+- [ ] Refactor upload process
+  - [ ] Test out different parameters of csv-parser
+  - [ ] Add Preview Page
+  - [ ] Add automatic category assignment to hardcoded strings
+  - [ ] Add management tooling for dynamic category assignment
+- [ ] Diagrams!
 - [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
 - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
 - [ ] Add Login functionality
