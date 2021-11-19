@@ -1,6 +1,6 @@
 import RCTable from "rc-table"
 import { ColumnsType } from "rc-table/lib/interface"
-import { Table } from "@mantine/core"
+import { Table, Text } from "@mantine/core"
 import dayjs from "dayjs"
 import { AccountChangeWithCategories } from "../../types/types"
 
@@ -50,12 +50,24 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
     dataIndex: "amount",
     key: "amount",
     width: "5%",
+    align: "right",
+    render: (v: AccountChangeWithCategories["amount"]) =>
+      !v ? null : v < 0 ? (
+        <Text weight="bold" color="red">
+          {v}
+        </Text>
+      ) : (
+        <Text weight="bold" color="lime">
+          {v}
+        </Text>
+      ),
   },
   {
     title: "Currency",
     dataIndex: "currency",
     key: "currency",
     width: "5%",
+    align: "left",
   },
 ]
 
