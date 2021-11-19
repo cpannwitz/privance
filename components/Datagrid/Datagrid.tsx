@@ -1,6 +1,6 @@
-import { AccountChange } from ".prisma/client"
 import { Column, useTable } from "react-table"
 import { Table } from "@mantine/core"
+import { AccountChangeWithCategories } from "../../types/types"
 
 // ! Missing Category!
 
@@ -9,8 +9,9 @@ import { Table } from "@mantine/core"
 // https://reactdatagrid.io/
 // https://mui.com/components/data-grid/editing/
 // https://github.com/adazzle/react-data-grid
+// https://github.com/react-component/table
 
-const columns: Column<AccountChange>[] = [
+const columns: Column<AccountChangeWithCategories>[] = [
   {
     Header: "Date",
     accessor: "issuedate",
@@ -39,19 +40,19 @@ const columns: Column<AccountChange>[] = [
     Header: "Currency",
     accessor: "currency",
   },
-  // {
-  //   Header: 'Categories',
-  //   accessor: ''
-  // },
+  {
+    Header: "Categories",
+    accessor: "categories",
+  },
 ]
 
 interface DatagridProps {
-  data: AccountChange[]
+  data: AccountChangeWithCategories[]
 }
 
 const Datagrid = ({ data }: DatagridProps) => {
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable<AccountChange>({ columns, data })
+    useTable<AccountChangeWithCategories>({ columns, data })
   return (
     <Table {...getTableProps()}>
       <thead>

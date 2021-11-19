@@ -1,12 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
-import { PrismaClient, AccountChange } from ".prisma/client"
+import { PrismaClient } from ".prisma/client"
+import { AccountChangeWithCategories } from "../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AccountChange[]
+  data?: AccountChangeWithCategories[]
 }
 
 export default async function getAccountChanges(
@@ -15,7 +16,7 @@ export default async function getAccountChanges(
 ) {
   if (req.method === "GET") {
     try {
-      const data = await prisma.accountChange.findMany()
+      const data = await prisma.accountChange.findMany({ include: { categories: true } })
 
       res.json({ data })
     } catch (err) {

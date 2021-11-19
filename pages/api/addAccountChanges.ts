@@ -1,14 +1,15 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
-import { PrismaClient, AccountChange } from ".prisma/client"
+import { PrismaClient } from ".prisma/client"
 
 import transformAccountChanges from "../../functions/transformAccountChanges"
+import { AccountChangeWithCategories } from "../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AccountChange[]
+  data?: AccountChangeWithCategories[]
 }
 
 type RawData = string[][]
