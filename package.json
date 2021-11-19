@@ -27,6 +27,7 @@
     "csv-parse": "~5.0.1",
     "dayjs": "~1.10.7",
     "next": "12.0.4",
+    "rc-table": "~7.19.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-table": "~7.7.0"
