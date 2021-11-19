@@ -12,9 +12,7 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
     dataIndex: "issuedate",
     key: "issuedate",
     width: "10%",
-    render: v => {
-      return dayjs(v).format("D. MMM YYYY")
-    },
+    render: v => dayjs(v).format("D. MMM YYYY"),
   },
   {
     title: "Issuer",
@@ -39,6 +37,7 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
     dataIndex: "categories",
     key: "categories",
     width: "10%",
+    render: (v: AccountChangeWithCategories["categories"]) => v.map(cat => cat.name),
   },
   {
     title: "Balance",
@@ -65,8 +64,14 @@ interface DatatableProps {
 }
 
 const Datatable = ({ data }: DatatableProps) => {
-  console.log(`LOG |  ~ file: Datatable.tsx ~ line 66 ~ Datatable ~ data`, data)
-  return <RCTable columns={columns} data={data} components={{ table: Table }} />
+  return (
+    <RCTable<AccountChangeWithCategories>
+      columns={columns}
+      data={data}
+      rowKey={r => r.id}
+      components={{ table: Table }}
+    />
+  )
 }
 
 export default Datatable
