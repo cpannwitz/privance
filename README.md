@@ -8,11 +8,11 @@
 - [x] Add local database and base models
 - [x] Add simple data view
 - [ ] Add mechanic to manage and assign categories
-  - [ ] Split app into pages (home -> simple data view, category management, upload)
+  - [x] Split app into pages (home -> simple data view, category management, upload)
   - [ ] Add category CRUD logic
   - [ ] Add category management handles
 - [ ] Refactor upload process
-  - [ ] Test out different parameters of csv-parser
+  - [x] Test out different parameters of csv-parser
   - [ ] Add Preview Page
   - [ ] Add automatic category assignment to hardcoded strings
   - [ ] Add management tooling for dynamic category assignment
