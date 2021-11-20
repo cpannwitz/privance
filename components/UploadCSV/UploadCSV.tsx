@@ -55,10 +55,10 @@ const UploadCSV = ({}: UploadCSVProps) => {
           <GrDocumentCsv size={32} />
           <div>
             <Text size="xl" inline>
-              Drag images here or click to select files
+              Drag .csv file here to upload data
             </Text>
             <Text size="sm" color="dimmed" inline mt={7}>
-              Attach as many files as you like, each file should not exceed 5mb
+              Only use ING Diba export csv files!
             </Text>
           </div>
         </Group>
