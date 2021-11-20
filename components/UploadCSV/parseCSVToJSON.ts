@@ -1,16 +1,30 @@
 import { parse } from "csv-parse"
+import { ParsedCSVValues } from "../../types/types"
 
 // https://csv.js.org/parse
 
 export default async function parseCSVToJSON(
   file: File
-): Promise<{ data?: string[][]; error?: Error }> {
+): Promise<{ data?: ParsedCSVValues[]; error?: Error }> {
   try {
     const buffer = await file.text()
 
     const parser = parse(buffer, {
       delimiter: ";",
-      fromLine: 15,
+      skipEmptyLines: true,
+      skipRecordsWithError: true,
+      relax_column_count_more: true,
+      columns: [
+        "issuedate",
+        "__",
+        "issuer",
+        "type",
+        "purpose",
+        "balance",
+        "__",
+        "amount",
+        "currency",
+      ],
     })
     const records = []
 

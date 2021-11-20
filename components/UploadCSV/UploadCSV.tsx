@@ -5,6 +5,7 @@ import { GrDocumentCsv } from "@react-icons/all-files/gr/GrDocumentCsv"
 
 import axios from "axios"
 import parseCSVToJSON from "./parseCSVToJSON"
+import transformTransactions from "./transformTransactions"
 
 interface UploadCSVProps {}
 
@@ -32,6 +33,17 @@ const UploadCSV = ({}: UploadCSVProps) => {
 
     const parsedJSON = await parseCSVToJSON(file)
 
+    if (!parsedJSON.data) {
+      notifications.showNotification({
+        message: "No data found OR not able to process ",
+        color: "red",
+      })
+      return
+    }
+
+    // TODO: move transformation to preview component, once initialized -> display raw values for preview
+    const transformedJSON = await transformTransactions(parsedJSON.data)
+
     if (parsedJSON.error) {
       notifications.showNotification({
         message: parsedJSON.error.message,
@@ -43,7 +55,7 @@ const UploadCSV = ({}: UploadCSVProps) => {
 
     if (parsedJSON.data) {
       axios
-        .post("/api/addTransactions", parsedJSON.data)
+        .post("/api/addTransactions", transformedJSON)
         // TODO: handle response data, either reflow, global state or discard
         .then(res => console.log("res:", res.data))
     }

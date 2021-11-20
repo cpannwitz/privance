@@ -1,8 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
-import { PrismaClient } from ".prisma/client"
+import { PrismaClient, Prisma } from ".prisma/client"
 
-import transformTransactions from "../../functions/transformTransactions"
 import { TransactionWithCategories } from "../../types/types"
 
 const prisma = new PrismaClient()
@@ -12,20 +11,16 @@ type ResponseData = {
   data?: TransactionWithCategories[]
 }
 
-type RawData = string[][]
-
 export default async function addTransactions(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
-    const data = req.body as RawData
-
-    const transformedData = await transformTransactions(data)
+    const bodydata = req.body as Prisma.TransactionCreateInput[]
 
     try {
       const insertedData = await prisma.$transaction(
-        transformedData.map(data =>
+        bodydata.map(data =>
           prisma.transaction.create({
             data: data,
             include: { categories: true },
