@@ -5,8 +5,11 @@ import dayjs from "dayjs"
 import { TransactionWithCategories } from "../../types/types"
 import useGetTransactions from "../hooks/useGetTransactions"
 import { useCallback } from "react"
+import { useRouter } from "next/router"
 
 // https://github.com/react-component/table
+
+// TODO: dark mode styles are currently missing
 
 const columns: ColumnsType<TransactionWithCategories> = [
   {
@@ -86,7 +89,15 @@ const Datatable = ({}: DatatableProps) => {
       data={data}
       rowKey={r => r.id}
       components={{ table: Table }}
-      emptyText={isLoading ? DataIsLoading : isError ? <DataIsError retry={retry} /> : undefined}
+      emptyText={
+        isLoading ? (
+          <DataIsLoading />
+        ) : isError ? (
+          <DataIsError retry={retry} />
+        ) : !data || data.length === 0 ? (
+          <DataIsEmpty />
+        ) : undefined
+      }
     />
   )
 }
@@ -94,13 +105,28 @@ const Datatable = ({}: DatatableProps) => {
 export default Datatable
 
 const DataIsLoading = () => (
-  <Center>
+  <Center style={{ height: "12rem" }}>
     <Loader color="orange" size="lg" variant="bars" />
   </Center>
 )
 
+const DataIsEmpty = () => {
+  const router = useRouter()
+  const linkToUpload = useCallback(() => router.push(`/upload`), [router])
+  return (
+    <Center style={{ height: "12rem" }}>
+      <Group direction="column" position="center">
+        <Text color="gray">You currently have no data. Please add some first.</Text>
+        <Button variant="light" color="violet" compact onClick={linkToUpload}>
+          Add some data
+        </Button>
+      </Group>
+    </Center>
+  )
+}
+
 const DataIsError = ({ retry }: any) => (
-  <Center>
+  <Center style={{ height: "12rem" }}>
     <Group direction="column" position="center">
       <Text color="gray">Couldn&apos;t fetch your data. Please retry.</Text>
       <Button variant="light" color="violet" compact onClick={retry}>

@@ -1,13 +1,17 @@
 import type { InferGetStaticPropsType } from "next"
-
-import Datatable from "../components/Datatable/Datatable"
+import { useRouter } from "next/router"
+import { useEffect } from "react"
 
 export const getStaticProps = async () => {
   return { props: {} }
 }
 
-const Home = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <Datatable />
+const IndexPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const router = useRouter()
+  useEffect(() => {
+    router.replace("/overview")
+  }, [router])
+  return null
 }
 
-export default Home
+export default IndexPage

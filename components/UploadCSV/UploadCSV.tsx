@@ -1,7 +1,7 @@
 import { Group, Text } from "@mantine/core"
 import { Dropzone } from "@mantine/dropzone"
 import { useNotifications } from "@mantine/notifications"
-import { ImageIcon } from "@modulz/radix-icons"
+import { GrDocumentCsv } from "@react-icons/all-files/gr/GrDocumentCsv"
 
 import axios from "axios"
 import parseCSVToJSON from "./parseCSVToJSON"
@@ -52,7 +52,7 @@ const UploadCSV = ({}: UploadCSVProps) => {
     <Dropzone onDrop={onDrop} multiple={false}>
       {() => (
         <Group position="center" spacing="xl" style={{ minHeight: 220, pointerEvents: "none" }}>
-          <ImageIcon />
+          <GrDocumentCsv size={32} />
           <div>
             <Text size="xl" inline>
               Drag images here or click to select files
