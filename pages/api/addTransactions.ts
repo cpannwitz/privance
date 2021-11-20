@@ -2,32 +2,33 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
 
-import transformAccountChanges from "../../functions/transformAccountChanges"
-import { AccountChangeWithCategories } from "../../types/types"
+import transformTransactions from "../../functions/transformTransactions"
+import { TransactionWithCategories } from "../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AccountChangeWithCategories[]
+  data?: TransactionWithCategories[]
 }
 
 type RawData = string[][]
 
-export default async function addAccountChanges(
+export default async function addTransactions(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
     const data = req.body as RawData
 
-    const transformedData = await transformAccountChanges(data)
+    const transformedData = await transformTransactions(data)
 
     try {
       const insertedData = await prisma.$transaction(
         transformedData.map(data =>
-          prisma.accountChange.create({
+          prisma.transaction.create({
             data: data,
+            include: { categories: true },
           })
         )
       )

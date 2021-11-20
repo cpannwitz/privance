@@ -11,8 +11,8 @@ function transformNumber(value: string) {
   return value.replaceAll(".", "").replaceAll(",", ".")
 }
 
-const transformAccountChanges = async (accountChanges: string[][]) => {
-  const values: Prisma.AccountChangeCreateInput[] = accountChanges.map(change => ({
+const transformTransactions = async (transactions: string[][]) => {
+  const values: Prisma.TransactionCreateInput[] = transactions.map(change => ({
     issuedate: new Date(transformDate(change[0])),
     issuer: change[2],
     type: change[3],
@@ -24,4 +24,4 @@ const transformAccountChanges = async (accountChanges: string[][]) => {
   return values
 }
 
-export default transformAccountChanges
+export default transformTransactions

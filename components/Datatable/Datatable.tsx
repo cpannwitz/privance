@@ -1,12 +1,14 @@
 import RCTable from "rc-table"
 import { ColumnsType } from "rc-table/lib/interface"
-import { Table, Text } from "@mantine/core"
+import { Loader, Table, Text, Center, Group, Button } from "@mantine/core"
 import dayjs from "dayjs"
-import { AccountChangeWithCategories } from "../../types/types"
+import { TransactionWithCategories } from "../../types/types"
+import useGetTransactions from "../hooks/useGetTransactions"
+import { useCallback } from "react"
 
 // https://github.com/react-component/table
 
-const columns: ColumnsType<AccountChangeWithCategories> = [
+const columns: ColumnsType<TransactionWithCategories> = [
   {
     title: "Date",
     dataIndex: "issuedate",
@@ -37,7 +39,7 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
     dataIndex: "categories",
     key: "categories",
     width: "10%",
-    render: (v: AccountChangeWithCategories["categories"]) => v.map(cat => cat.name),
+    render: (v: TransactionWithCategories["categories"]) => v.map(cat => cat.name),
   },
   {
     title: "Balance",
@@ -51,7 +53,7 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
     key: "amount",
     width: "5%",
     align: "right",
-    render: (v: AccountChangeWithCategories["amount"]) =>
+    render: (v: TransactionWithCategories["amount"]) =>
       !v ? null : v < 0 ? (
         <Text weight="bold" color="red">
           {v}
@@ -71,19 +73,39 @@ const columns: ColumnsType<AccountChangeWithCategories> = [
   },
 ]
 
-interface DatatableProps {
-  data: AccountChangeWithCategories[]
-}
+interface DatatableProps {}
 
-const Datatable = ({ data }: DatatableProps) => {
+const Datatable = ({}: DatatableProps) => {
+  const { data, isError, isLoading, mutate } = useGetTransactions()
+
+  const retry = useCallback(() => mutate(), [mutate])
+
   return (
-    <RCTable<AccountChangeWithCategories>
+    <RCTable<TransactionWithCategories>
       columns={columns}
       data={data}
       rowKey={r => r.id}
       components={{ table: Table }}
+      emptyText={isLoading ? DataIsLoading : isError ? <DataIsError retry={retry} /> : undefined}
     />
   )
 }
 
 export default Datatable
+
+const DataIsLoading = () => (
+  <Center>
+    <Loader color="orange" size="lg" variant="bars" />
+  </Center>
+)
+
+const DataIsError = ({ retry }: any) => (
+  <Center>
+    <Group direction="column" position="center">
+      <Text color="gray">Couldn&apos;t fetch your data. Please retry.</Text>
+      <Button variant="light" color="violet" compact onClick={retry}>
+        Reload
+      </Button>
+    </Group>
+  </Center>
+)

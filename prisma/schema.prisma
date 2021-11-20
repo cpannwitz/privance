@@ -12,22 +12,22 @@ datasource db {
 }
 
 // Models
-model AccountChange {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  issuedate DateTime?
-  issuer    String?
-  type      String?
-  purpose   String?
-  balance   Float?
-  amount    Float?
-  currency  String?
-  categories  Category[] @relation("AccountChangeCategories", references: [id])
+model Transaction {
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  issuedate  DateTime?
+  issuer     String?
+  type       String?
+  purpose    String?
+  balance    Float?
+  amount     Float?
+  currency   String?
+  categories Category[] @relation("TransactionCategories", references: [id])
 }
 
 model Category {
-  id             Int             @id @default(autoincrement())
-  name           String
-  accountChanges AccountChange[] @relation("AccountChangeCategories")
+  id           Int           @id @default(autoincrement())
+  name         String
+  transactions Transaction[] @relation("TransactionCategories")
 }

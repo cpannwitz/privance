@@ -18,6 +18,10 @@
   - [ ] Add management tooling for dynamic category assignment
 - [ ] Diagrams!
 - [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
+  - [ ] https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/
+  - [ ] https://github.com/vercel/next.js/tree/canary/examples/with-electron-typescript
+  - [ ] https://github.com/prisma/prisma/issues/9613
+  - [ ] https://github.com/prisma/prisma/issues/4703
 - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
 - [ ] Add Login functionality
 

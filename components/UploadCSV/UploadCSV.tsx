@@ -43,7 +43,7 @@ const UploadCSV = ({}: UploadCSVProps) => {
 
     if (parsedJSON.data) {
       axios
-        .post("/api/addAccountChanges", parsedJSON.data)
+        .post("/api/addTransactions", parsedJSON.data)
         // TODO: handle response data, either reflow, global state or discard
         .then(res => console.log("res:", res.data))
     }

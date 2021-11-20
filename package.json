@@ -15,7 +15,6 @@
     "watch": "concurrently \"npx prisma generate --watch\" \"npx prisma studio\" \"npm run dev\""
   },
   "dependencies": {
-    "@fast-csv/parse": "~4.3.6",
     "@mantine/core": "~3.1.9",
     "@mantine/dates": "~3.1.9",
     "@mantine/dropzone": "~3.1.9",
@@ -30,12 +29,11 @@
     "rc-table": "~7.19.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-table": "~7.7.0"
+    "swr": "~1.0.1"
   },
   "devDependencies": {
     "@types/node": "16.11.7",
     "@types/react": "17.0.35",
-    "@types/react-table": "~7.7.8",
     "concurrently": "~6.4.0",
     "eslint": "~7.32.0",
     "eslint-config-next": "12.0.4",

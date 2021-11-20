@@ -1,5 +1,5 @@
-import { AccountChange, Category } from ".prisma/client"
+import { Transaction, Category } from ".prisma/client"
 
-export type AccountChangeWithCategories = AccountChange & {
+export type TransactionWithCategories = Transaction & {
   categories: Category[]
 }
