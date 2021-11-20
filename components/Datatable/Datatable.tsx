@@ -49,6 +49,7 @@ const columns: ColumnsType<TransactionWithCategories> = [
     dataIndex: "balance",
     key: "balance",
     width: "5%",
+    render: (v: TransactionWithCategories["balance"]) => v?.toFixed(2),
   },
   {
     title: "Amount",
@@ -59,11 +60,11 @@ const columns: ColumnsType<TransactionWithCategories> = [
     render: (v: TransactionWithCategories["amount"]) =>
       !v ? null : v < 0 ? (
         <Text weight="bold" color="red">
-          {v}
+          {v.toFixed(2)}
         </Text>
       ) : (
         <Text weight="bold" color="lime">
-          {v}
+          {v.toFixed(2)}
         </Text>
       ),
   },
