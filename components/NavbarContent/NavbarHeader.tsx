@@ -1,15 +1,26 @@
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 
-import { ActionIcon, Center, Group, Text, useMantineColorScheme } from "@mantine/core"
+import { useColorMode } from "@chakra-ui/color-mode"
+
+import {
+  ActionIcon,
+  Center,
+  Group,
+  Text,
+  // useMantineColorScheme
+} from "@mantine/core"
 import { RiBarChartGroupedLine } from "@react-icons/all-files/ri/RiBarChartGroupedLine"
 import { RiSunLine } from "@react-icons/all-files/ri/RiSunLine"
 import { RiMoonClearLine } from "@react-icons/all-files/ri/RiMoonClearLine"
 
 const NavbarHeader = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
-  const dark = colorScheme === "dark"
-  const toggle = useCallback(() => toggleColorScheme(), [toggleColorScheme])
+  const { colorMode, toggleColorMode } = useColorMode()
+  const dark = colorMode === "dark"
+
+  // const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+  // const dark = colorScheme === "dark"
+  // const toggle = useCallback(() => toggleColorScheme(), [toggleColorScheme])
 
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
@@ -33,7 +44,7 @@ const NavbarHeader = () => {
       <ActionIcon
         variant="outline"
         color={dark ? "yellow" : "blue"}
-        onClick={toggle}
+        onClick={toggleColorMode}
         title="Toggle color scheme"
       >
         {dark ? <RiSunLine /> : <RiMoonClearLine />}
