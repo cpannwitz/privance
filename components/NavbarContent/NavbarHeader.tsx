@@ -1,44 +1,40 @@
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 
-import { ActionIcon, Center, Group, Text, useMantineColorScheme } from "@mantine/core"
+import { useColorMode, Icon, IconButton, Spacer, HStack, Text } from "@chakra-ui/react"
+
 import { RiBarChartGroupedLine } from "@react-icons/all-files/ri/RiBarChartGroupedLine"
 import { RiSunLine } from "@react-icons/all-files/ri/RiSunLine"
 import { RiMoonClearLine } from "@react-icons/all-files/ri/RiMoonClearLine"
 
 const NavbarHeader = () => {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
-  const dark = colorScheme === "dark"
-  const toggle = useCallback(() => toggleColorScheme(), [toggleColorScheme])
+  const { colorMode, toggleColorMode } = useColorMode()
+  const dark = colorMode === "dark"
 
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   return (
-    <Group position="apart" onClick={linkToOverview}>
-      <Center inline>
-        <RiBarChartGroupedLine size="2rem" color="royalblue" />
+    <HStack w="100%">
+      <HStack onClick={linkToOverview}>
+        <Icon as={RiBarChartGroupedLine} w={8} h={8} color="royalblue" />
         <Text
-          size="xl"
-          weight="bold"
-          variant="gradient"
-          gradient={{
-            from: "royalblue",
-            to: "red",
-            deg: 45,
-          }}
+          fontSize="2xl"
+          fontWeight="semibold"
+          bgGradient="linear(to-tr, royalblue, red)"
+          bgClip="text"
         >
           Privance
         </Text>
-      </Center>
-      <ActionIcon
-        variant="outline"
-        color={dark ? "yellow" : "blue"}
-        onClick={toggle}
-        title="Toggle color scheme"
-      >
-        {dark ? <RiSunLine /> : <RiMoonClearLine />}
-      </ActionIcon>
-    </Group>
+      </HStack>
+      <Spacer />
+      <IconButton
+        variant="ghost"
+        colorScheme={dark ? "orange" : "blue"}
+        onClick={toggleColorMode}
+        aria-label="toggle darkmode"
+        icon={dark ? <RiSunLine /> : <RiMoonClearLine />}
+      />
+    </HStack>
   )
 }
 
