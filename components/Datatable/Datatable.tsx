@@ -1,6 +1,18 @@
 import RCTable from "rc-table"
 import { ColumnsType } from "rc-table/lib/interface"
-import { Loader, Table, Text, Center, Group, Button } from "@mantine/core"
+import {
+  Table,
+  Tbody,
+  Thead,
+  Tr,
+  Th,
+  Td,
+  Center,
+  Spinner,
+  VStack,
+  Text,
+  Button,
+} from "@chakra-ui/react"
 import dayjs from "dayjs"
 import { TransactionWithCategories } from "../../types/types"
 import useGetTransactions from "../hooks/useGetTransactions"
@@ -89,7 +101,11 @@ const Datatable = ({}: DatatableProps) => {
       columns={columns}
       data={data}
       rowKey={r => r.id}
-      components={{ table: Table }}
+      components={{
+        table: Table,
+        body: { wrapper: Tbody, cell: Td, row: Tr },
+        header: { wrapper: Thead, cell: Th, row: Tr },
+      }}
       emptyText={
         isLoading ? (
           <DataIsLoading />
@@ -106,8 +122,8 @@ const Datatable = ({}: DatatableProps) => {
 export default Datatable
 
 const DataIsLoading = () => (
-  <Center style={{ height: "12rem" }}>
-    <Loader color="orange" size="lg" variant="bars" />
+  <Center h="12rem">
+    <Spinner thickness="4px" speed="1s" emptyColor="gray.200" color="blue.500" size="xl" />
   </Center>
 )
 
@@ -115,24 +131,24 @@ const DataIsEmpty = () => {
   const router = useRouter()
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   return (
-    <Center style={{ height: "12rem" }}>
-      <Group direction="column" position="center">
-        <Text color="gray">You currently have no data. Please add some first.</Text>
-        <Button variant="light" color="violet" compact onClick={linkToUpload}>
+    <Center h="12rem">
+      <VStack>
+        <Text color="gray.600">You currently have no data. Please add some first.</Text>
+        <Button variant="outline" colorScheme="violet" size="sm" onClick={linkToUpload}>
           Add some data
         </Button>
-      </Group>
+      </VStack>
     </Center>
   )
 }
 
 const DataIsError = ({ retry }: any) => (
-  <Center style={{ height: "12rem" }}>
-    <Group direction="column" position="center">
+  <Center h="12rem">
+    <VStack>
       <Text color="gray">Couldn&apos;t fetch your data. Please retry.</Text>
-      <Button variant="light" color="violet" compact onClick={retry}>
+      <Button variant="outline" colorScheme="violet" size="sm" onClick={retry}>
         Reload
       </Button>
-    </Group>
+    </VStack>
   </Center>
 )

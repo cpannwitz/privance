@@ -1,22 +1,23 @@
-import { Group, Text } from "@mantine/core"
-import { Dropzone } from "@mantine/dropzone"
-import { useNotifications } from "@mantine/notifications"
+import axios from "axios"
+import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
+
 import { GrDocumentCsv } from "@react-icons/all-files/gr/GrDocumentCsv"
 
-import axios from "axios"
 import parseCSVToJSON from "./parseCSVToJSON"
 import transformTransactions from "./transformTransactions"
+
+import Dropzone from "./Dropzone"
 
 interface UploadCSVProps {}
 
 const UploadCSV = ({}: UploadCSVProps) => {
-  const notifications = useNotifications()
+  const toast = useToast()
 
   async function onDrop(files: File[]) {
     if (!files || files.length > 1) {
-      notifications.showNotification({
-        message: "Please upload only one file.",
-        color: "red",
+      toast({
+        title: "Please upload only one file.",
+        status: "error",
       })
       return
     }
@@ -24,9 +25,9 @@ const UploadCSV = ({}: UploadCSVProps) => {
     const file = files[0]
 
     if (file.type !== "text/csv") {
-      notifications.showNotification({
-        message: "Wrong file format",
-        color: "red",
+      toast({
+        title: "Wrong file format",
+        status: "error",
       })
       return
     }
@@ -34,9 +35,9 @@ const UploadCSV = ({}: UploadCSVProps) => {
     const parsedJSON = await parseCSVToJSON(file)
 
     if (!parsedJSON.data) {
-      notifications.showNotification({
-        message: "No data found OR not able to process ",
-        color: "red",
+      toast({
+        title: "No data found OR not able to process ",
+        status: "error",
       })
       return
     }
@@ -45,9 +46,9 @@ const UploadCSV = ({}: UploadCSVProps) => {
     const transformedJSON = await transformTransactions(parsedJSON.data)
 
     if (parsedJSON.error) {
-      notifications.showNotification({
-        message: parsedJSON.error.message,
-        color: "red",
+      toast({
+        title: parsedJSON.error.message,
+        status: "error",
       })
       console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedJSON.error)
       return
@@ -63,17 +64,19 @@ const UploadCSV = ({}: UploadCSVProps) => {
   return (
     <Dropzone onDrop={onDrop} multiple={false}>
       {() => (
-        <Group position="center" spacing="xl" style={{ minHeight: 220, pointerEvents: "none" }}>
-          <GrDocumentCsv size={32} />
-          <div>
-            <Text size="xl" inline>
-              Drag .csv file here to upload data
-            </Text>
-            <Text size="sm" color="dimmed" inline mt={7}>
-              Only use ING Diba export csv files!
-            </Text>
-          </div>
-        </Group>
+        <Center height={200}>
+          <HStack spacing={6}>
+            <Icon as={GrDocumentCsv} boxSize={10} />
+            <div>
+              <Text mb={1} fontSize="xl">
+                Drag .csv file here to upload data
+              </Text>
+              <Text size="sm" color="gray.500">
+                Only use ING Diba export csv files!
+              </Text>
+            </div>
+          </HStack>
+        </Center>
       )}
     </Dropzone>
   )

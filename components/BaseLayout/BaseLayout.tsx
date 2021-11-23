@@ -1,4 +1,4 @@
-import { AppShell, Navbar } from "@mantine/core"
+import { Box } from "@chakra-ui/react"
 
 import NavbarContent from "../NavbarContent/NavbarContent"
 
@@ -7,15 +7,12 @@ interface BaseLayoutProps {
 }
 export default function Layout({ children }: BaseLayoutProps) {
   return (
-    <AppShell
-      navbar={
-        <Navbar padding="md">
-          <NavbarContent />
-        </Navbar>
-      }
-      padding="xs"
-    >
-      {children}
-    </AppShell>
+    <Box w="100%" pos="relative">
+      <NavbarContent />
+
+      <Box p={5} ml="18rem">
+        {children}
+      </Box>
+    </Box>
   )
 }
