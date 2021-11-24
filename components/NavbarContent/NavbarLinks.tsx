@@ -10,12 +10,24 @@ const NavbarLinks = () => {
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   return (
-    <VStack spacing={4} align="stretch">
-      <Button variant="ghost" colorScheme="blue" leftIcon={<RiHomeLine />} onClick={linkToOverview}>
+    <VStack spacing={4} align="stretch" w="100%">
+      <Button
+        isFullWidth
+        variant="ghost"
+        colorScheme="blue"
+        leftIcon={<RiHomeLine />}
+        onClick={linkToOverview}
+      >
         Overview
       </Button>
 
-      <Button variant="ghost" colorScheme="red" leftIcon={<RiUpload2Line />} onClick={linkToUpload}>
+      <Button
+        isFullWidth
+        variant="ghost"
+        colorScheme="red"
+        leftIcon={<RiUpload2Line />}
+        onClick={linkToUpload}
+      >
         Upload
       </Button>
     </VStack>

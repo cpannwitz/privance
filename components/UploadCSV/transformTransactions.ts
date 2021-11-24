@@ -20,6 +20,7 @@ function transformNumber(value?: string) {
 
 const transformTransactions = async (transactions: ParsedCSVValues[]) => {
   const values: Prisma.TransactionCreateInput[] = transactions
+
     .map(({ issuedate, issuer, type, purpose, balance, amount, currency }) => ({
       issuedate: transformDate(issuedate),
       issuer: issuer,
@@ -33,6 +34,13 @@ const transformTransactions = async (transactions: ParsedCSVValues[]) => {
       if (!value.amount || !value.balance || !value.issuedate) return false
       return true
     })
+    .map(transaction => ({
+      ...transaction,
+      identifier:
+        (transaction.amount || 0) +
+        (transaction.balance || 0) +
+        (transaction.issuedate?.getTime() || 0),
+    }))
   return values
 }
 

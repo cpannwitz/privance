@@ -21,8 +21,16 @@ export default async function addTransactions(
     try {
       const insertedData = await prisma.$transaction(
         bodydata.map(data =>
-          prisma.transaction.create({
-            data: data,
+          // prisma.transaction.create({
+          //   data: data,
+          //   include: { categories: true },
+          // })
+          prisma.transaction.upsert({
+            where: {
+              identifier: data.identifier ?? undefined,
+            },
+            update: data,
+            create: data,
             include: { categories: true },
           })
         )
