@@ -4,6 +4,7 @@
 public/samples
 .vscode
 .env
+.misc
 prisma/dev*
 
 # dependencies

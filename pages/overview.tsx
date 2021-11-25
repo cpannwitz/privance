@@ -1,13 +1,13 @@
 import type { InferGetStaticPropsType } from "next"
 
-import Datatable from "../components/Datatable/Datatable"
+import DatatableContainer from "../components/Datatable/DatatableContainer"
 
 export const getStaticProps = async () => {
   return { props: {} }
 }
 
 const OverviewPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <Datatable />
+  return <DatatableContainer />
 }
 
 export default OverviewPage
