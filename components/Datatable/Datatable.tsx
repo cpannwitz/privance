@@ -44,7 +44,7 @@ const Datatable = ({ data }: DatatableProps) => {
       <Box w="100%" p={2}>
         <Searchbar filterValue={state.globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
-      <Table {...getTableProps()}>
+      <Table {...getTableProps()} variant="striped" size="md">
         <Thead>
           {headerGroups.map(headerGroup => {
             const headerProps = headerGroup.getHeaderGroupProps()
