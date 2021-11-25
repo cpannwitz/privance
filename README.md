@@ -22,8 +22,16 @@
   - [ ] https://github.com/vercel/next.js/tree/canary/examples/with-electron-typescript
   - [ ] https://github.com/prisma/prisma/issues/9613
   - [ ] https://github.com/prisma/prisma/issues/4703
+- [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
 - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
 - [ ] Add Login functionality
+
+
+---
+
+## Business?
+- Free: one category assignment per transaction | Prem: multiple categories
+- Free: Simple charts | Prem: expert charts (brush etc)
 
 ---
 
