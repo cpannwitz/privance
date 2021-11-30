@@ -1,24 +1,35 @@
 import { FormControl, FormLabel, BoxProps, Icon, IconButton, SimpleGrid } from "@chakra-ui/react"
+import { Controller, useFormContext } from "react-hook-form"
+import { CategoryEditFormValues } from "./CategoryForm"
 
 import { icons } from "../../../shared/iconUtils"
 
-interface IconPickerProps {
-  iconValue: string
-  setIcon: (icon: string) => void
-}
+interface IconPickerProps {}
 
-const IconPicker = ({ iconValue, setIcon }: IconPickerProps) => {
+const IconPicker = ({}: IconPickerProps) => {
+  const { control } = useFormContext<CategoryEditFormValues>()
   return (
-    <FormControl>
-      <FormLabel fontSize="sm" color="gray.500">
-        Icon
-      </FormLabel>
-      <SimpleGrid spacing={5} minChildWidth="2rem">
-        {Object.keys(icons).map(icon => (
-          <IconBox key={icon} icon={icon} onIconClick={setIcon} active={iconValue === icon} />
-        ))}
-      </SimpleGrid>
-    </FormControl>
+    <Controller
+      name="icon"
+      control={control}
+      render={({ field }) => (
+        <FormControl>
+          <FormLabel fontSize="sm" color="gray.500">
+            Icon
+          </FormLabel>
+          <SimpleGrid spacing={5} minChildWidth="2rem">
+            {Object.keys(icons).map(icon => (
+              <IconBox
+                key={icon}
+                icon={icon}
+                onIconClick={field.onChange}
+                active={field.value === icon}
+              />
+            ))}
+          </SimpleGrid>
+        </FormControl>
+      )}
+    />
   )
 }
 

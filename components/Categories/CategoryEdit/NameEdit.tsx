@@ -1,22 +1,27 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
-import { ChangeEventHandler } from "react"
+import { Controller, useFormContext } from "react-hook-form"
+import { CategoryEditFormValues } from "./CategoryForm"
 
-interface NameEditProps {
-  nameValue: string
-  setNameValue: (name: string) => void
-}
+interface NameEditProps {}
 
-const NameEdit = ({ nameValue, setNameValue }: NameEditProps) => {
-  const onChangeName: ChangeEventHandler<HTMLInputElement> = e => {
-    setNameValue(e.target.value)
-  }
+const NameEdit = ({}: NameEditProps) => {
+  const { control } = useFormContext<CategoryEditFormValues>()
   return (
-    <FormControl isRequired>
-      <FormLabel fontSize="sm" color="gray.500">
-        Name
-      </FormLabel>
-      <Input value={nameValue} onChange={onChangeName} required />
-    </FormControl>
+    <Controller
+      name="name"
+      control={control}
+      rules={{
+        required: true,
+      }}
+      render={({ field, fieldState }) => (
+        <FormControl isInvalid={!!fieldState.error}>
+          <FormLabel fontSize="sm" color="gray.500">
+            Name
+          </FormLabel>
+          <Input {...field} />
+        </FormControl>
+      )}
+    />
   )
 }
 

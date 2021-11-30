@@ -10,8 +10,9 @@ import {
   VStack,
 } from "@chakra-ui/react"
 import { Category, Prisma } from ".prisma/client"
-import { useState } from "react"
+import { SubmitHandler } from "react-hook-form"
 
+import CategoryEditForm, { CategoryEditFormValues } from "./CategoryForm"
 import ColorPicker from "./ColorPicker"
 import IconPicker from "./IconPicker"
 import NameEdit from "./NameEdit"
@@ -25,16 +26,12 @@ interface CategoryAddEditProps {
 // https://github.com/casesandberg/react-color
 
 const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) => {
-  const [colorValue, setColorValue] = useState(formValue?.color ?? "")
-  const [iconValue, setIconValue] = useState(formValue?.icon ?? "")
-  const [nameValue, setNameValue] = useState(formValue?.name ?? "")
-
-  function onSaveCategory() {
+  const onFormSubmit: SubmitHandler<CategoryEditFormValues> = data => {
     onSave({
       ...formValue,
-      name: nameValue ?? null,
-      color: colorValue ?? null,
-      icon: iconValue ?? null,
+      name: data.name ?? null,
+      color: data.color ?? null,
+      icon: data.icon ?? null,
     })
   }
 
@@ -49,23 +46,25 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Customize category</ModalHeader>
-        <ModalCloseButton onClick={onCancel} />
-        <ModalBody>
-          <VStack spacing={5}>
-            <NameEdit nameValue={nameValue} setNameValue={setNameValue} />
-            <ColorPicker colorValue={colorValue} setColor={setColorValue} />
-            <IconPicker iconValue={iconValue} setIcon={setIconValue} />
-          </VStack>
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="ghost" size="sm" mr={3} onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button size="sm" colorScheme="blue" onClick={onSaveCategory}>
-            Save
-          </Button>
-        </ModalFooter>
+        <CategoryEditForm onSubmit={onFormSubmit}>
+          <ModalHeader>Customize category</ModalHeader>
+          <ModalCloseButton onClick={onCancel} />
+          <ModalBody>
+            <VStack spacing={5}>
+              <NameEdit />
+              <ColorPicker />
+              <IconPicker />
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" size="sm" mr={3} onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button size="sm" colorScheme="blue" type="submit">
+              Save
+            </Button>
+          </ModalFooter>
+        </CategoryEditForm>
       </ModalContent>
     </Modal>
   )
