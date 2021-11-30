@@ -1,7 +1,7 @@
 import axios from "axios"
 import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
 
-import { GrDocumentCsv } from "@react-icons/all-files/gr/GrDocumentCsv"
+import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
 
 import parseCSVToJSON from "./parseCSVToJSON"
 import transformTransactions from "./transformTransactions"
@@ -72,7 +72,7 @@ const UploadCSV = ({}: UploadCSVProps) => {
       {() => (
         <Center height={200}>
           <HStack spacing={6}>
-            <Icon as={GrDocumentCsv} boxSize={10} />
+            <Icon as={FileChartLineIcon} boxSize={10} />
             <div>
               <Text mb={1} fontSize="xl">
                 Drag .csv file here to upload data

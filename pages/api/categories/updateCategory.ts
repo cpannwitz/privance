@@ -8,7 +8,7 @@ type ResponseData = {
   error?: any
   data?: Category
 }
-
+// TODO: change to "updateCategor(y/ies)Transactions" maybe?
 export default async function updateCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -30,13 +30,13 @@ export default async function updateCategory(
 
         res.json({ data: insertedData })
       } catch (err) {
-        console.log(`ERROR | err`, err)
+        console.error(`ERROR | err`, err)
         res.status(500).json({ error: err })
       }
     } else {
-      res.status(400).json({ error: "wrong input format" })
+      res.status(400).json({ error: "missing category id" })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }

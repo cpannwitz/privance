@@ -18,10 +18,10 @@ export default async function getCategories(
       const data = await prisma.category.findMany()
       res.json({ data })
     } catch (err) {
-      console.log(`ERROR | err`, err)
+      console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }

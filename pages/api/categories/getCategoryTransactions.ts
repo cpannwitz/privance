@@ -15,11 +15,11 @@ export default async function getCategoryTransactions(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "GET") {
-    const { categoryId } = req.query
+    const { id } = req.query
     try {
       const data = await prisma.category.findFirst({
         where: {
-          id: Number(categoryId),
+          id: Number(id),
         },
         include: {
           transactions: true,
@@ -27,10 +27,10 @@ export default async function getCategoryTransactions(
       })
       res.json({ data })
     } catch (err) {
-      console.log(`ERROR | err`, err)
+      console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }

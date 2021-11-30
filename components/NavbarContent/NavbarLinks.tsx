@@ -1,9 +1,10 @@
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 
-import { RiHomeLine } from "@react-icons/all-files/ri/RiHomeLine"
-import { RiUpload2Line } from "@react-icons/all-files/ri/RiUpload2Line"
-import { TiTags } from "@react-icons/all-files/ti/TiTags"
+import HomeIcon from "remixicon-react/Home4LineIcon"
+import UploadIcon from "remixicon-react/Upload2LineIcon"
+import TagIcon from "remixicon-react/PriceTag3LineIcon"
+
 import { VStack, Button, Icon } from "@chakra-ui/react"
 
 const NavbarLinks = () => {
@@ -17,7 +18,7 @@ const NavbarLinks = () => {
         isFullWidth
         variant="ghost"
         colorScheme="blue"
-        leftIcon={<Icon as={RiHomeLine} />}
+        leftIcon={<Icon as={HomeIcon} w={6} h={6} />}
         onClick={linkToOverview}
       >
         Overview
@@ -27,7 +28,7 @@ const NavbarLinks = () => {
         isFullWidth
         variant="ghost"
         colorScheme="red"
-        leftIcon={<Icon as={RiUpload2Line} />}
+        leftIcon={<Icon as={UploadIcon} w={6} h={6} />}
         onClick={linkToUpload}
       >
         Upload
@@ -37,7 +38,7 @@ const NavbarLinks = () => {
         isFullWidth
         variant="ghost"
         colorScheme="green"
-        leftIcon={<Icon as={TiTags} />}
+        leftIcon={<Icon as={TagIcon} w={6} h={6} />}
         onClick={linkToCategories}
       >
         Categories

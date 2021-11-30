@@ -33,10 +33,10 @@ export default async function addTransactions(
       )
       res.json({ data: insertedData })
     } catch (err) {
-      console.log(`ERROR | err`, err)
+      console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }
