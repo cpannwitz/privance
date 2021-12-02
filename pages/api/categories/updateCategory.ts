@@ -8,7 +8,7 @@ type ResponseData = {
   error?: any
   data?: Category
 }
-// TODO: change to "updateCategor(y/ies)Transactions" maybe?
+
 export default async function updateCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>

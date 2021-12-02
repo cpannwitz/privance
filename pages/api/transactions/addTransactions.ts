@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, Prisma } from ".prisma/client"
 
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategories } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
