@@ -4,6 +4,7 @@ import { useRouter } from "next/router"
 import HomeIcon from "remixicon-react/Home4LineIcon"
 import UploadIcon from "remixicon-react/Upload2LineIcon"
 import TagIcon from "remixicon-react/PriceTag3LineIcon"
+import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
 
 import { VStack, Button, Icon } from "@chakra-ui/react"
 
@@ -12,6 +13,7 @@ const NavbarLinks = () => {
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   const linkToCategories = useCallback(() => router.push(`/categories`), [router])
+  const linkToPlayground = useCallback(() => router.push(`/playground`), [router])
   return (
     <VStack spacing={4} align="stretch" w="100%">
       <Button
@@ -42,6 +44,15 @@ const NavbarLinks = () => {
         onClick={linkToCategories}
       >
         Categories
+      </Button>
+      <Button
+        isFullWidth
+        variant="ghost"
+        colorScheme="orange"
+        leftIcon={<Icon as={PlaygroundIcon} w={6} h={6} />}
+        onClick={linkToPlayground}
+      >
+        Playground
       </Button>
     </VStack>
   )
