@@ -3,9 +3,9 @@ import { useRouter } from "next/router"
 
 import { useColorMode, Icon, IconButton, Spacer, HStack, Text } from "@chakra-ui/react"
 
-import { RiBarChartGroupedLine } from "@react-icons/all-files/ri/RiBarChartGroupedLine"
-import { RiSunLine } from "@react-icons/all-files/ri/RiSunLine"
-import { RiMoonClearLine } from "@react-icons/all-files/ri/RiMoonClearLine"
+import BarChartIcon from "remixicon-react/BarChartGroupedLineIcon"
+import SunIcon from "remixicon-react/SunLineIcon"
+import MoonIcon from "remixicon-react/MoonClearLineIcon"
 
 const NavbarHeader = () => {
   const { colorMode, toggleColorMode } = useColorMode()
@@ -16,7 +16,7 @@ const NavbarHeader = () => {
   return (
     <HStack w="100%">
       <HStack onClick={linkToOverview}>
-        <Icon as={RiBarChartGroupedLine} w={8} h={8} color="royalblue" />
+        <Icon as={BarChartIcon} w={8} h={8} color="royalblue" />
         <Text
           fontSize="2xl"
           fontWeight="semibold"
@@ -32,7 +32,7 @@ const NavbarHeader = () => {
         colorScheme={dark ? "orange" : "blue"}
         onClick={toggleColorMode}
         aria-label="toggle darkmode"
-        icon={dark ? <RiSunLine /> : <RiMoonClearLine />}
+        icon={dark ? <Icon as={SunIcon} /> : <Icon as={MoonIcon} />}
       />
     </HStack>
   )

@@ -13,16 +13,21 @@ import {
 } from "@chakra-ui/react"
 
 import { TransactionWithCategories } from "../../types/types"
-import { columns } from "./DatatableColumns"
+import { getColumns } from "./DatatableColumns"
 import Searchbar from "../Searchbar/Searchbar"
+import { Category } from ".prisma/client"
+import { useMemo } from "react"
 
 // https://react-table.tanstack.com/docs/installation
 
 interface DatatableProps {
-  data: TransactionWithCategories[]
+  transactions: TransactionWithCategories[]
+  categories: Category[]
 }
 
-const Datatable = ({ data }: DatatableProps) => {
+const Datatable = ({ transactions, categories }: DatatableProps) => {
+  const columns = useMemo(() => getColumns({ categories }), [categories])
+
   const {
     getTableProps,
     getTableBodyProps,
@@ -33,8 +38,8 @@ const Datatable = ({ data }: DatatableProps) => {
     setGlobalFilter,
   } = useTable(
     {
-      columns,
-      data: data || [],
+      columns: columns,
+      data: transactions || [],
     },
     useGlobalFilter
   )
@@ -53,7 +58,13 @@ const Datatable = ({ data }: DatatableProps) => {
                 {headerGroup.headers.map(column => {
                   const columnHeaderProps = column.getHeaderProps()
                   return (
-                    <Th {...columnHeaderProps} key={columnHeaderProps.key}>
+                    <Th
+                      {...columnHeaderProps}
+                      key={columnHeaderProps.key}
+                      style={{
+                        width: column.width,
+                      }}
+                    >
                       {column.render("Header")}
                     </Th>
                   )
@@ -71,7 +82,13 @@ const Datatable = ({ data }: DatatableProps) => {
                 {row.cells.map(cell => {
                   const cellProps = cell.getCellProps()
                   return (
-                    <Td {...cellProps} key={cellProps.key}>
+                    <Td
+                      {...cellProps}
+                      key={cellProps.key}
+                      style={{
+                        width: cell.column.width,
+                      }}
+                    >
                       {cell.render("Cell")}
                     </Td>
                   )

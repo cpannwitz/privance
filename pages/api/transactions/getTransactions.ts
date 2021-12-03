@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategories } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
@@ -19,10 +19,10 @@ export default async function getTransactions(
       const data = await prisma.transaction.findMany({ include: { categories: true } })
       res.json({ data })
     } catch (err) {
-      console.log(`ERROR | err`, err)
+      console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }

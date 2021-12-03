@@ -2,7 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, Prisma } from ".prisma/client"
 
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategories } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
@@ -21,10 +21,6 @@ export default async function addTransactions(
     try {
       const insertedData = await prisma.$transaction(
         bodydata.map(data =>
-          // prisma.transaction.create({
-          //   data: data,
-          //   include: { categories: true },
-          // })
           prisma.transaction.upsert({
             where: {
               identifier: data.identifier ?? undefined,
@@ -37,10 +33,10 @@ export default async function addTransactions(
       )
       res.json({ data: insertedData })
     } catch (err) {
-      console.log(`ERROR | err`, err)
+      console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
     }
   } else {
-    res.status(400).json({ error: "wrong http method" })
+    res.status(405).json({ error: "wrong http method" })
   }
 }

@@ -1,5 +1,5 @@
 import { Input, InputGroup, InputLeftElement, Icon } from "@chakra-ui/react"
-import { RiSearchLine } from "@react-icons/all-files/ri/RiSearchLine"
+import SearchIcon from "remixicon-react/SearchLineIcon"
 import { useState } from "react"
 import { useAsyncDebounce } from "react-table"
 
@@ -17,7 +17,7 @@ const Searchbar = ({ filterValue, setFilterValue }: SearchbarProps) => {
   return (
     <InputGroup>
       <InputLeftElement pointerEvents="none">
-        <Icon as={RiSearchLine} />
+        <Icon as={SearchIcon} />
       </InputLeftElement>
       <Input
         placeholder="Search for transactions"

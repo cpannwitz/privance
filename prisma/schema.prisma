@@ -30,5 +30,7 @@ model Transaction {
 model Category {
   id           Int           @id @default(autoincrement())
   name         String
+  icon         String?
+  color        String?
   transactions Transaction[] @relation("TransactionCategories")
 }
