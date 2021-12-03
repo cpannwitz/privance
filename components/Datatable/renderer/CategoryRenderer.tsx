@@ -44,23 +44,24 @@ const CategoryRenderer = memo(
               actionMeta.action === "deselect-option" ? [actionMeta.option?.id] : undefined,
           }
         )
-        .then(res => {
+        .then(() => {
           toast({
             title: `Updated your Transaction!`,
             status: "success",
           })
-          const updatedTransaction = res.data.data
+          // const updatedTransaction = res.data.data
 
-          mutate(
-            `/api/transactions/getTransactions`,
-            async (transactions: { data: TransactionWithCategories[] }) => {
-              const filteredTransactions = transactions.data.filter(
-                tr => tr.id !== updatedTransaction.id
-              )
-              return { data: [...filteredTransactions, updatedTransaction] }
-            },
-            false
-          )
+          // ! causes performance issues
+          // mutate(
+          //   `/api/transactions/getTransactions`,
+          //   async (transactions: { data: TransactionWithCategories[] }) => {
+          //     const filteredTransactions = transactions.data.filter(
+          //       tr => tr.id !== updatedTransaction.id
+          //     )
+          //     return { data: [...filteredTransactions, updatedTransaction] }
+          //   },
+          //   false
+          // )
         })
         .catch((error: AxiosError) => {
           if (error.response) {
