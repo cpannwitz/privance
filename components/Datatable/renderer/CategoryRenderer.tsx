@@ -114,7 +114,7 @@ const CategoryRenderer = memo(
               Add Cat.
             </Button>
           ) : (
-            <AvatarGroup onClick={onOpen} max={4}>
+            <AvatarGroup onClick={onOpen} max={3}>
               {value.map(cat => (
                 <Avatar
                   boxSize={10}

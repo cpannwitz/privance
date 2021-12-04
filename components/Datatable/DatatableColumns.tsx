@@ -45,7 +45,7 @@ export const getColumns = ({
       accessor: "purpose",
       id: "purpose",
       Cell: TextRenderer,
-      width: "20%",
+      width: "25%",
       // width: 6,
       // width: "6%",
     },
@@ -80,7 +80,7 @@ export const getColumns = ({
       Header: "Curr.",
       accessor: "currency",
       id: "currency",
-      width: "10%",
+      width: "5%",
       // width: 0.1,
       // width: "0.0000000001%", // collapse to min-width
     },
