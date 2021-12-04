@@ -19,54 +19,70 @@ export const getColumns = ({
       accessor: "issuedate",
       id: "issuedate",
       Cell: DateRenderer,
-      width: "0.0000000001%", // collapse to min-width -> https://github.com/tannerlinsley/react-table/issues/1639
+      width: "10%",
+      // width: 0.1,
+      // width: "0.0000000001%", // collapse to min-width -> https://github.com/tannerlinsley/react-table/issues/1639
     },
     {
       Header: "Issuer",
       accessor: "issuer",
       id: "issuer",
       Cell: TextRenderer,
-      width: "3%",
+      width: "20%",
+      // width: 3,
+      // width: "3%",
     },
     {
       Header: "Type",
       accessor: "type",
       id: "type",
-      width: "0.0000000001%", // collapse to min-width
+      width: "10%",
+      // width: 0.1,
+      // width: "0.0000000001%", // collapse to min-width
     },
     {
       Header: "Purpose",
       accessor: "purpose",
       id: "purpose",
       Cell: TextRenderer,
-      width: "6%",
+      width: "20%",
+      // width: 6,
+      // width: "6%",
     },
     {
       Header: "Categories",
       accessor: "categories",
       id: "categories",
       Cell: p => <CategoryRenderer {...p} categories={categories} />,
-      width: "3%",
+      width: "10%",
+      // width: 3,
+      // width: "3%",
     },
     {
       Header: "Balance",
       accessor: "balance",
       id: "balance",
       Cell: p => <NumberRenderer {...p} variant="balance" />,
-      width: "0.0000000001%", // collapse to min-width
+      width: "10%",
+      // width: 0.1,
+      // width: "0.0000000001%", // collapse to min-width
     },
     {
       Header: "Amount",
       accessor: "amount",
       id: "amount",
       Cell: p => <NumberRenderer {...p} variant="amount" />,
-      width: "0.0000000001%", // collapse to min-width
+      width: "10%",
+      // width: 0.1,
+      // width: "0.0000000001%", // collapse to min-width
     },
     {
       Header: "Curr.",
       accessor: "currency",
       id: "currency",
-      width: "0.0000000001%", // collapse to min-width
+      width: "10%",
+      // width: 0.1,
+      // width: "0.0000000001%", // collapse to min-width
     },
   ]
 }

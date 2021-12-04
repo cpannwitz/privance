@@ -142,10 +142,9 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
   return (
     <HStack p={3} shadow="md" borderWidth="1px" align="center" spacing={3} borderRadius="lg">
       <Avatar
-        w={10}
-        h={10}
+        boxSize={10}
         bg={color || "gray.100"}
-        icon={<Icon as={icon ? icons[icon] : PlaceholderIcon} w={7} h={7} color="white" />}
+        icon={<Icon as={icon ? icons[icon] : PlaceholderIcon} boxSize={6} color="white" />}
       />
       <Heading fontSize="md">{name}</Heading>
       <Spacer />
@@ -153,14 +152,14 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
         variant="ghost"
         isRound
         aria-label="edit category"
-        icon={<Icon as={DeleteIcon} color="gray.300" w={5} h={5} />}
+        icon={<Icon as={DeleteIcon} color="gray.300" boxSize={5} />}
         onClick={onDeleteCategory}
       />
       <IconButton
         variant="ghost"
         isRound
         aria-label="edit category"
-        icon={<Icon as={EditIcon} color="gray.300" w={5} h={5} />}
+        icon={<Icon as={EditIcon} color="gray.300" boxSize={5} />}
         onClick={onEditCategory}
       />
     </HStack>

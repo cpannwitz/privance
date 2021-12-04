@@ -16,7 +16,10 @@ export default async function getTransactions(
 ) {
   if (req.method === "GET") {
     try {
-      const data = await prisma.transaction.findMany({ include: { categories: true } })
+      const data = await prisma.transaction.findMany({
+        orderBy: { issuedate: "desc" },
+        include: { categories: true, _count: true },
+      })
       res.json({ data })
     } catch (err) {
       console.error(`ERROR | err`, err)
