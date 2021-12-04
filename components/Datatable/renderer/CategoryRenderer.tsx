@@ -55,10 +55,15 @@ const CategoryRenderer = memo(
           // mutate(
           //   `/api/transactions/getTransactions`,
           //   async (transactions: { data: TransactionWithCategories[] }) => {
-          //     const filteredTransactions = transactions.data.filter(
-          //       tr => tr.id !== updatedTransaction.id
-          //     )
-          //     return { data: [...filteredTransactions, updatedTransaction] }
+          //     const index = transactions.data.findIndex(val => val.id === updatedTransaction.id)
+          //     const updatedData = [...transactions.data]
+          //     updatedData[index] = updatedTransaction
+          //     // return transactions
+          //     return { data: updatedData }
+          //     // const filteredTransactions = transactions.data.filter(
+          //     //   tr => tr.id !== updatedTransaction.id
+          //     // )
+          //     // return { data: [...filteredTransactions, updatedTransaction] }
           //   },
           //   false
           // )

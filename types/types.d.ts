@@ -2,6 +2,7 @@ import { Transaction, Category } from ".prisma/client"
 
 export type TransactionWithCategories = Transaction & {
   categories: Category[]
+  _count?: Prisma.TransactionCountOutputType
 }
 
 export type CategoryWithTransactions = Category & {

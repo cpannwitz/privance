@@ -1,31 +1,25 @@
 import { useTable, useGlobalFilter } from "react-table"
 
-import {
-  Table,
-  Tbody,
-  Thead,
-  Tr,
-  Th,
-  Td,
-  // Tfoot,
-  // TableCaption,
-  Box,
-} from "@chakra-ui/react"
+import { Box, useMultiStyleConfig } from "@chakra-ui/react"
 
 import { TransactionWithCategories } from "../../types/types"
 import { getColumns } from "./DatatableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Category } from ".prisma/client"
-import { useMemo } from "react"
+import { memo, useMemo } from "react"
+import { FixedSizeList, ListChildComponentProps } from "react-window"
+import Autosizer from "react-virtualized-auto-sizer"
 
 // https://react-table.tanstack.com/docs/installation
 
-interface DatatableProps {
+interface DatatableDivProps {
   transactions: TransactionWithCategories[]
   categories: Category[]
 }
 
-const Datatable = ({ transactions, categories }: DatatableProps) => {
+const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
+  const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
+
   const columns = useMemo(() => getColumns({ categories }), [categories])
 
   const {
@@ -44,62 +38,91 @@ const Datatable = ({ transactions, categories }: DatatableProps) => {
     useGlobalFilter
   )
 
+  const RenderRow = memo(({ index, style }: ListChildComponentProps) => {
+    const row = rows[index]
+    prepareRow(row)
+    const rowProps = row.getRowProps({ style })
+    return (
+      <Box
+        {...rowProps}
+        key={rowProps.key}
+        __css={tableStyles.tr}
+        d="grid"
+        gridTemplateColumns={row.cells.map(cell => cell.column.width).join(" ")}
+      >
+        {row.cells.map(cell => {
+          const cellProps = cell.getCellProps()
+          return (
+            <Box
+              {...cellProps}
+              key={cellProps.key}
+              __css={tableStyles.td}
+              d="flex"
+              alignItems="center"
+            >
+              {cell.render("Cell")}
+            </Box>
+          )
+        })}
+      </Box>
+    )
+  })
+  RenderRow.displayName = "RenderRow"
+  // [prepareRow, rows, tableStyles]
+
   return (
     <>
       <Box w="100%" p={2}>
         <Searchbar filterValue={state.globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
-      <Table {...getTableProps()} variant="striped" size="md">
-        <Thead>
+      <Box __css={tableStyles.table} {...getTableProps()} h="88vh">
+        <Box __css={tableStyles.thead}>
           {headerGroups.map(headerGroup => {
             const headerProps = headerGroup.getHeaderGroupProps()
             return (
-              <Tr {...headerProps} key={headerProps.key}>
+              <Box
+                {...headerProps}
+                key={headerProps.key}
+                __css={tableStyles.tr}
+                d="grid"
+                gridTemplateColumns={headerGroup.headers.map(col => col.width).join(" ")}
+              >
                 {headerGroup.headers.map(column => {
                   const columnHeaderProps = column.getHeaderProps()
                   return (
-                    <Th
+                    <Box
                       {...columnHeaderProps}
                       key={columnHeaderProps.key}
-                      style={{
-                        width: column.width,
-                      }}
+                      __css={tableStyles.th}
+                      d="flex"
+                      alignItems="center"
                     >
                       {column.render("Header")}
-                    </Th>
+                    </Box>
                   )
                 })}
-              </Tr>
+              </Box>
             )
           })}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row)
-            const rowProps = row.getRowProps()
-            return (
-              <Tr {...rowProps} key={rowProps.key}>
-                {row.cells.map(cell => {
-                  const cellProps = cell.getCellProps()
-                  return (
-                    <Td
-                      {...cellProps}
-                      key={cellProps.key}
-                      style={{
-                        width: cell.column.width,
-                      }}
-                    >
-                      {cell.render("Cell")}
-                    </Td>
-                  )
-                })}
-              </Tr>
-            )
-          })}
-        </Tbody>
-      </Table>
+        </Box>
+        <Box __css={tableStyles.tbody} {...getTableBodyProps()} h="100%">
+          <Autosizer>
+            {({ height, width }) => (
+              <FixedSizeList
+                height={height}
+                itemCount={transactions.length}
+                itemSize={65}
+                overscanCount={40}
+                width={width}
+              >
+                {RenderRow}
+              </FixedSizeList>
+            )}
+          </Autosizer>
+        </Box>
+      </Box>
     </>
   )
 }
 
-export default Datatable
+export default DatatableDiv
