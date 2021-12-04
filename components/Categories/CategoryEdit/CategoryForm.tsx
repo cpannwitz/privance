@@ -9,11 +9,16 @@ export type CategoryEditFormValues = {
 
 interface CategoryEditFormProps {
   onSubmit: SubmitHandler<CategoryEditFormValues>
+  defaultValues?: { name?: string; icon?: string; color?: string }
 }
 
-const CategoryEditForm = ({ onSubmit, children }: PropsWithChildren<CategoryEditFormProps>) => {
+const CategoryEditForm = ({
+  onSubmit,
+  defaultValues,
+  children,
+}: PropsWithChildren<CategoryEditFormProps>) => {
   const methods = useForm<CategoryEditFormValues>({
-    defaultValues: { name: "", icon: "", color: "" },
+    defaultValues: { name: "", icon: "", color: "", ...defaultValues },
   })
   return (
     <FormProvider {...methods}>

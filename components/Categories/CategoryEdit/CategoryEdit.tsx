@@ -35,6 +35,12 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     })
   }
 
+  const defaultValues = {
+    name: formValue?.name ?? undefined,
+    color: formValue?.color ?? undefined,
+    icon: formValue?.icon ?? undefined,
+  }
+
   return (
     <Modal
       size="xl"
@@ -46,7 +52,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     >
       <ModalOverlay />
       <ModalContent>
-        <CategoryEditForm onSubmit={onFormSubmit}>
+        <CategoryEditForm onSubmit={onFormSubmit} defaultValues={defaultValues}>
           <ModalHeader>Customize category</ModalHeader>
           <ModalCloseButton onClick={onCancel} />
           <ModalBody>
