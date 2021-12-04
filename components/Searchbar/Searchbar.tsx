@@ -9,7 +9,7 @@ interface SearchbarProps {
 }
 
 const Searchbar = ({ filterValue, setFilterValue }: SearchbarProps) => {
-  const [searchValue, setSearchValue] = useState(filterValue)
+  const [searchValue, setSearchValue] = useState(filterValue || "")
 
   const onSearchValueChange = useAsyncDebounce(value => {
     setFilterValue(value || undefined)

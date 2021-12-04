@@ -41,6 +41,7 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
   const RenderRow = useCallback(
     ({ index, style }: ListChildComponentProps) => {
       const row = rows[index]
+      if (!row) return null
       prepareRow(row)
       const rowProps = row.getRowProps({ style })
       return (
@@ -111,7 +112,7 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
             {({ height, width }) => (
               <FixedSizeList
                 height={height}
-                itemCount={transactions.length}
+                itemCount={rows.length}
                 itemSize={65}
                 overscanCount={40}
                 width={width}
