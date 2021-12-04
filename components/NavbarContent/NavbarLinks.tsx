@@ -15,12 +15,13 @@ const NavbarLinks = () => {
   const linkToCategories = useCallback(() => router.push(`/categories`), [router])
   const linkToPlayground = useCallback(() => router.push(`/playground`), [router])
   return (
-    <VStack spacing={4} align="stretch" w="100%">
+    <VStack spacing={4} align="stretch" w="100%" py={3}>
       <Button
         isFullWidth
         variant="ghost"
-        colorScheme="blue"
-        leftIcon={<Icon as={HomeIcon} w={6} h={6} />}
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={HomeIcon} boxSize={6} />}
         onClick={linkToOverview}
       >
         Overview
@@ -29,8 +30,9 @@ const NavbarLinks = () => {
       <Button
         isFullWidth
         variant="ghost"
-        colorScheme="red"
-        leftIcon={<Icon as={UploadIcon} w={6} h={6} />}
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={UploadIcon} boxSize={6} />}
         onClick={linkToUpload}
       >
         Upload
@@ -39,8 +41,9 @@ const NavbarLinks = () => {
       <Button
         isFullWidth
         variant="ghost"
-        colorScheme="green"
-        leftIcon={<Icon as={TagIcon} w={6} h={6} />}
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={TagIcon} boxSize={6} />}
         onClick={linkToCategories}
       >
         Categories
@@ -48,8 +51,9 @@ const NavbarLinks = () => {
       <Button
         isFullWidth
         variant="ghost"
-        colorScheme="orange"
-        leftIcon={<Icon as={PlaygroundIcon} w={6} h={6} />}
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={PlaygroundIcon} boxSize={6} />}
         onClick={linkToPlayground}
       >
         Playground

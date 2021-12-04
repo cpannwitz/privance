@@ -74,7 +74,7 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
 
   return (
     <>
-      <Box w="100%" p={2}>
+      <Box w="100%" mb={4}>
         <Searchbar filterValue={state.globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
       <Box __css={tableStyles.table} {...getTableProps()} h="88vh">
