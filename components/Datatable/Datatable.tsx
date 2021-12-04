@@ -6,7 +6,7 @@ import { TransactionWithCategories } from "../../types/types"
 import { getColumns } from "./DatatableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Category } from ".prisma/client"
-import { memo, useMemo } from "react"
+import { useCallback, useMemo } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import Autosizer from "react-virtualized-auto-sizer"
 
@@ -38,37 +38,38 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
     useGlobalFilter
   )
 
-  const RenderRow = memo(({ index, style }: ListChildComponentProps) => {
-    const row = rows[index]
-    prepareRow(row)
-    const rowProps = row.getRowProps({ style })
-    return (
-      <Box
-        {...rowProps}
-        key={rowProps.key}
-        __css={tableStyles.tr}
-        d="grid"
-        gridTemplateColumns={row.cells.map(cell => cell.column.width).join(" ")}
-      >
-        {row.cells.map(cell => {
-          const cellProps = cell.getCellProps()
-          return (
-            <Box
-              {...cellProps}
-              key={cellProps.key}
-              __css={tableStyles.td}
-              d="flex"
-              alignItems="center"
-            >
-              {cell.render("Cell")}
-            </Box>
-          )
-        })}
-      </Box>
-    )
-  })
-  RenderRow.displayName = "RenderRow"
-  // [prepareRow, rows, tableStyles]
+  const RenderRow = useCallback(
+    ({ index, style }: ListChildComponentProps) => {
+      const row = rows[index]
+      prepareRow(row)
+      const rowProps = row.getRowProps({ style })
+      return (
+        <Box
+          {...rowProps}
+          key={rowProps.key}
+          __css={tableStyles.tr}
+          d="grid"
+          gridTemplateColumns={row.cells.map(cell => cell.column.width).join(" ")}
+        >
+          {row.cells.map(cell => {
+            const cellProps = cell.getCellProps()
+            return (
+              <Box
+                {...cellProps}
+                key={cellProps.key}
+                __css={tableStyles.td}
+                d="flex"
+                alignItems="center"
+              >
+                {cell.render("Cell")}
+              </Box>
+            )
+          })}
+        </Box>
+      )
+    },
+    [prepareRow, rows, tableStyles]
+  )
 
   return (
     <>
