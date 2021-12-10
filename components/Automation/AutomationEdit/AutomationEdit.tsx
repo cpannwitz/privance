@@ -13,16 +13,18 @@ import {
   // getInputType,
   schema,
 } from "./FormUtils"
-import { AutomationRule } from "../../../types/types"
+import { AutomationRuleWithCategories } from "../../../types/types"
+// import { AutomationRule } from "../../../types/types"
+// import { Category, AutomationRule, Prisma } from ".prisma/client"
 
 interface AutomationEditProps {
-  onSave: (automationRule: AutomationRule) => void
+  onSave: (automationRule: AutomationRuleWithCategories) => void
   onCancel: () => void
-  formValue?: AutomationRule
+  formValue?: AutomationRuleWithCategories
 }
 
 const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) => {
-  const onFormSubmit: SubmitHandler<AutomationRule> = data => {
+  const onFormSubmit: SubmitHandler<AutomationRuleWithCategories> = data => {
     console.log(`LOG |  ~ file: AutomationEdit.tsx ~ line 23 ~ AutomationEdit ~ data`, data)
     onSave(data)
     // TODO: maybe unnötig?
@@ -63,7 +65,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
         </>
       }
     >
-      <FormWrapper<AutomationRule>
+      <FormWrapper<AutomationRuleWithCategories>
         onSubmit={onFormSubmit}
         defaultValues={defaultValues}
         formId="AutomationRulesForm"

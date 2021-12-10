@@ -28,9 +28,20 @@ model Transaction {
 }
 
 model Category {
-  id           Int           @id @default(autoincrement())
-  name         String
-  icon         String?
-  color        String?
-  transactions Transaction[] @relation("TransactionCategories")
+  id              Int              @id @default(autoincrement())
+  name            String
+  icon            String?
+  color           String?
+  transactions    Transaction[]    @relation("TransactionCategories")
+  automationRules AutomationRule[] @relation("AutomationRuleCategories")
+}
+
+model AutomationRule {
+  id          Int        @id @default(autoincrement())
+  field       String
+  operation   String
+  categories  Category[] @relation("AutomationRuleCategories", references: [id])
+  stringValue String?
+  numberValue Float?
+  dateValue   DateTime?
 }

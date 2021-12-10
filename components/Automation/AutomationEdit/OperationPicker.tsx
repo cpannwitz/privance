@@ -1,13 +1,13 @@
 import { FormControl, FormErrorMessage, FormLabel, Select } from "@chakra-ui/react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
-import { AutomationRule } from "../../../types/types"
+import { AutomationRuleWithCategories } from "../../../types/types"
 
 import { getOperationType } from "./FormUtils"
 
 interface OperationPickerProps {}
 
 const OperationPicker = ({}: OperationPickerProps) => {
-  const { control } = useFormContext<AutomationRule>()
+  const { control } = useFormContext<AutomationRuleWithCategories>()
   const fieldValue = useWatch({
     name: "field",
     control,

@@ -13,12 +13,12 @@ import {
 } from "@chakra-ui/react"
 import { parseDateToString, parseStringToDate } from "./FormUtils"
 
-import { AutomationRule, TransactionRuleFields } from "../../../types/types"
+import { AutomationRuleWithCategories, TAutomationRuleField } from "../../../types/types"
 
 interface ValuePickerProps {}
 
 const ValuePicker = ({}: ValuePickerProps) => {
-  const { control } = useFormContext<AutomationRule>()
+  const { control } = useFormContext<AutomationRuleWithCategories>()
   const fieldValue = useWatch({
     name: "field",
     control,
@@ -33,7 +33,7 @@ const ValuePicker = ({}: ValuePickerProps) => {
 
 export default ValuePicker
 
-function getInputType(field: keyof TransactionRuleFields) {
+function getInputType(field: TAutomationRuleField) {
   switch (field) {
     case "issuedate":
       return "date"
@@ -65,7 +65,7 @@ const TextInputField = () => {
     register,
     unregister,
     formState: { errors },
-  } = useFormContext<AutomationRule>()
+  } = useFormContext<AutomationRuleWithCategories>()
   useEffect(() => {
     return () => {
       unregister("stringValue")
@@ -87,7 +87,7 @@ const NumericalInputField = () => {
     register,
     unregister,
     formState: { errors },
-  } = useFormContext<AutomationRule>()
+  } = useFormContext<AutomationRuleWithCategories>()
   useEffect(() => {
     return () => {
       unregister("numberValue")
@@ -111,7 +111,7 @@ const NumericalInputField = () => {
 }
 
 const DateInputField = () => {
-  const { control } = useFormContext<AutomationRule>()
+  const { control } = useFormContext<AutomationRuleWithCategories>()
 
   return (
     <Controller
@@ -140,7 +140,7 @@ const DateInputField = () => {
 //     register,
 //     unregister,
 //     formState: { errors },
-//   } = useFormContext<AutomationRule>()
+//   } = useFormContext<AutomationRuleWithCategories>()
 //   useEffect(() => {
 //     return () => {
 //       unregister("dateValue")

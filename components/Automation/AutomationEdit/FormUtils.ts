@@ -1,7 +1,7 @@
 import * as yup from "yup"
-import { AutomationRule, TransactionRuleFields } from "../../../types/types"
+import { AutomationRuleWithCategories, TAutomationRuleField } from "../../../types/types"
 
-export const parseDateToString = (date?: Date) => {
+export const parseDateToString = (date?: Date | null) => {
   if (!date) return undefined
   return `${date.getFullYear().toString().padStart(2, "0")}-${date
     .getMonth()
@@ -16,21 +16,21 @@ export const schema = yup
     operation: yup.string().required("Please select the desired operation."),
     categories: yup.array().min(1, "Please select atleast 1 category."),
     stringValue: yup.string().when("field", {
-      is: (fieldValue: keyof TransactionRuleFields) => getInputType(fieldValue) === "text",
+      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "text",
       then: yup.string().required("Please fill in an appropiate value."),
     }),
     numberValue: yup.number().when("field", {
-      is: (fieldValue: keyof TransactionRuleFields) => getInputType(fieldValue) === "number",
+      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "number",
       then: yup.number().required("Please fill in an appropiate value."),
     }),
     dateValue: yup.string().when("field", {
-      is: (fieldValue: keyof TransactionRuleFields) => getInputType(fieldValue) === "date",
+      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "date",
       then: yup.string().required("Please fill in an appropiate value."),
     }),
   })
   .required()
 
-export function getInputType(field: keyof TransactionRuleFields | string) {
+export function getInputType(field: TAutomationRuleField) {
   switch (field) {
     case "issuedate":
       return "date"
@@ -47,7 +47,7 @@ export function getInputType(field: keyof TransactionRuleFields | string) {
   }
 }
 
-export function getOperationType(field: keyof TransactionRuleFields) {
+export function getOperationType(field: TAutomationRuleField) {
   switch (field) {
     case "issuedate":
       return dateOperationValues
@@ -65,7 +65,7 @@ export function getOperationType(field: keyof TransactionRuleFields) {
 }
 
 export interface OperationValue {
-  value: AutomationRule["operation"]
+  value: AutomationRuleWithCategories["operation"]
   label: string
 }
 export const dateOperationValues: OperationValue[] = [
@@ -104,7 +104,7 @@ export const stringOperationValues: OperationValue[] = [
 ]
 
 export interface FieldValue {
-  value: keyof TransactionRuleFields
+  value: TAutomationRuleField
   label: string
 }
 export const fieldValues: FieldValue[] = [
