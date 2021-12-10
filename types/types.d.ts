@@ -19,3 +19,19 @@ export interface ParsedCSVValues {
   amount?: string
   currency?: string
 }
+
+export type TransactionRuleFields = Partial<
+  Omit<
+    TransactionWithCategories,
+    "id" | "createdAt" | "updatedAt" | "identifier" | "_count" | "categories"
+  >
+>
+
+export interface AutomationRule {
+  field: keyof TransactionRuleFields
+  operation: "includes" | "excludes" | "lessthan" | "equal" | "morethan" | "before" | "after"
+  numberValue?: number
+  stringValue?: string
+  dateValue?: Date
+  categories: Category[]
+}

@@ -1,225 +1,255 @@
 import type { InferGetStaticPropsType } from "next"
-import { useMemo } from "react"
-import { useTable, Column } from "react-table"
 
-import {
-  Table,
-  Tbody,
-  Thead,
-  Tr,
-  Th,
-  Td,
-  // Tfoot,
-  // TableCaption,
-  useMultiStyleConfig,
-  useTheme,
-  Flex,
-} from "@chakra-ui/react"
+import useGetTransactions from "../components/hooks/useGetTransactions"
+import useGetCategories from "../components/hooks/useGetCategories"
+import { AutomationRule, TransactionRuleFields, TransactionWithCategories } from "../types/types"
+import { Prisma, Category, Transaction } from ".prisma/client"
 
 export const getStaticProps = async () => {
   return { props: {} }
 }
 
 const PlaygroundPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const {
+    data: transactions,
+    isError: isErrorTransactions,
+    isLoading: isLoadingTransactions,
+    mutate: mutateTransactions,
+  } = useGetTransactions()
+
+  const {
+    data: categories,
+    isError: isErrorCategories,
+    isLoading: isLoadingCategories,
+    mutate: mutateCategories,
+  } = useGetCategories()
+  if (isLoadingTransactions || isLoadingCategories) return <div>loading</div>
+  if (!transactions || !categories) return <div>no data</div>
+
   return (
-    <>
-      <TableOne />
-      <TableTwo />
-    </>
+    <div>
+      <Transformator transactions={transactions} categories={categories} />
+    </div>
   )
 }
 
 export default PlaygroundPage
 
-const TableOne = () => {
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "john",
-        age: 20,
-      },
-      {
-        id: 2,
-        name: "fred",
-        age: 17,
-      },
-      {
-        id: 3,
-        name: "lisa",
-        age: 35,
-      },
-      {
-        id: 4,
-        name: "agnes",
-        age: 74,
-      },
-    ],
-    []
-  )
-  const columns: Column<{ id: number; name: string; age: number }>[] = useMemo(
-    () => [
-      {
-        Header: "id",
-        accessor: "id",
-        id: "id",
-      },
-      {
-        Header: "name",
-        accessor: "name",
-        id: "name",
-      },
-      {
-        Header: "age",
-        accessor: "age",
-        id: "age",
-      },
-    ],
-    []
-  )
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns: columns,
-    data: data,
-  })
-  const theme = useTheme()
-  console.log(`LOG |  ~ file: playground.tsx ~ line 86 ~ TableOne ~ theme`, theme)
-  const tableStyles = useMultiStyleConfig("Table", { size: "md", variant: "striped" })
-
-  return (
-    <Flex __css={tableStyles.table} {...getTableProps()}>
-      <Flex __css={tableStyles.thead}>
-        {headerGroups.map(headerGroup => {
-          const headerProps = headerGroup.getHeaderGroupProps()
-          return (
-            <Flex __css={tableStyles.tr} d="flex" {...headerProps} key={headerProps.key}>
-              {headerGroup.headers.map(column => {
-                const columnHeaderProps = column.getHeaderProps()
-                return (
-                  <Flex
-                    __css={tableStyles.th}
-                    flex="1"
-                    {...columnHeaderProps}
-                    key={columnHeaderProps.key}
-                  >
-                    {column.render("Header")}
-                  </Flex>
-                )
-              })}
-            </Flex>
-          )
-        })}
-      </Flex>
-      <Flex __css={tableStyles.tbody} {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row)
-          const rowProps = row.getRowProps()
-          return (
-            <Flex __css={tableStyles.tr} d="flex" {...rowProps} key={rowProps.key}>
-              {row.cells.map(cell => {
-                const cellProps = cell.getCellProps()
-                return (
-                  <Flex __css={tableStyles.td} flex="1" {...cellProps} key={cellProps.key}>
-                    {cell.render("Cell")}
-                  </Flex>
-                )
-              })}
-            </Flex>
-          )
-        })}
-      </Flex>
-    </Flex>
-  )
+interface LL {
+  transactions: TransactionWithCategories[]
+  categories: Category[]
 }
-const TableTwo = () => {
-  const data = useMemo(
-    () => [
-      {
-        id: 1,
-        name: "john",
-        age: 20,
-      },
-      {
-        id: 2,
-        name: "fred",
-        age: 17,
-      },
-      {
-        id: 3,
-        name: "lisa",
-        age: 35,
-      },
-      {
-        id: 4,
-        name: "agnes",
-        age: 74,
-      },
-    ],
-    []
-  )
-  const columns: Column<{ id: number; name: string; age: number }>[] = useMemo(
-    () => [
-      {
-        Header: "id",
-        accessor: "id",
-        id: "id",
-      },
-      {
-        Header: "name",
-        accessor: "name",
-        id: "name",
-      },
-      {
-        Header: "age",
-        accessor: "age",
-        id: "age",
-      },
-    ],
-    []
+const Transformator = ({ transactions, categories }: LL) => {
+  const rules: AutomationRule[] = [
+    {
+      field: "issuer",
+      operation: "includes",
+      categories: [categories[0]],
+      stringValue: "rewe",
+    },
+    {
+      field: "issuer",
+      operation: "includes",
+      categories: [categories[1]],
+      stringValue: "paypal",
+    },
+  ]
+
+  const { transformedTransactions: newt, transformedTransactionsDisplay } =
+    assignCategoriesToNewTransactions(transactions as any, rules)
+  const { transformedTransactions, untouchedTransactions } = assignCategoriesToTransactions(
+    transactions,
+    rules
   )
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
-    columns: columns,
-    data: data,
+  return <div>yes</div>
+}
+
+function assignCategoriesToNewTransactions(
+  transactions: Prisma.TransactionUncheckedCreateInput[],
+  rules: AutomationRule[]
+) {
+  const transformedTransactions: Prisma.TransactionCreateInput[] = []
+  const transformedTransactionsDisplay: (Prisma.TransactionUncheckedCreateInput & {
+    categories: Category[]
+  })[] = []
+
+  transactions.forEach(transaction => {
+    const categoriesToApply: Category[] = []
+
+    rules.forEach(rule => {
+      const result = applyRule(rule, transaction)
+      categoriesToApply.push(...result)
+    })
+
+    const displayCategories = [
+      ...Array.from(new Map(categoriesToApply.map(c => [c.id, c])).values()),
+    ]
+    const categories: Prisma.CategoryCreateNestedManyWithoutTransactionsInput["connect"] =
+      displayCategories.map(cat => ({ id: cat.id }))
+    transformedTransactions.push({ ...transaction, categories: { connect: categories } })
+    transformedTransactionsDisplay.push({ ...transaction, categories: displayCategories })
   })
 
-  return (
-    <Table {...getTableProps()} variant="striped" size="md">
-      <Thead>
-        {headerGroups.map(headerGroup => {
-          const headerProps = headerGroup.getHeaderGroupProps()
-          return (
-            <Tr {...headerProps} key={headerProps.key}>
-              {headerGroup.headers.map(column => {
-                const columnHeaderProps = column.getHeaderProps()
-                return (
-                  <Th {...columnHeaderProps} key={columnHeaderProps.key}>
-                    {column.render("Header")}
-                  </Th>
-                )
-              })}
-            </Tr>
-          )
-        })}
-      </Thead>
-      <Tbody {...getTableBodyProps()}>
-        {rows.map(row => {
-          prepareRow(row)
-          const rowProps = row.getRowProps()
-          return (
-            <Tr {...rowProps} key={rowProps.key}>
-              {row.cells.map(cell => {
-                const cellProps = cell.getCellProps()
-                return (
-                  <Td {...cellProps} key={cellProps.key}>
-                    {cell.render("Cell")}
-                  </Td>
-                )
-              })}
-            </Tr>
-          )
-        })}
-      </Tbody>
-    </Table>
-  )
+  return { transformedTransactions, transformedTransactionsDisplay }
+}
+
+function assignCategoriesToTransactions(
+  transactions: TransactionWithCategories[],
+  rules: AutomationRule[]
+) {
+  const transformedTransactions: TransactionWithCategories[] = []
+  const untouchedTransactions: TransactionWithCategories[] = []
+
+  transactions.forEach(transaction => {
+    const categoriesToApply: Category[] = []
+
+    rules.forEach(rule => {
+      const result = applyRule(rule, transaction)
+      categoriesToApply.push(...result)
+    })
+
+    if (categoriesToApply.length > 0) {
+      transaction.categories = [
+        ...Array.from(new Map(categoriesToApply.map(c => [c.id, c])).values()),
+      ]
+      transformedTransactions.push(transaction)
+      return
+    } else {
+      // TODO: does make no sense? transactions already hold the categories wanted
+      // if (transaction.categories) {
+      //   categoriesToApply.push(...transaction.categories)
+      // }
+      // transaction.categories = [
+      //   ...Array.from(new Map(categoriesToApply.map(c => [c.id, c])).values()),
+      // ]
+      untouchedTransactions.push(transaction)
+      return
+    }
+  })
+  return {
+    transformedTransactions,
+    untouchedTransactions,
+  }
+}
+
+function isWithCategories(
+  transaction: TransactionWithCategories | Prisma.TransactionUncheckedCreateInput
+): transaction is TransactionWithCategories {
+  return (transaction as TransactionWithCategories).categories !== undefined
+}
+
+// TODO: Bonus: create AND/OR combined rulesets? hierachy: category -> rule1, rule2...
+function applyRule(
+  rule: AutomationRule,
+  transaction: TransactionWithCategories | Prisma.TransactionUncheckedCreateInput
+) {
+  const fieldValue = transaction[rule.field]
+  switch (rule.operation) {
+    case "includes": {
+      if (
+        fieldValue &&
+        typeof fieldValue === "string" &&
+        rule.stringValue &&
+        fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      } else {
+        return []
+      }
+    }
+    case "excludes": {
+      if (
+        fieldValue &&
+        typeof fieldValue === "string" &&
+        rule.stringValue &&
+        !fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      } else {
+        return []
+      }
+    }
+    case "equal": {
+      if (
+        fieldValue &&
+        typeof fieldValue === "number" &&
+        rule.numberValue &&
+        fieldValue === rule.numberValue
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      } else {
+        return []
+      }
+    }
+    case "lessthan": {
+      if (
+        fieldValue &&
+        typeof fieldValue === "number" &&
+        rule.numberValue &&
+        fieldValue < rule.numberValue
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      } else {
+        return []
+      }
+    }
+    case "morethan": {
+      if (
+        fieldValue &&
+        typeof fieldValue === "number" &&
+        rule.numberValue &&
+        fieldValue > rule.numberValue
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      }
+    }
+    case "before": {
+      if (
+        fieldValue &&
+        fieldValue instanceof Date &&
+        fieldValue.getTime() &&
+        rule.dateValue &&
+        fieldValue.getTime() < rule.dateValue.getTime()
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      } else {
+        return []
+      }
+    }
+    case "after": {
+      if (
+        fieldValue &&
+        fieldValue instanceof Date &&
+        fieldValue.getTime() &&
+        rule.dateValue &&
+        fieldValue.getTime() > rule.dateValue.getTime()
+      ) {
+        if (isWithCategories(transaction)) {
+          return rule.categories.filter(element => transaction.categories.includes(element))
+        }
+        return rule.categories
+      }
+    }
+    default:
+      return []
+  }
 }

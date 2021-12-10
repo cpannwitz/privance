@@ -7,15 +7,23 @@
 - [x] Add mechanic to upload csv files
 - [x] Add local database and base models
 - [x] Add simple data view
-- [ ] Add mechanic to manage and assign categories
+- [x] Add mechanic to manage and assign categories
   - [x] Split app into pages (home -> simple data view, category management, upload)
-  - [ ] Add category CRUD logic
-  - [ ] Add category management handles
+  - [x] Add category CRUD logic
+  - [x] Add category management handles
+- [ ] Add Automation Rules
+  - [ ] CRUD for Automation Rules
+  - [ ] Add manual run with Automation Rules
+  - [ ] Prepare Automation Rules for Preview Page on Transaction-Adding-Process
 - [ ] Refactor upload process
   - [x] Test out different parameters of csv-parser
   - [ ] Add Preview Page
   - [ ] Add automatic category assignment to hardcoded strings
   - [ ] Add management tooling for dynamic category assignment
+- [ ] Stability!
+  - [ ] Runtypes in API
+  - [ ] Optimize data usage (useSWR, API)
+  - [ ] Deployment? Maybe not needed.
 - [ ] Diagrams!
 - [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
   - [ ] https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/

@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
-import { CategoryEditFormValues } from "./CategoryForm"
+import { CategoryEditFormValues } from "./CategoryEdit"
 
 interface NameEditProps {}
 

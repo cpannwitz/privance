@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, BoxProps, Icon, IconButton, SimpleGrid } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
-import { CategoryEditFormValues } from "./CategoryForm"
+import { CategoryEditFormValues } from "./CategoryEdit"
 
 import { icons } from "../../../shared/iconUtils"
 

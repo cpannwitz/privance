@@ -12,10 +12,17 @@ import {
 import { Category, Prisma } from ".prisma/client"
 import { SubmitHandler } from "react-hook-form"
 
-import CategoryEditForm, { CategoryEditFormValues } from "./CategoryForm"
 import ColorPicker from "./ColorPicker"
 import IconPicker from "./IconPicker"
 import NameEdit from "./NameEdit"
+
+import FormWrapper from "../../FormWrapper/FormWrapper"
+
+export interface CategoryEditFormValues {
+  name: string
+  color: string
+  icon: string
+}
 
 interface CategoryAddEditProps {
   onSave: (category: Prisma.CategoryUncheckedCreateInput) => void
@@ -36,9 +43,9 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
   }
 
   const defaultValues = {
-    name: formValue?.name ?? undefined,
-    color: formValue?.color ?? undefined,
-    icon: formValue?.icon ?? undefined,
+    name: formValue?.name ?? "",
+    color: formValue?.color ?? "",
+    icon: formValue?.icon ?? "",
   }
 
   return (
@@ -52,7 +59,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     >
       <ModalOverlay />
       <ModalContent>
-        <CategoryEditForm onSubmit={onFormSubmit} defaultValues={defaultValues}>
+        <FormWrapper<CategoryEditFormValues> onSubmit={onFormSubmit} defaultValues={defaultValues}>
           <ModalHeader>Customize category</ModalHeader>
           <ModalCloseButton onClick={onCancel} />
           <ModalBody>
@@ -70,7 +77,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
               Save
             </Button>
           </ModalFooter>
-        </CategoryEditForm>
+        </FormWrapper>
       </ModalContent>
     </Modal>
   )

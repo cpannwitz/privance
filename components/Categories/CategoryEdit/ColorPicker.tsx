@@ -1,6 +1,6 @@
 import { FormControl, FormLabel } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
-import { CategoryEditFormValues } from "./CategoryForm"
+import { CategoryEditFormValues } from "./CategoryEdit"
 import { CirclePicker } from "react-color"
 
 interface ColorPickerProps {}

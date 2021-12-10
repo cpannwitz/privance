@@ -6,8 +6,8 @@ export const getStaticProps = async () => {
   return { props: {} }
 }
 
-const OverviewPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CategoriesPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return <Categories />
 }
 
-export default OverviewPage
+export default CategoriesPage
