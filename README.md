@@ -11,8 +11,8 @@
   - [x] Split app into pages (home -> simple data view, category management, upload)
   - [x] Add category CRUD logic
   - [x] Add category management handles
-- [ ] Add Automation Rules
-  - [ ] CRUD for Automation Rules
+- [x] Add Automation Rules
+  - [x] CRUD for Automation Rules
   - [ ] Add manual run with Automation Rules
   - [ ] Prepare Automation Rules for Preview Page on Transaction-Adding-Process
 - [ ] Refactor upload process
