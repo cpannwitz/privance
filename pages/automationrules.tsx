@@ -6,8 +6,8 @@ export const getStaticProps = async () => {
   return { props: {} }
 }
 
-const AutomationPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
+const AutomationRulesPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   return <AutomationRules />
 }
 
-export default AutomationPage
+export default AutomationRulesPage
