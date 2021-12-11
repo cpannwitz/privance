@@ -11,9 +11,9 @@ import {
   FormErrorMessage,
   FormLabel,
 } from "@chakra-ui/react"
-import { parseDateToString, parseStringToDate } from "./FormUtils"
+import { getFieldType, parseDateToString, parseStringToDate } from "./FormUtils"
 
-import { AutomationRuleWithCategories, TAutomationRuleField } from "../../../types/types"
+import { AutomationRuleWithCategories } from "../../../types/types"
 
 interface ValuePickerProps {}
 
@@ -23,32 +23,15 @@ const ValuePicker = ({}: ValuePickerProps) => {
     name: "field",
     control,
   })
-  const inputType = getInputType(fieldValue)
+  const inputType = getFieldType(fieldValue)
 
   if (inputType === "number") return <NumericalInputField />
   if (inputType === "date") return <DateInputField />
-  if (inputType === "text") return <TextInputField />
+  if (inputType === "string") return <TextInputField />
   return <DisabledInputField />
 }
 
 export default ValuePicker
-
-function getInputType(field: TAutomationRuleField) {
-  switch (field) {
-    case "issuedate":
-      return "date"
-    case "amount":
-    case "balance":
-      return "number"
-    case "currency":
-    case "issuer":
-    case "purpose":
-    case "type":
-      return "text"
-    default:
-      return "disabled"
-  }
-}
 
 const DisabledInputField = () => (
   <FormControl isInvalid={true}>
@@ -135,29 +118,3 @@ const DateInputField = () => {
     />
   )
 }
-// const DateInputField = () => {
-//   const {
-//     register,
-//     unregister,
-//     formState: { errors },
-//   } = useFormContext<AutomationRuleWithCategories>()
-//   useEffect(() => {
-//     return () => {
-//       unregister("dateValue")
-//     }
-//   }, [unregister])
-//   return (
-//     <FormControl isInvalid={!!errors.dateValue}>
-//       <FormLabel fontSize="sm" color="gray.500">
-//         Insert value
-//       </FormLabel>
-//       <Input
-//         {...register("dateValue", {
-//           pattern: new RegExp("d{4}-d{2}-d{2}"),
-//         })}
-//         type="date"
-//       />
-//       <FormErrorMessage>{errors.dateValue?.message}</FormErrorMessage>
-//     </FormControl>
-//   )
-// }

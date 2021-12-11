@@ -16,21 +16,39 @@ export const schema = yup
     operation: yup.string().required("Please select the desired operation."),
     categories: yup.array().min(1, "Please select atleast 1 category."),
     stringValue: yup.string().when("field", {
-      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "text",
+      is: (fieldValue: TAutomationRuleField) => getFieldType(fieldValue) === "string",
       then: yup.string().required("Please fill in an appropiate value."),
     }),
     numberValue: yup.number().when("field", {
-      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "number",
+      is: (fieldValue: TAutomationRuleField) => getFieldType(fieldValue) === "number",
       then: yup.number().required("Please fill in an appropiate value."),
     }),
-    dateValue: yup.string().when("field", {
-      is: (fieldValue: TAutomationRuleField) => getInputType(fieldValue) === "date",
-      then: yup.string().required("Please fill in an appropiate value."),
+    dateValue: yup.date().when("field", {
+      is: (fieldValue: TAutomationRuleField) => getFieldType(fieldValue) === "date",
+      then: yup.date().required("Please fill in an appropiate value."),
     }),
   })
   .required()
 
-export function getInputType(field: TAutomationRuleField) {
+export function getValueType(field: TAutomationRuleField) {
+  switch (field) {
+    case "issuedate":
+      return "dateValue"
+    case "amount":
+    case "balance":
+      return "numberValue"
+    default:
+      return "stringValue"
+    // case "currency":
+    // case "issuer":
+    // case "purpose":
+    // case "type":
+    // default:
+    //   return undefined
+  }
+}
+
+export function getFieldType(field: TAutomationRuleField) {
   switch (field) {
     case "issuedate":
       return "date"
@@ -41,9 +59,9 @@ export function getInputType(field: TAutomationRuleField) {
     case "issuer":
     case "purpose":
     case "type":
-      return "text"
+      return "string"
     default:
-      return "disabled"
+      return undefined
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import useGetAutomationRules from "../hooks/useGetAutomationRules"
-import AutomationList from "./AutomationList"
-import { DataIsLoading, DataIsEmpty, DataIsError } from "./AutomationListStates"
+import AutomationRulesList from "./AutomationRulesList"
+import { DataIsLoading, DataIsError } from "./AutomationRulesListStates"
 
 interface AutomationProps {}
 
@@ -15,10 +15,10 @@ const Automation = ({}: AutomationProps) => {
   const retryAutomationRules = useCallback(() => mutateCategories(), [mutateCategories])
 
   if (isLoadingAutomationRules) return <DataIsLoading />
-  if (isErrorAutomationRules) return <DataIsError retry={retryAutomationRules} />
-  if (!automationRules || automationRules.length === 0) return <DataIsEmpty />
+  if (!automationRules || isErrorAutomationRules)
+    return <DataIsError retry={retryAutomationRules} />
 
-  return <AutomationList data={automationRules} />
+  return <AutomationRulesList data={automationRules} />
 }
 
 export default Automation
