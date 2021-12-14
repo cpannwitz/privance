@@ -3,8 +3,8 @@ import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
 
 import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
 
-import parseCSVToJSON from "./parseCSVToJSON"
-import transformTransactions from "./transformTransactions"
+import parseCSVToTransactions from "./parseCSVToJSON"
+import normalizeCSVTransactions from "./transformTransactions"
 
 import Dropzone from "./Dropzone"
 import { Prisma } from ".prisma/client"
@@ -35,9 +35,9 @@ const UploadCSV = ({ onUpload = () => {} }: UploadCSVProps) => {
       return
     }
 
-    const parsedJSON = await parseCSVToJSON(file)
+    const parsedCSVTransactions = await parseCSVToTransactions(file)
 
-    if (!parsedJSON.data) {
+    if (!parsedCSVTransactions.data) {
       toast({
         title: "No data found OR not able to process ",
         status: "error",
@@ -45,20 +45,19 @@ const UploadCSV = ({ onUpload = () => {} }: UploadCSVProps) => {
       return
     }
 
-    // TODO: move transformation to preview component, once initialized -> display raw values for preview
-    const transformedJSON = await transformTransactions(parsedJSON.data)
-
-    if (parsedJSON.error) {
+    if (parsedCSVTransactions.error) {
       toast({
-        title: parsedJSON.error.message,
+        title: parsedCSVTransactions.error.message,
         status: "error",
       })
-      console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedJSON.error)
+      console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedCSVTransactions.error)
       return
     }
 
-    if (transformedJSON) {
-      onUpload(transformedJSON)
+    const normalizedCSVTransactions = await normalizeCSVTransactions(parsedCSVTransactions.data)
+
+    if (normalizedCSVTransactions) {
+      onUpload(normalizedCSVTransactions)
       // axios
       //   .post("/api/transactions/addTransactions", transformedJSON)
       //   // TODO: handle response data, either reflow, global state or discard

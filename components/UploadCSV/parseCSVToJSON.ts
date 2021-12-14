@@ -3,7 +3,7 @@ import { ParsedCSVTransactions } from "../../types/types"
 
 // https://csv.js.org/parse
 
-export default async function parseCSVToJSON(
+export default async function parseCSVToTransactions(
   file: File
 ): Promise<{ data?: ParsedCSVTransactions[]; error?: Error }> {
   try {

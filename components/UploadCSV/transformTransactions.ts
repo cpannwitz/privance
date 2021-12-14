@@ -18,7 +18,7 @@ function transformNumber(value?: string) {
   return number
 }
 
-const transformTransactions = async (transactions: ParsedCSVTransactions[]) => {
+const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
   const values: Prisma.TransactionCreateInput[] = transactions
 
     .map(({ issuedate, issuer, type, purpose, balance, amount, currency }) => ({
@@ -44,4 +44,4 @@ const transformTransactions = async (transactions: ParsedCSVTransactions[]) => {
   return values
 }
 
-export default transformTransactions
+export default normalizeCSVTransactions
