@@ -13,7 +13,7 @@ export type AutomationRuleWithCategories = AutomationRule & {
   categories: Category[]
 }
 
-export interface ParsedCSVValues {
+export interface ParsedCSVTransactions {
   issuedate?: string
   __?: string
   issuer?: string
@@ -34,7 +34,7 @@ const AutomationRuleOperation = [
   "before",
   "after",
 ]
-type TAutomationRuleOperation = typeof AutomationRuleField[number]
+export type TAutomationRuleOperation = typeof AutomationRuleField[number]
 const AutomationRuleField = [
   "issuedate",
   "issuer",
@@ -45,6 +45,15 @@ const AutomationRuleField = [
   "currency",
 ]
 type TAutomationRuleField = typeof AutomationRuleField[number]
+
+export type ZAutomationRuleField =
+  | "issuedate"
+  | "issuer"
+  | "type"
+  | "purpose"
+  | "balance"
+  | "amount"
+  | "currency"
 
 export function isAutomationRuleOperation(field: unknown): field is TAutomationRuleOperation {
   return typeof field === "string" && AutomationRuleOperation.includes(field)

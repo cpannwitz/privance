@@ -1,11 +1,11 @@
 import { parse } from "csv-parse"
-import { ParsedCSVValues } from "../../types/types"
+import { ParsedCSVTransactions } from "../../types/types"
 
 // https://csv.js.org/parse
 
 export default async function parseCSVToJSON(
   file: File
-): Promise<{ data?: ParsedCSVValues[]; error?: Error }> {
+): Promise<{ data?: ParsedCSVTransactions[]; error?: Error }> {
   try {
     const buffer = await file.text()
 

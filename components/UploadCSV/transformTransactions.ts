@@ -1,5 +1,5 @@
 import type { Prisma } from ".prisma/client"
-import { ParsedCSVValues } from "../../types/types"
+import { ParsedCSVTransactions } from "../../types/types"
 
 // expects "19.03.2020"
 // returns "2020-03-19T00:00:00+00:00"
@@ -18,7 +18,7 @@ function transformNumber(value?: string) {
   return number
 }
 
-const transformTransactions = async (transactions: ParsedCSVValues[]) => {
+const transformTransactions = async (transactions: ParsedCSVTransactions[]) => {
   const values: Prisma.TransactionCreateInput[] = transactions
 
     .map(({ issuedate, issuer, type, purpose, balance, amount, currency }) => ({

@@ -7,10 +7,13 @@ import parseCSVToJSON from "./parseCSVToJSON"
 import transformTransactions from "./transformTransactions"
 
 import Dropzone from "./Dropzone"
+import { Prisma } from ".prisma/client"
 
-interface UploadCSVProps {}
+interface UploadCSVProps {
+  onUpload?: (transaction: Prisma.TransactionCreateInput[]) => void
+}
 
-const UploadCSV = ({}: UploadCSVProps) => {
+const UploadCSV = ({ onUpload = () => {} }: UploadCSVProps) => {
   const toast = useToast()
 
   async function onDrop(files: File[]) {
@@ -54,17 +57,18 @@ const UploadCSV = ({}: UploadCSVProps) => {
       return
     }
 
-    if (parsedJSON.data) {
-      axios
-        .post("/api/transactions/addTransactions", transformedJSON)
-        // TODO: handle response data, either reflow, global state or discard
-        .then(() => {
-          // res.data
-          toast({
-            title: `Added or updated your transactions!`,
-            status: "success",
-          })
-        })
+    if (transformedJSON) {
+      onUpload(transformedJSON)
+      // axios
+      //   .post("/api/transactions/addTransactions", transformedJSON)
+      //   // TODO: handle response data, either reflow, global state or discard
+      //   .then(() => {
+      //     // res.data
+      //     toast({
+      //       title: `Added or updated your transactions!`,
+      //       status: "success",
+      //     })
+      //   })
     }
   }
   return (

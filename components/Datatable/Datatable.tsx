@@ -5,7 +5,7 @@ import { Box, useMultiStyleConfig } from "@chakra-ui/react"
 import { TransactionWithCategories } from "../../types/types"
 import { getColumns } from "./DatatableColumns"
 import Searchbar from "../Searchbar/Searchbar"
-import { Category } from ".prisma/client"
+import { Category, Prisma } from ".prisma/client"
 import { useCallback, useMemo } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import Autosizer from "react-virtualized-auto-sizer"
@@ -22,6 +22,7 @@ const Datatable = ({ transactions, categories, transformedTransactions = [] }: D
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
 
   // TODO: move categories in getColumns? or smth else...
+  // TODO: if transaction is without ID (Prisma.TransactionCreateInput) -> need solution with categoryrenderer
   const columns = useMemo(() => getColumns({ categories }), [categories])
 
   const {
@@ -45,7 +46,11 @@ const Datatable = ({ transactions, categories, transformedTransactions = [] }: D
       const row = rows[index]
       if (!row) return null
       prepareRow(row)
-      const background = transformedTransactions.includes(row.original.id) ? "#edf7ed" : undefined
+      const background =
+        isTransactionWithCategories(row.original) &&
+        transformedTransactions.includes(row.original.id)
+          ? "#edf7ed"
+          : undefined
       const rowProps = row.getRowProps({ style: { ...style, background } })
       return (
         <Box
@@ -131,3 +136,9 @@ const Datatable = ({ transactions, categories, transformedTransactions = [] }: D
 }
 
 export default Datatable
+
+export function isTransactionWithCategories(
+  transaction: TransactionWithCategories | Prisma.TransactionCreateInput
+): transaction is TransactionWithCategories {
+  return "id" in transaction
+}
