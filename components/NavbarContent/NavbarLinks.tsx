@@ -5,7 +5,7 @@ import HomeIcon from "remixicon-react/Home4LineIcon"
 import UploadIcon from "remixicon-react/Upload2LineIcon"
 import TagIcon from "remixicon-react/PriceTag3LineIcon"
 import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
-import AutomationIcon from "remixicon-react/Settings2LineIcon"
+import AutomationRuleIcon from "remixicon-react/Settings2LineIcon"
 
 import { VStack, Button, Icon } from "@chakra-ui/react"
 
@@ -14,7 +14,7 @@ const NavbarLinks = () => {
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   const linkToCategories = useCallback(() => router.push(`/categories`), [router])
-  const linkToAutomation = useCallback(() => router.push(`/automation`), [router])
+  const linkToAutomationRules = useCallback(() => router.push(`/automationrules`), [router])
   const linkToPlayground = useCallback(() => router.push(`/playground`), [router])
   return (
     <VStack spacing={4} align="stretch" w="100%" py={3}>
@@ -56,10 +56,10 @@ const NavbarLinks = () => {
         variant="ghost"
         colorScheme="gray"
         justifyContent="start"
-        leftIcon={<Icon as={AutomationIcon} boxSize={6} />}
-        onClick={linkToAutomation}
+        leftIcon={<Icon as={AutomationRuleIcon} boxSize={6} />}
+        onClick={linkToAutomationRules}
       >
-        Automation
+        Automation Rules
       </Button>
 
       <Button
@@ -70,7 +70,7 @@ const NavbarLinks = () => {
         leftIcon={<Icon as={PlaygroundIcon} boxSize={6} />}
         onClick={linkToPlayground}
       >
-        Playground
+        [DEV] Playground
       </Button>
     </VStack>
   )

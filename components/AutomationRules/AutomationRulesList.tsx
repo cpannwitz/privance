@@ -17,10 +17,12 @@ import {
   Tag,
   TagLeftIcon,
   TagLabel,
+  Spacer,
 } from "@chakra-ui/react"
 
 import { Prisma } from ".prisma/client"
 
+import PlayIcon from "remixicon-react/PlayLineIcon"
 import EditIcon from "remixicon-react/PencilLineIcon"
 import AddIcon from "remixicon-react/AddLineIcon"
 import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
@@ -30,6 +32,8 @@ import { AutomationRuleWithCategories } from "../../types/types"
 import { DataIsEmpty } from "./AutomationRulesListStates"
 import { getValueType } from "./AutomationRulesEdit/FormUtils"
 import { icons } from "../../shared/iconUtils"
+
+import { useRouter } from "next/router"
 
 interface AutomationListProps {
   data: AutomationRuleWithCategories[]
@@ -137,6 +141,16 @@ const AutomationList = ({ data }: AutomationListProps) => {
     }
   }
 
+  const router = useRouter()
+  function onRunAutomationRule(automationRule: AutomationRuleWithCategories) {
+    router.push({
+      pathname: `/automationruleapply`,
+      query: {
+        rules: [automationRule.id],
+      },
+    })
+  }
+
   return (
     <>
       {editedAutomationRule && (
@@ -164,6 +178,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
           {data.map(automationRule => (
             <AutomationRuleListItem
               key={automationRule.id}
+              onRun={onRunAutomationRule}
               onEdit={onEditAutomationRule}
               onDelete={onDeleteAutomationRule}
               automationRule={automationRule}
@@ -178,6 +193,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
 export default AutomationList
 
 interface AutomationRuleListItemProps {
+  onRun: (automationRule: AutomationRuleWithCategories) => void
   onEdit: (automationRule: AutomationRuleWithCategories) => void
   onDelete: (automationRule: AutomationRuleWithCategories) => void
   automationRule: AutomationRuleWithCategories
@@ -185,6 +201,7 @@ interface AutomationRuleListItemProps {
 
 // TODO: i18n, plus better labels, better text structure (for string, number, date...)
 const AutomationRuleListItem = ({
+  onRun,
   onEdit,
   onDelete,
   automationRule,
@@ -194,6 +211,9 @@ const AutomationRuleListItem = ({
   }
   function onDeleteAutomationRule() {
     onDelete(automationRule)
+  }
+  function onRunAutomationRule() {
+    onRun(automationRule)
   }
   return (
     <HStack w="100%" p={3} shadow="md" borderWidth="1px" align="center" borderRadius="lg">
@@ -217,20 +237,27 @@ const AutomationRuleListItem = ({
           <StatHelpText>will be assigned.</StatHelpText>
         </Stat>
       </StatGroup>
-
+      <Spacer />
       <IconButton
         variant="ghost"
         isRound
-        aria-label="edit category"
+        aria-label="delete automation rule"
         icon={<Icon as={DeleteIcon} color="gray.300" boxSize={5} />}
         onClick={onDeleteAutomationRule}
       />
       <IconButton
         variant="ghost"
         isRound
-        aria-label="edit category"
+        aria-label="edit automation rule"
         icon={<Icon as={EditIcon} color="gray.300" boxSize={5} />}
         onClick={onEditAutomationRule}
+      />
+      <IconButton
+        variant="ghost"
+        isRound
+        aria-label="run automation rule"
+        icon={<Icon as={PlayIcon} color="gray.300" boxSize={5} />}
+        onClick={onRunAutomationRule}
       />
     </HStack>
   )

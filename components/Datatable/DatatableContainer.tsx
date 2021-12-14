@@ -1,4 +1,5 @@
 import { useCallback } from "react"
+import { Box } from "@chakra-ui/react"
 
 import useGetTransactions from "../hooks/useGetTransactions"
 
@@ -28,7 +29,11 @@ const DatatableContainer = ({}: DatatableContainerProps) => {
   if (isErrorTransactions) return <DataIsError retry={retryTransactions} />
   if (isErrorCategories) return <DataIsError retry={retryCategories} />
   if (!transactions || transactions.length === 0) return <DataIsEmpty />
-  return <Datatable transactions={transactions} categories={categories || []} />
+  return (
+    <Box h="100%">
+      <Datatable transactions={transactions} categories={categories || []} />
+    </Box>
+  )
 }
 
 export default DatatableContainer

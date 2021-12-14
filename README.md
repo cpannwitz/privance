@@ -13,8 +13,7 @@
   - [x] Add category management handles
 - [x] Add Automation Rules
   - [x] CRUD for Automation Rules
-  - [ ] Add manual run with Automation Rules
-  - [ ] Prepare Automation Rules for Preview Page on Transaction-Adding-Process
+  - [x] Add manual run with Automation Rules
 - [ ] Refactor upload process
   - [x] Test out different parameters of csv-parser
   - [ ] Add Preview Page
@@ -24,15 +23,21 @@
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
   - [ ] Deployment? Maybe not needed.
+- [ ] i18n
+  - [ ] add i18n provider
+  - [ ] add i18n management handle
+  - [ ] add strings etc.
 - [ ] Diagrams!
 - [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
   - [ ] https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/
   - [ ] https://github.com/vercel/next.js/tree/canary/examples/with-electron-typescript
   - [ ] https://github.com/prisma/prisma/issues/9613
   - [ ] https://github.com/prisma/prisma/issues/4703
+## Premium Todo's
 - [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
 - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
 - [ ] Add Login functionality
+- [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
 
 
 ---

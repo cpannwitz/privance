@@ -3,10 +3,11 @@ import { AutomationRuleWithCategories, TAutomationRuleField } from "../../../typ
 
 export const parseDateToString = (date?: Date | null) => {
   if (!date) return undefined
-  return `${date.getFullYear().toString().padStart(2, "0")}-${date
+  const realdate = new Date(date)
+  return `${realdate.getFullYear().toString().padStart(2, "0")}-${realdate
     .getMonth()
     .toString()
-    .padStart(2, "0")}-${date.getDay().toString().padStart(2, "0")}`
+    .padStart(2, "0")}-${realdate.getDay().toString().padStart(2, "0")}`
 }
 export const parseStringToDate = (dateString: string) => new Date(dateString)
 

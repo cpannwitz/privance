@@ -10,7 +10,7 @@ export default function Layout({ children }: BaseLayoutProps) {
     <Box w="100%" pos="relative">
       <NavbarContent />
 
-      <Box p={5} ml="18rem">
+      <Box p={5} ml="18rem" h="100vh">
         {children}
       </Box>
     </Box>
