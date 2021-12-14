@@ -1,13 +1,13 @@
 import type { InferGetStaticPropsType } from "next"
 
-import UploadCSV from "../components/UploadCSV/UploadCSV"
+import Upload from "../components/Upload/Upload"
 
 export const getStaticProps = async () => {
   return { props: {} }
 }
 
 const UploadPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <UploadCSV />
+  return <Upload />
 }
 
 export default UploadPage
