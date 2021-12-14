@@ -12,14 +12,16 @@ import Autosizer from "react-virtualized-auto-sizer"
 
 // https://react-table.tanstack.com/docs/installation
 
-interface DatatableDivProps {
+interface DatatableProps {
   transactions: TransactionWithCategories[]
   categories: Category[]
+  transformedTransactions?: number[]
 }
 
-const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
+const Datatable = ({ transactions, categories, transformedTransactions = [] }: DatatableProps) => {
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
 
+  // TODO: move categories in getColumns? or smth else...
   const columns = useMemo(() => getColumns({ categories }), [categories])
 
   const {
@@ -43,7 +45,8 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
       const row = rows[index]
       if (!row) return null
       prepareRow(row)
-      const rowProps = row.getRowProps({ style })
+      const background = transformedTransactions.includes(row.original.id) ? "#edf7ed" : undefined
+      const rowProps = row.getRowProps({ style: { ...style, background } })
       return (
         <Box
           {...rowProps}
@@ -69,15 +72,15 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
         </Box>
       )
     },
-    [prepareRow, rows, tableStyles]
+    [prepareRow, rows, tableStyles, transformedTransactions]
   )
 
   return (
     <>
-      <Box w="100%" mb={4}>
+      <Box w="100%" h="4rem">
         <Searchbar filterValue={state.globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
-      <Box __css={tableStyles.table} {...getTableProps()} h="88vh">
+      <Box __css={tableStyles.table} {...getTableProps()} h="calc(100% - 5rem)">
         <Box __css={tableStyles.thead}>
           {headerGroups.map(headerGroup => {
             const headerProps = headerGroup.getHeaderGroupProps()
@@ -127,4 +130,4 @@ const DatatableDiv = ({ transactions, categories }: DatatableDivProps) => {
   )
 }
 
-export default DatatableDiv
+export default Datatable

@@ -1,7 +1,7 @@
 import type { InferGetStaticPropsType } from "next"
 import { useRouter } from "next/router"
 
-// import AutomationRules from "../components/AutomationRules/AutomationRules"
+import AutomationRuleApply from "../components/AutomationRuleApply/AutomationRuleApply"
 
 export const getStaticProps = async () => {
   return { props: {} }
@@ -9,9 +9,16 @@ export const getStaticProps = async () => {
 
 const AutomationRuleApplyPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
-  const query = router.query
+  const { rules } = router.query
 
-  return <div>Hello apply</div>
+  const automationRuleIds: number[] = []
+  if (rules && typeof rules === "string") {
+    automationRuleIds.push(Number(rules))
+  } else if (rules && Array.isArray(rules)) {
+    automationRuleIds.push(...rules.map(rule => Number(rule)))
+  }
+
+  return <AutomationRuleApply rules={automationRuleIds} />
 }
 
 export default AutomationRuleApplyPage

@@ -146,7 +146,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
     router.push({
       pathname: `/automationruleapply`,
       query: {
-        rule: automationRule.id,
+        rules: [automationRule.id],
       },
     })
   }

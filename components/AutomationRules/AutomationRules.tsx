@@ -10,9 +10,9 @@ const Automation = ({}: AutomationProps) => {
     data: automationRules,
     isError: isErrorAutomationRules,
     isLoading: isLoadingAutomationRules,
-    mutate: mutateCategories,
+    mutate: mutateAutomationRules,
   } = useGetAutomationRules()
-  const retryAutomationRules = useCallback(() => mutateCategories(), [mutateCategories])
+  const retryAutomationRules = useCallback(() => mutateAutomationRules(), [mutateAutomationRules])
 
   if (isLoadingAutomationRules) return <DataIsLoading />
   if (!automationRules || isErrorAutomationRules)
