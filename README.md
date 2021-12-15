@@ -14,11 +14,11 @@
 - [x] Add Automation Rules
   - [x] CRUD for Automation Rules
   - [x] Add manual run with Automation Rules
-- [ ] Refactor upload process
+- [x] Refactor upload process
   - [x] Test out different parameters of csv-parser
-  - [ ] Add Preview Page
-  - [ ] Add automatic category assignment to hardcoded strings
-  - [ ] Add management tooling for dynamic category assignment
+  - [x] Add Preview Page
+  - [x] Add automatic category assignment to hardcoded strings
+  - [x] Add management tooling for dynamic category assignment
 - [ ] Stability!
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
