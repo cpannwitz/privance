@@ -1,9 +1,10 @@
 import { useTable, useGlobalFilter } from "react-table"
-
-import { Box, useMultiStyleConfig } from "@chakra-ui/react"
+import axios, { AxiosError } from "axios"
+import { Box, useMultiStyleConfig, useToast } from "@chakra-ui/react"
+import { useSWRConfig } from "swr"
 
 import { TransactionWithCategories } from "../../types/types"
-import { getColumns } from "./TransactionTableColumns"
+import getDefaultColumns from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Category, Prisma } from ".prisma/client"
 import { useCallback, useMemo } from "react"
@@ -18,21 +19,70 @@ interface TransactionTableProps {
   categories: Category[]
   transformedTransactions?: number[]
   variant?: TableVariant
+  updateTransaction?: (transaction: TransactionWithCategories) => void
 }
-
+const DEFAULTTRANSFORMATIONS: number[] = []
 const TransactionTable = ({
   transactions,
   categories,
-  transformedTransactions = [],
+  transformedTransactions = DEFAULTTRANSFORMATIONS,
   variant = "default",
+  updateTransaction,
 }: TransactionTableProps) => {
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
+  const toast = useToast()
+  const { mutate } = useSWRConfig()
+
+  const onSelectCategories = useCallback(
+    (transaction: TransactionWithCategories) => {
+      if (variant === "preview" && updateTransaction) {
+        updateTransaction(transaction)
+      } else {
+        axios
+          .post<{ data: TransactionWithCategories }>(
+            "/api/transactions/updateTransactionCategories",
+            {
+              id: transaction.id,
+              categories: transaction.categories.map(cat => cat.id),
+            }
+          )
+          .then(res => {
+            toast({
+              title: `Updated your Transaction!`,
+              status: "success",
+            })
+
+            // ! causes performance issues
+            const updatedTransaction = res.data.data
+            mutate(
+              `/api/transactions/getTransactions`,
+              async (transactions: { data: TransactionWithCategories[] }) => {
+                const index = transactions.data.findIndex(val => val.id === updatedTransaction.id)
+                const updatedData = [...transactions.data]
+                updatedData[index] = updatedTransaction
+                // return transactions
+                return { data: updatedData }
+              },
+              false
+            )
+          })
+          .catch((error: AxiosError) => {
+            if (error.response) {
+              toast({
+                title: `Couldn't update your transaction: ${error.response.data.error}`,
+                status: "error",
+              })
+            }
+          })
+      }
+    },
+    [updateTransaction, variant, mutate, toast]
+  )
 
   // TODO: move categories in getColumns? or smth else...
-  // TODO: if transaction is without ID (Prisma.TransactionCreateInput) -> need solution with categoryrenderer
   const columns = useMemo(() => {
-    return getColumns({ categories })
-  }, [categories])
+    return getDefaultColumns({ categories, onSelectCategories })
+  }, [categories, onSelectCategories])
 
   const {
     getTableProps,

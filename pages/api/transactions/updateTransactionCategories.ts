@@ -16,8 +16,7 @@ export default async function updateTransactionCategories(
 ) {
   if (req.method === "POST") {
     const bodydata = req.body as Prisma.TransactionWhereUniqueInput & {
-      categoriesConnect?: number[]
-      categoriesDisconnect?: number[]
+      categories?: number[]
     }
 
     if (bodydata.id) {
@@ -28,12 +27,7 @@ export default async function updateTransactionCategories(
           },
           data: {
             categories: {
-              connect: bodydata.categoriesConnect
-                ? bodydata.categoriesConnect.map(cat => ({ id: cat }))
-                : undefined,
-              disconnect: bodydata.categoriesDisconnect
-                ? bodydata.categoriesDisconnect.map(cat => ({ id: cat }))
-                : undefined,
+              set: bodydata.categories?.map(cat => ({ id: cat })) ?? [],
             },
           },
           include: {

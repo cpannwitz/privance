@@ -23,6 +23,20 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
   const [uploadedTransactions, setUploadedTransactions] = useState<
     TransactionCreateInputWithCategories[] | undefined
   >(undefined)
+
+  function onUpdateTransaction(transaction: TransactionCreateInputWithCategories) {
+    if (uploadedTransactions) {
+      const index = uploadedTransactions.findIndex(t => t.identifier === transaction.identifier)
+      setUploadedTransactions(state => {
+        if (state) {
+          const newState = [...state]
+          newState.splice(index, 1, transaction)
+          return newState
+        }
+      })
+    }
+  }
+
   function onUploadRawTransactions(transactions: TransactionCreateInputWithCategories[]) {
     setUploadedTransactions(transactions)
   }
@@ -72,6 +86,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
         categories={categories}
         onCancel={onCancelUploadTransactions}
         onUpload={onUploadTransactions}
+        onUpdateTransaction={onUpdateTransaction}
       />
     )
   }

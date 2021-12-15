@@ -12,16 +12,15 @@ interface UploadPreviewProps {
   categories: Category[]
   onCancel?: () => void
   onUpload?: () => void
+  onUpdateTransaction?: (transaction: TransactionWithCategories) => void
 }
-
-// TODO: make categories (maybe all Data?) editable: TransactionTable onEdit -> UploadPreview onEdit -> Upload (edit state with transactions)
-// TODO: maybe use state management lib?
 
 const UploadPreview = ({
   transactions,
   categories,
   onCancel = () => {},
   onUpload = () => {},
+  onUpdateTransaction = () => {},
 }: UploadPreviewProps) => {
   return (
     <>
@@ -50,6 +49,7 @@ const UploadPreview = ({
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategories[]}
           variant="preview"
+          updateTransaction={onUpdateTransaction}
         />
       </Box>
     </>

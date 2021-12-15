@@ -7,12 +7,14 @@ import DisplayTextRenderer from "./columnrenderer/DisplayTextRenderer"
 import DisplayDateRenderer from "./columnrenderer/DisplayDateRenderer"
 import DisplayNumberRenderer from "./columnrenderer/DisplayNumberRenderer"
 
-interface GetColumnsProps {
+interface GetPreviewColumnsProps {
   categories: Category[]
+  onSelectCategories?: (transaction: TransactionWithCategories) => void
 }
-export const getColumns = ({
+const getPreviewColumns = ({
   categories,
-}: GetColumnsProps): Column<TransactionWithCategories>[] => {
+  onSelectCategories = () => {},
+}: GetPreviewColumnsProps): Column<TransactionWithCategories>[] => {
   return [
     {
       Header: "Date",
@@ -53,7 +55,13 @@ export const getColumns = ({
       Header: "Categories",
       accessor: "categories",
       id: "categories",
-      Cell: p => <InteractiveCategoryRenderer {...p} categories={categories} />,
+      Cell: p => (
+        <InteractiveCategoryRenderer
+          {...p}
+          categories={categories}
+          onSelectCategories={onSelectCategories}
+        />
+      ),
       width: "10%",
       // width: 3,
       // width: "3%",
@@ -86,3 +94,5 @@ export const getColumns = ({
     },
   ]
 }
+
+export default getPreviewColumns
