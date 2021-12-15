@@ -21,15 +21,18 @@ function transformNumber(value?: string) {
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
   const values: Prisma.TransactionUncheckedCreateInput[] = transactions
 
-    .map(({ issuedate, issuer, type, purpose, balance, amount, currency }) => ({
-      issuedate: transformDate(issuedate),
-      issuer: issuer,
-      type: type,
-      purpose: purpose,
-      balance: transformNumber(balance),
-      amount: transformNumber(amount),
-      currency: currency,
-    }))
+    .map(
+      ({ issuedate, issuer, type, purpose, balance, balanceCurrency, amount, amountCurrency }) => ({
+        issuedate: transformDate(issuedate),
+        issuer: issuer,
+        type: type,
+        purpose: purpose,
+        balance: transformNumber(balance),
+        balanceCurrency: balanceCurrency,
+        amount: transformNumber(amount),
+        amountCurrency: amountCurrency,
+      })
+    )
     .filter(value => {
       if (!value.amount || !value.balance || !value.issuedate) return false
       return true

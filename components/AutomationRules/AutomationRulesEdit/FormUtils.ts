@@ -40,12 +40,6 @@ export function getValueType(field: TAutomationRuleField) {
       return "numberValue"
     default:
       return "stringValue"
-    // case "currency":
-    // case "issuer":
-    // case "purpose":
-    // case "type":
-    // default:
-    //   return undefined
   }
 }
 
@@ -56,7 +50,6 @@ export function getFieldType(field: TAutomationRuleField) {
     case "amount":
     case "balance":
       return "number"
-    case "currency":
     case "issuer":
     case "purpose":
     case "type":
@@ -73,7 +66,6 @@ export function getOperationType(field: TAutomationRuleField) {
     case "amount":
     case "balance":
       return numberOperationValues
-    case "currency":
     case "issuer":
     case "purpose":
     case "type":
@@ -150,9 +142,5 @@ export const fieldValues: FieldValue[] = [
   {
     value: "amount",
     label: "amount",
-  },
-  {
-    value: "currency",
-    label: "currency",
   },
 ]

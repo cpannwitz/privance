@@ -2,6 +2,7 @@ import { Text } from "@chakra-ui/react"
 import { memo, PropsWithChildren } from "react"
 import { CellProps } from "react-table"
 import { TransactionWithCategories } from "../../../types/types"
+import getSymbolFromCurrency from "currency-map-symbol"
 
 const colors = {
   amount: {
@@ -20,20 +21,17 @@ interface NumberRendererProps
 }
 
 const NumberRenderer = memo(
-  ({ value, variant = "amount" }: NumberRendererProps) => {
+  ({ value, variant = "amount", row: { original: data } }: NumberRendererProps) => {
     if (!value) {
       return null
     }
-    if (value < 0) {
-      return (
-        <Text fontWeight="bold" color={colors[variant].negative}>
-          {value.toFixed(2)}
-        </Text>
-      )
-    }
+    const currency = variant === "amount" ? data.amountCurrency : data.balanceCurrency
+    const positiveNegative = value < 0 ? "negative" : "positive"
     return (
-      <Text fontWeight="bold" color={colors[variant].positive}>
+      <Text fontWeight="bold" color={colors[variant][positiveNegative]}>
         {value.toFixed(2)}
+        &nbsp;
+        {getSymbolFromCurrency(currency)}
       </Text>
     )
   },

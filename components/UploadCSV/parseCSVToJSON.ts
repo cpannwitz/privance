@@ -21,9 +21,9 @@ export default async function parseCSVToTransactions(
         "type",
         "purpose",
         "balance",
-        "__",
+        "balanceCurrency",
         "amount",
-        "currency",
+        "amountCurrency",
       ],
     })
     const records = []
