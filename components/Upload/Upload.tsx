@@ -42,9 +42,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
   }
 
   function onCancelUploadTransactions() {
-    router.push({
-      pathname: `/upload`,
-    })
+    setUploadedTransactions(undefined)
   }
   function onUploadTransactions() {
     if (uploadedTransactions) {
@@ -71,9 +69,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
               title: `Couldn't add your transactions: ${error.response.data.error}`,
               status: "error",
             })
-            router.push({
-              pathname: `/upload`,
-            })
+            onCancelUploadTransactions()
           }
         })
     }

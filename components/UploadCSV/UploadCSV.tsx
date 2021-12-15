@@ -71,7 +71,7 @@ const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => 
   return (
     <Dropzone onDrop={onDrop} multiple={false}>
       {() => (
-        <Center height={200}>
+        <Center height="90vh">
           <HStack spacing={6}>
             <Icon as={FileChartLineIcon} boxSize={10} />
             <div>
