@@ -13,18 +13,19 @@ datasource db {
 
 // Models
 model Transaction {
-  id         Int        @id @default(autoincrement())
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @default(now()) @updatedAt
-  identifier Float?     @unique
-  issuedate  DateTime?
-  issuer     String?
-  type       String?
-  purpose    String?
-  balance    Float?
-  amount     Float?
-  currency   String?
-  categories Category[] @relation("TransactionCategories", references: [id])
+  id              Int        @id @default(autoincrement())
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @default(now()) @updatedAt
+  identifier      Float?     @unique
+  issuedate       DateTime?
+  issuer          String?
+  type            String?
+  purpose         String?
+  balance         Float?
+  balanceCurrency String?
+  amount          Float?
+  amountCurrency  String?
+  categories      Category[] @relation("TransactionCategories", references: [id])
 }
 
 model Category {
