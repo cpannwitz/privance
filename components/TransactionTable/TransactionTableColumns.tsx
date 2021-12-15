@@ -2,10 +2,10 @@ import { Column } from "react-table"
 
 import { TransactionWithCategories } from "../../types/types"
 import { Category } from ".prisma/client"
-import CategoryRenderer from "./renderer/CategoryRenderer"
-import TextRenderer from "./renderer/TextRenderer"
-import DateRenderer from "./renderer/DateRenderer"
-import NumberRenderer from "./renderer/NumberRenderer"
+import InteractiveCategoryRenderer from "./columnrenderer/InteractiveCategoryRenderer"
+import DisplayTextRenderer from "./columnrenderer/DisplayTextRenderer"
+import DisplayDateRenderer from "./columnrenderer/DisplayDateRenderer"
+import DisplayNumberRenderer from "./columnrenderer/DisplayNumberRenderer"
 
 interface GetColumnsProps {
   categories: Category[]
@@ -18,7 +18,7 @@ export const getColumns = ({
       Header: "Date",
       accessor: "issuedate",
       id: "issuedate",
-      Cell: DateRenderer,
+      Cell: DisplayDateRenderer,
       width: "10%",
       // width: 0.1,
       // width: "0.0000000001%", // collapse to min-width -> https://github.com/tannerlinsley/react-table/issues/1639
@@ -27,7 +27,7 @@ export const getColumns = ({
       Header: "Issuer",
       accessor: "issuer",
       id: "issuer",
-      Cell: TextRenderer,
+      Cell: DisplayTextRenderer,
       width: "20%",
       // width: 3,
       // width: "3%",
@@ -44,7 +44,7 @@ export const getColumns = ({
       Header: "Purpose",
       accessor: "purpose",
       id: "purpose",
-      Cell: TextRenderer,
+      Cell: DisplayTextRenderer,
       width: "25%",
       // width: 6,
       // width: "6%",
@@ -53,7 +53,7 @@ export const getColumns = ({
       Header: "Categories",
       accessor: "categories",
       id: "categories",
-      Cell: p => <CategoryRenderer {...p} categories={categories} />,
+      Cell: p => <InteractiveCategoryRenderer {...p} categories={categories} />,
       width: "10%",
       // width: 3,
       // width: "3%",
@@ -62,7 +62,7 @@ export const getColumns = ({
       Header: "Balance",
       accessor: "balance",
       id: "balance",
-      Cell: p => <NumberRenderer {...p} variant="balance" />,
+      Cell: p => <DisplayNumberRenderer {...p} variant="balance" />,
       width: "10%",
       // width: 0.1,
       // width: "0.0000000001%", // collapse to min-width
@@ -71,7 +71,7 @@ export const getColumns = ({
       Header: "Amount",
       accessor: "amount",
       id: "amount",
-      Cell: p => <NumberRenderer {...p} variant="amount" />,
+      Cell: p => <DisplayNumberRenderer {...p} variant="amount" />,
       width: "10%",
       // width: 0.1,
       // width: "0.0000000001%", // collapse to min-width

@@ -3,7 +3,7 @@ import { useTable, useGlobalFilter } from "react-table"
 import { Box, useMultiStyleConfig } from "@chakra-ui/react"
 
 import { TransactionWithCategories } from "../../types/types"
-import { getColumns } from "./DatatableColumns"
+import { getColumns } from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Category, Prisma } from ".prisma/client"
 import { useCallback, useMemo } from "react"
@@ -13,19 +13,19 @@ import Autosizer from "react-virtualized-auto-sizer"
 // https://react-table.tanstack.com/docs/installation
 
 export type TableVariant = "preview" | "default"
-interface DatatableProps {
+interface TransactionTableProps {
   transactions: TransactionWithCategories[]
   categories: Category[]
   transformedTransactions?: number[]
   variant?: TableVariant
 }
 
-const Datatable = ({
+const TransactionTable = ({
   transactions,
   categories,
   transformedTransactions = [],
   variant = "default",
-}: DatatableProps) => {
+}: TransactionTableProps) => {
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
 
   // TODO: move categories in getColumns? or smth else...
@@ -144,7 +144,7 @@ const Datatable = ({
   )
 }
 
-export default Datatable
+export default TransactionTable
 
 export function isTransactionWithCategories(
   transaction: TransactionWithCategories | Prisma.TransactionCreateInput

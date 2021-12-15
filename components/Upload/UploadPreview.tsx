@@ -1,6 +1,6 @@
 import { Category } from ".prisma/client"
 
-import Datatable from "../Datatable/Datatable"
+import TransactionTable from "../TransactionTable/TransactionTable"
 import { Box, HStack, Divider, Button, Icon } from "@chakra-ui/react"
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
@@ -14,7 +14,7 @@ interface UploadPreviewProps {
   onUpload?: () => void
 }
 
-// TODO: make categories (maybe all Data?) editable: Datatable onEdit -> UploadPreview onEdit -> Upload (edit state with transactions)
+// TODO: make categories (maybe all Data?) editable: TransactionTable onEdit -> UploadPreview onEdit -> Upload (edit state with transactions)
 // TODO: maybe use state management lib?
 
 const UploadPreview = ({
@@ -45,7 +45,7 @@ const UploadPreview = ({
 
       <Divider my={6} />
       <Box w="100%" h="50%">
-        <Datatable
+        <TransactionTable
           categories={categories}
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategories[]}

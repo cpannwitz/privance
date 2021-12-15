@@ -1,6 +1,6 @@
 import { Category } from ".prisma/client"
 import { AutomationRuleWithCategories, TransactionWithCategories } from "../../types/types"
-import Datatable from "../Datatable/Datatable"
+import TransactionTable from "../TransactionTable/TransactionTable"
 import assignTransactionCategories from "./assignTransactionCategories"
 import {
   Box,
@@ -136,7 +136,7 @@ const AutomationRuleApplyPreview = ({
 
       <Divider my={6} />
       <Box w="100%" h="50%">
-        <Datatable
+        <TransactionTable
           categories={categories}
           transactions={showTransformedOnly ? transformedTransactions : allTransactions}
           transformedTransactions={transformedTransactions.map(t => t.id)}

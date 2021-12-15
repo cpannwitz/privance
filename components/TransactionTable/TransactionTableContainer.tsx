@@ -3,13 +3,13 @@ import { Box } from "@chakra-ui/react"
 
 import useGetTransactions from "../hooks/useGetTransactions"
 
-import { DataIsEmpty, DataIsError, DataIsLoading } from "./DatatableStates"
-import Datatable from "./Datatable"
+import { DataIsEmpty, DataIsError, DataIsLoading } from "./TransactionTableStates"
+import TransactionTable from "./TransactionTable"
 import useGetCategories from "../hooks/useGetCategories"
 
-interface DatatableContainerProps {}
+interface TransactionTableContainerProps {}
 
-const DatatableContainer = ({}: DatatableContainerProps) => {
+const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
   const {
     data: transactions,
     isError: isErrorTransactions,
@@ -31,9 +31,9 @@ const DatatableContainer = ({}: DatatableContainerProps) => {
   if (!transactions || transactions.length === 0) return <DataIsEmpty />
   return (
     <Box h="100%">
-      <Datatable transactions={transactions} categories={categories || []} />
+      <TransactionTable transactions={transactions} categories={categories || []} />
     </Box>
   )
 }
 
-export default DatatableContainer
+export default TransactionTableContainer
