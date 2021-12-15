@@ -1,25 +1,34 @@
-import { Prisma } from ".prisma/client"
+import { Category } from ".prisma/client"
 
 import Datatable from "../Datatable/Datatable"
 import { Box, HStack, Divider, Button, Icon } from "@chakra-ui/react"
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
 import CancelIcon from "remixicon-react/CloseCircleLineIcon"
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionCreateInputWithCategories, TransactionWithCategories } from "../../types/types"
 
 interface UploadPreviewProps {
-  transactions: Prisma.TransactionCreateInput[]
+  transactions: TransactionCreateInputWithCategories[]
+  categories: Category[]
+  onCancel?: () => void
+  onUpload?: () => void
 }
 
-// TODO: add methods
-// TODO: add categories
-const UploadPreview = ({ transactions }: UploadPreviewProps) => {
+// TODO: make categories (maybe all Data?) editable: Datatable onEdit -> UploadPreview onEdit -> Upload (edit state with transactions)
+// TODO: maybe use state management lib?
+
+const UploadPreview = ({
+  transactions,
+  categories,
+  onCancel = () => {},
+  onUpload = () => {},
+}: UploadPreviewProps) => {
   return (
     <>
       <HStack>
         <Button
           leftIcon={<Icon as={CancelIcon} boxSize={5} />}
-          onClick={() => {}}
+          onClick={onCancel}
           variant="ghost"
           colorScheme="red"
         >
@@ -27,19 +36,20 @@ const UploadPreview = ({ transactions }: UploadPreviewProps) => {
         </Button>
         <Button
           leftIcon={<Icon as={PlayIcon} boxSize={5} />}
-          onClick={() => {}}
+          onClick={onUpload}
           colorScheme="green"
         >
-          Apply
+          Upload Transactions
         </Button>
       </HStack>
 
       <Divider my={6} />
       <Box w="100%" h="50%">
         <Datatable
-          categories={[]}
+          categories={categories}
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategories[]}
+          variant="preview"
         />
       </Box>
     </>

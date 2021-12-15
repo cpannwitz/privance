@@ -16,6 +16,32 @@ export const theme = extendTheme(
   {
     config,
     components: {
+      GeneralBadge: {
+        baseStyle: (p: ThemeComponentProps<BaseTheme>) => ({
+          boxSize: "1em",
+          position: "absolute",
+          right: "10%",
+          bottom: "10%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "column",
+          borderRadius: p.theme.radii.full,
+
+          borderWidth: 1,
+          borderStyle: "solid",
+        }),
+        variants: {
+          default: (p: ThemeComponentProps<BaseTheme>) => ({
+            borderColor: mode("white", "gray.800")(p),
+            bgColor: mode("gray.400", "gray.500")(p),
+          }),
+        },
+        // The default size and variant values
+        defaultProps: {
+          variant: "default",
+        },
+      },
       Dropzone: {
         baseStyle: (p: ThemeComponentProps<BaseTheme>) => ({
           flex: 1,

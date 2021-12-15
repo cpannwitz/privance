@@ -1,4 +1,3 @@
-import axios from "axios"
 import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
 
 import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
@@ -7,13 +6,18 @@ import parseCSVToTransactions from "./parseCSVToJSON"
 import normalizeCSVTransactions from "./transformTransactions"
 
 import Dropzone from "./Dropzone"
-import { Prisma } from ".prisma/client"
+import assignNewTransactionCategories from "./assignNewTransactionCategories"
+import {
+  AutomationRuleWithCategories,
+  TransactionCreateInputWithCategories,
+} from "../../types/types"
 
 interface UploadCSVProps {
-  onUpload?: (transaction: Prisma.TransactionCreateInput[]) => void
+  onUpload?: (transaction: TransactionCreateInputWithCategories[]) => void
+  automationRules: AutomationRuleWithCategories[]
 }
 
-const UploadCSV = ({ onUpload = () => {} }: UploadCSVProps) => {
+const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => {
   const toast = useToast()
 
   async function onDrop(files: File[]) {
@@ -55,19 +59,13 @@ const UploadCSV = ({ onUpload = () => {} }: UploadCSVProps) => {
     }
 
     const normalizedCSVTransactions = await normalizeCSVTransactions(parsedCSVTransactions.data)
+    const transactionsWithCategories = await assignNewTransactionCategories(
+      normalizedCSVTransactions,
+      automationRules
+    )
 
-    if (normalizedCSVTransactions) {
-      onUpload(normalizedCSVTransactions)
-      // axios
-      //   .post("/api/transactions/addTransactions", transformedJSON)
-      //   // TODO: handle response data, either reflow, global state or discard
-      //   .then(() => {
-      //     // res.data
-      //     toast({
-      //       title: `Added or updated your transactions!`,
-      //       status: "success",
-      //     })
-      //   })
+    if (transactionsWithCategories) {
+      onUpload(transactionsWithCategories)
     }
   }
   return (

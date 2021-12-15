@@ -9,6 +9,8 @@ import AutomationRuleIcon from "remixicon-react/Settings2LineIcon"
 
 import { VStack, Button, Icon } from "@chakra-ui/react"
 
+// TODO: add styling for active link
+
 const NavbarLinks = () => {
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])

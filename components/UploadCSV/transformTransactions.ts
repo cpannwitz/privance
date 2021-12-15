@@ -19,7 +19,7 @@ function transformNumber(value?: string) {
 }
 
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
-  const values: Prisma.TransactionCreateInput[] = transactions
+  const values: Prisma.TransactionUncheckedCreateInput[] = transactions
 
     .map(({ issuedate, issuer, type, purpose, balance, amount, currency }) => ({
       issuedate: transformDate(issuedate),

@@ -22,7 +22,8 @@
 - [ ] Stability!
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
-  - [ ] Deployment? Maybe not needed.
+  - [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
+  - [ ] Add double currency (https://www.npmjs.com/package/currency-codes + https://github.com/ZakZubair/currency-map-symbol)
 - [ ] i18n
   - [ ] add i18n provider
   - [ ] add i18n management handle

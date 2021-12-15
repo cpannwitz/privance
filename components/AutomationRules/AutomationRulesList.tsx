@@ -20,6 +20,10 @@ import {
   Spacer,
 } from "@chakra-ui/react"
 
+import UploadIcon from "remixicon-react/Upload2LineIcon"
+import PositiveIcon from "remixicon-react/CheckLineIcon"
+import NegativeIcon from "remixicon-react/CloseLineIcon"
+
 import { Prisma } from ".prisma/client"
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
@@ -34,6 +38,7 @@ import { getValueType } from "./AutomationRulesEdit/FormUtils"
 import { icons } from "../../shared/iconUtils"
 
 import { useRouter } from "next/router"
+import GeneralBadge from "../GeneralBadge/GeneralBadge"
 
 interface AutomationListProps {
   data: AutomationRuleWithCategories[]
@@ -91,7 +96,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
-        categories: { connect: categories.map(cat => ({ id: cat.id })) },
+        categories: { set: categories.map(cat => ({ id: cat.id })) },
       }
       axios
         .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
@@ -141,6 +146,38 @@ const AutomationList = ({ data }: AutomationListProps) => {
     }
   }
 
+  function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategories) {
+    if (automationRule?.id) {
+      const { categories } = automationRule
+      const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
+        Prisma.AutomationRuleWhereUniqueInput = {
+        ...automationRule,
+        categories: { set: categories.map(cat => ({ id: cat.id })) },
+        activeOnUpload: !automationRule.activeOnUpload,
+      }
+      axios
+        .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
+        .then(() => {
+          toast({
+            title: `Updated your automation rule!`,
+            status: "success",
+          })
+        })
+        .catch((error: AxiosError) => {
+          if (error.response) {
+            toast({
+              title: `Couldn't update your automation rule: ${error.response.data.error}`,
+              status: "error",
+            })
+          }
+        })
+        .finally(() => {
+          mutate(`/api/automationrules/getAutomationRules`)
+          setEditedAutomationRule(null)
+        })
+    }
+  }
+
   const router = useRouter()
   function onRunAutomationRule(automationRule: AutomationRuleWithCategories) {
     router.push({
@@ -181,6 +218,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
               onRun={onRunAutomationRule}
               onEdit={onEditAutomationRule}
               onDelete={onDeleteAutomationRule}
+              onToggleOnUploadRun={onToggleAutomationRuleOnUploadRun}
               automationRule={automationRule}
             />
           ))}
@@ -196,6 +234,7 @@ interface AutomationRuleListItemProps {
   onRun: (automationRule: AutomationRuleWithCategories) => void
   onEdit: (automationRule: AutomationRuleWithCategories) => void
   onDelete: (automationRule: AutomationRuleWithCategories) => void
+  onToggleOnUploadRun: (automationRule: AutomationRuleWithCategories) => void
   automationRule: AutomationRuleWithCategories
 }
 
@@ -204,6 +243,7 @@ const AutomationRuleListItem = ({
   onRun,
   onEdit,
   onDelete,
+  onToggleOnUploadRun,
   automationRule,
 }: AutomationRuleListItemProps) => {
   function onEditAutomationRule() {
@@ -215,6 +255,10 @@ const AutomationRuleListItem = ({
   function onRunAutomationRule() {
     onRun(automationRule)
   }
+  function onToggleAutomationRuleRunOnUpload() {
+    onToggleOnUploadRun(automationRule)
+  }
+
   return (
     <HStack w="100%" p={3} shadow="md" borderWidth="1px" align="center" borderRadius="lg">
       <StatGroup minW="75%">
@@ -238,6 +282,25 @@ const AutomationRuleListItem = ({
         </Stat>
       </StatGroup>
       <Spacer />
+
+      <IconButton
+        variant="ghost"
+        isRound
+        aria-label="toggle run on upload"
+        icon={
+          <>
+            <Icon as={UploadIcon} color="gray.300" boxSize={5} />
+            <GeneralBadge bg={automationRule.activeOnUpload ? "green.500" : "red.500"}>
+              <Icon
+                as={automationRule.activeOnUpload ? PositiveIcon : NegativeIcon}
+                boxSize="0.7em"
+                color="white"
+              />
+            </GeneralBadge>
+          </>
+        }
+        onClick={onToggleAutomationRuleRunOnUpload}
+      />
       <IconButton
         variant="ghost"
         isRound

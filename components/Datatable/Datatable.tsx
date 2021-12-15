@@ -12,18 +12,27 @@ import Autosizer from "react-virtualized-auto-sizer"
 
 // https://react-table.tanstack.com/docs/installation
 
+export type TableVariant = "preview" | "default"
 interface DatatableProps {
   transactions: TransactionWithCategories[]
   categories: Category[]
   transformedTransactions?: number[]
+  variant?: TableVariant
 }
 
-const Datatable = ({ transactions, categories, transformedTransactions = [] }: DatatableProps) => {
+const Datatable = ({
+  transactions,
+  categories,
+  transformedTransactions = [],
+  variant = "default",
+}: DatatableProps) => {
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
 
   // TODO: move categories in getColumns? or smth else...
   // TODO: if transaction is without ID (Prisma.TransactionCreateInput) -> need solution with categoryrenderer
-  const columns = useMemo(() => getColumns({ categories }), [categories])
+  const columns = useMemo(() => {
+    return getColumns({ categories })
+  }, [categories])
 
   const {
     getTableProps,

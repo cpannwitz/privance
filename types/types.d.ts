@@ -1,8 +1,15 @@
-import { Transaction, Category, AutomationRule } from ".prisma/client"
+import { Prisma, Transaction, Category, AutomationRule } from ".prisma/client"
 
 export type TransactionWithCategories = Transaction & {
   categories: Category[]
   _count?: Prisma.TransactionCountOutputType
+}
+
+export type TransactionCreateInputWithCategories = Omit<
+  Prisma.TransactionCreateInput,
+  "categories"
+> & {
+  categories: Category[]
 }
 
 export type CategoryWithTransactions = Category & {

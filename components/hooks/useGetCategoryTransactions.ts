@@ -3,7 +3,6 @@ import { useMemo } from "react"
 import useSWR from "swr"
 import { CategoryWithTransactions } from "../../types/types"
 
-// TODO: get params?
 export default function useGetCategoryTransactions(id: number) {
   const requestConfig: AxiosRequestConfig = useMemo(() => ({ params: { id: id } }), [id])
   const { data, error, isValidating, mutate } = useSWR<{ data: CategoryWithTransactions }>([
