@@ -27,8 +27,9 @@ export interface ParsedCSVTransactions {
   type?: string
   purpose?: string
   balance?: string
+  balanceCurrency?: string
   amount?: string
-  currency?: string
+  amountCurrency?: string
 }
 
 // TODO: replace this with runtypes later
@@ -42,15 +43,7 @@ const AutomationRuleOperation = [
   "after",
 ]
 export type TAutomationRuleOperation = typeof AutomationRuleField[number]
-const AutomationRuleField = [
-  "issuedate",
-  "issuer",
-  "type",
-  "purpose",
-  "balance",
-  "amount",
-  "currency",
-]
+const AutomationRuleField = ["issuedate", "issuer", "type", "purpose", "balance", "amount"]
 type TAutomationRuleField = typeof AutomationRuleField[number]
 
 export type ZAutomationRuleField =
@@ -60,7 +53,6 @@ export type ZAutomationRuleField =
   | "purpose"
   | "balance"
   | "amount"
-  | "currency"
 
 export function isAutomationRuleOperation(field: unknown): field is TAutomationRuleOperation {
   return typeof field === "string" && AutomationRuleOperation.includes(field)
