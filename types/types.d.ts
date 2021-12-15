@@ -1,8 +1,15 @@
-import { Transaction, Category, AutomationRule } from ".prisma/client"
+import { Prisma, Transaction, Category, AutomationRule } from ".prisma/client"
 
 export type TransactionWithCategories = Transaction & {
   categories: Category[]
   _count?: Prisma.TransactionCountOutputType
+}
+
+export type TransactionCreateInputWithCategories = Omit<
+  Prisma.TransactionCreateInput,
+  "categories"
+> & {
+  categories: Category[]
 }
 
 export type CategoryWithTransactions = Category & {
@@ -13,7 +20,7 @@ export type AutomationRuleWithCategories = AutomationRule & {
   categories: Category[]
 }
 
-export interface ParsedCSVValues {
+export interface ParsedCSVTransactions {
   issuedate?: string
   __?: string
   issuer?: string
@@ -34,7 +41,7 @@ const AutomationRuleOperation = [
   "before",
   "after",
 ]
-type TAutomationRuleOperation = typeof AutomationRuleField[number]
+export type TAutomationRuleOperation = typeof AutomationRuleField[number]
 const AutomationRuleField = [
   "issuedate",
   "issuer",
@@ -45,6 +52,15 @@ const AutomationRuleField = [
   "currency",
 ]
 type TAutomationRuleField = typeof AutomationRuleField[number]
+
+export type ZAutomationRuleField =
+  | "issuedate"
+  | "issuer"
+  | "type"
+  | "purpose"
+  | "balance"
+  | "amount"
+  | "currency"
 
 export function isAutomationRuleOperation(field: unknown): field is TAutomationRuleOperation {
   return typeof field === "string" && AutomationRuleOperation.includes(field)

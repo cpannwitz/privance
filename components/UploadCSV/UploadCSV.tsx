@@ -1,16 +1,23 @@
-import axios from "axios"
 import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
 
 import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
 
-import parseCSVToJSON from "./parseCSVToJSON"
-import transformTransactions from "./transformTransactions"
+import parseCSVToTransactions from "./parseCSVToJSON"
+import normalizeCSVTransactions from "./transformTransactions"
 
 import Dropzone from "./Dropzone"
+import assignNewTransactionCategories from "./assignNewTransactionCategories"
+import {
+  AutomationRuleWithCategories,
+  TransactionCreateInputWithCategories,
+} from "../../types/types"
 
-interface UploadCSVProps {}
+interface UploadCSVProps {
+  onUpload?: (transaction: TransactionCreateInputWithCategories[]) => void
+  automationRules: AutomationRuleWithCategories[]
+}
 
-const UploadCSV = ({}: UploadCSVProps) => {
+const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => {
   const toast = useToast()
 
   async function onDrop(files: File[]) {
@@ -32,9 +39,9 @@ const UploadCSV = ({}: UploadCSVProps) => {
       return
     }
 
-    const parsedJSON = await parseCSVToJSON(file)
+    const parsedCSVTransactions = await parseCSVToTransactions(file)
 
-    if (!parsedJSON.data) {
+    if (!parsedCSVTransactions.data) {
       toast({
         title: "No data found OR not able to process ",
         status: "error",
@@ -42,35 +49,29 @@ const UploadCSV = ({}: UploadCSVProps) => {
       return
     }
 
-    // TODO: move transformation to preview component, once initialized -> display raw values for preview
-    const transformedJSON = await transformTransactions(parsedJSON.data)
-
-    if (parsedJSON.error) {
+    if (parsedCSVTransactions.error) {
       toast({
-        title: parsedJSON.error.message,
+        title: parsedCSVTransactions.error.message,
         status: "error",
       })
-      console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedJSON.error)
+      console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedCSVTransactions.error)
       return
     }
 
-    if (parsedJSON.data) {
-      axios
-        .post("/api/transactions/addTransactions", transformedJSON)
-        // TODO: handle response data, either reflow, global state or discard
-        .then(() => {
-          // res.data
-          toast({
-            title: `Added or updated your transactions!`,
-            status: "success",
-          })
-        })
+    const normalizedCSVTransactions = await normalizeCSVTransactions(parsedCSVTransactions.data)
+    const transactionsWithCategories = await assignNewTransactionCategories(
+      normalizedCSVTransactions,
+      automationRules
+    )
+
+    if (transactionsWithCategories) {
+      onUpload(transactionsWithCategories)
     }
   }
   return (
     <Dropzone onDrop={onDrop} multiple={false}>
       {() => (
-        <Center height={200}>
+        <Center height="90vh">
           <HStack spacing={6}>
             <Icon as={FileChartLineIcon} boxSize={10} />
             <div>
