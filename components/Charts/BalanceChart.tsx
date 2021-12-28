@@ -12,12 +12,25 @@ function lineChartTransformer(data: TransactionWithCategories[]): Datum[] {
   }))
 }
 
-interface FulltimeBalanceChartProps {
-  data: TransactionWithCategories[]
+function getMinMaxBalance(data: TransactionWithCategories[]): { min: number; max: number } {
+  return data.reduce(
+    (sum, t) => ({
+      min: Math.min(sum.min, t.balance || 0),
+      max: Math.max(sum.max, t.balance || 0),
+    }),
+    { min: data[0].balance || 0, max: data[0].balance || 0 }
+  )
 }
 
-const FulltimeBalanceChart = ({ data }: FulltimeBalanceChartProps) => {
+interface BalanceChartProps {
+  data: TransactionWithCategories[]
+  variant?: "default" | "small"
+}
+
+const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
+  const isVariantDefault = variant === "default"
   const transformedData = useMemo(() => lineChartTransformer(data), [data])
+  const minMaxBalance = useMemo(() => getMinMaxBalance(data), [data])
   const lineData = useMemo(
     () => [
       {
@@ -34,21 +47,47 @@ const FulltimeBalanceChart = ({ data }: FulltimeBalanceChartProps) => {
       xScale={{
         type: "time",
       }}
-      axisBottom={{
-        format: "%b %Y",
-      }}
+      axisBottom={
+        isVariantDefault
+          ? {
+              format: "%b %Y",
+            }
+          : null
+      }
       yScale={{
         type: "linear",
         nice: true,
       }}
       axisLeft={null}
-      // curve="step"
+      markers={[
+        {
+          axis: "y",
+          value: minMaxBalance.min,
+          lineStyle: { stroke: "rgba(255, 0, 0, .35)", strokeWidth: 1 },
+          legend: `min. ${minMaxBalance.min}`,
+          textStyle: {
+            fill: "#818181",
+            fontSize: "11px",
+          },
+        },
+        {
+          axis: "y",
+          value: minMaxBalance.max,
+          lineStyle: { stroke: "rgba(0, 255, 0, .35)", strokeWidth: 1 },
+          legend: `max. ${minMaxBalance.max}`,
+          textStyle: {
+            fill: "#818181",
+            fontSize: "11px",
+          },
+        },
+      ]}
+      curve="stepAfter"
       enablePoints={false}
       lineWidth={1}
       useMesh={true}
       tooltip={PointTooltip}
       enableArea={true}
-      enableGridX={true}
+      enableGridX={isVariantDefault ? true : false}
       enableGridY={false}
       colors={{ scheme: "category10" }}
       defs={[
@@ -82,7 +121,7 @@ const FulltimeBalanceChart = ({ data }: FulltimeBalanceChartProps) => {
   )
 }
 
-export default FulltimeBalanceChart
+export default BalanceChart
 
 interface PointTooltipProps extends TooltipType {
   point: Point & {

@@ -40,6 +40,7 @@
   - [ ] https://github.com/prisma/prisma/issues/4703
 ## Premium Todo's
 - [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
+- [ ] Add recurring spendings (abonnements), detection, management
 - [ ] Planned spendings, maybe in combination with ->
 - [ ] Forecasting balances, demo project tensorflow: https://github.com/jinglescode/time-series-forecasting-tensorflowjs
 - [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
