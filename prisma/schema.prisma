@@ -13,10 +13,10 @@ datasource db {
 
 // Models
 model Transaction {
-  id              Int        @id @default(autoincrement())
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @default(now()) @updatedAt
-  identifier      Float?     @unique
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
+  identifier      Float?    @unique
   issuedate       DateTime?
   issuer          String?
   type            String?
@@ -25,7 +25,9 @@ model Transaction {
   balanceCurrency String?
   amount          Float?
   amountCurrency  String?
-  categories      Category[] @relation("TransactionCategories", references: [id])
+  tags            Tag[]     @relation("TransactionTags", references: [id])
+  category        Category? @relation("TransactionCategory", references: [id], fields: [categoryId])
+  categoryId      Int?
 }
 
 model Category {
@@ -35,19 +37,30 @@ model Category {
   name            String
   icon            String?
   color           String?
-  transactions    Transaction[]    @relation("TransactionCategories")
-  automationRules AutomationRule[] @relation("AutomationRuleCategories")
+  transactions    Transaction[]    @relation("TransactionCategory")
+  automationRules AutomationRule[] @relation("AutomationRuleCategory")
+}
+
+model Tag {
+  id           Int           @id @default(autoincrement())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  name         String
+  icon         String?
+  color        String?
+  transactions Transaction[] @relation("TransactionTags")
 }
 
 model AutomationRule {
-  id             Int        @id @default(autoincrement())
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @default(now()) @updatedAt
+  id             Int       @id @default(autoincrement())
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
   field          String
   operation      String
-  categories     Category[] @relation("AutomationRuleCategories", references: [id])
   stringValue    String?
   numberValue    Float?
   dateValue      DateTime?
-  activeOnUpload Boolean    @default(true)
+  activeOnUpload Boolean   @default(true)
+  category       Category  @relation("AutomationRuleCategory", references: [id], fields: [categoryId])
+  categoryId     Int
 }
