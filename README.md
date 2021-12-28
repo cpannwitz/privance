@@ -19,10 +19,14 @@
   - [x] Add Preview Page
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
-- [ ] Extend Transactions API with filtering sorting for charts
+- [x] Extend Transactions API with filtering sorting for charts
+- [ ] Create TAGS:
+  - [ ] Transaction with single category
+  - [ ] Transaction with multiple tags
+  - [ ] Tags get dedicated section for things
 - [ ] Charts!
   - [x] General over-time-chart
-  - [ ] monthly charts
+  - [x] monthly charts
   - [ ] categories charts
 - [ ] Stability!
   - [ ] Runtypes in API
