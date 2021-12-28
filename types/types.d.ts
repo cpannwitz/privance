@@ -12,6 +12,34 @@ export type TransactionCreateInputWithCategories = Omit<
   categories: Category[]
 }
 
+export type MonthlyTransactionsWithCategories = {
+  totalPlus: number
+  totalMinus: number
+  preBalance: number
+  totalPlusPercentage: number
+  totalMinusPercentage: number
+  currency: string
+  startDate: Date
+  endDate: Date
+  years: {
+    [key: number | string]: {
+      year: number
+      totalYearPlus: number
+      totalYearMinus: number
+      months: {
+        [key: number | string]: {
+          month: number
+          totalMonthPlus: number
+          totalMonthMinus: number
+          transactions: TransactionWithCategories[]
+          totalMonthPlusPercentage: number
+          totalMonthMinusPercentage: number
+        }
+      }
+    }
+  }
+}
+
 export type CategoryWithTransactions = Category & {
   transactions: Transaction[]
 }

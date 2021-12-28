@@ -18,6 +18,9 @@ const SWRProvider = ({ children }: SWRProviderProps) => {
           err.response ? toast({ title: err.response.statusText, status: "error" }) : null,
         shouldRetryOnError: false,
         focusThrottleInterval: 60000,
+        revalidateIfStale: true,
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
       }}
     >
       {children}

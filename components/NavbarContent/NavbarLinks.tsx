@@ -2,6 +2,7 @@ import { useCallback } from "react"
 import { useRouter } from "next/router"
 
 import HomeIcon from "remixicon-react/Home4LineIcon"
+import MonthlyInsightIcon from "remixicon-react/Calendar2LineIcon"
 import UploadIcon from "remixicon-react/Upload2LineIcon"
 import TagIcon from "remixicon-react/PriceTag3LineIcon"
 import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
@@ -14,6 +15,7 @@ import { VStack, Button, Icon } from "@chakra-ui/react"
 const NavbarLinks = () => {
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
+  const linkToMonthlyInsight = useCallback(() => router.push(`/monthlyinsight`), [router])
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   const linkToCategories = useCallback(() => router.push(`/categories`), [router])
   const linkToAutomationRules = useCallback(() => router.push(`/automationrules`), [router])
@@ -29,6 +31,17 @@ const NavbarLinks = () => {
         onClick={linkToOverview}
       >
         Overview
+      </Button>
+
+      <Button
+        isFullWidth
+        variant="ghost"
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={MonthlyInsightIcon} boxSize={6} />}
+        onClick={linkToMonthlyInsight}
+      >
+        Monthly Insight
       </Button>
 
       <Button

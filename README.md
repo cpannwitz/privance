@@ -19,7 +19,11 @@
   - [x] Add Preview Page
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
-- [ ] Diagrams!
+- [ ] Extend Transactions API with filtering sorting for charts
+- [ ] Charts!
+  - [x] General over-time-chart
+  - [ ] monthly charts
+  - [ ] categories charts
 - [ ] Stability!
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
@@ -35,10 +39,15 @@
   - [ ] https://github.com/prisma/prisma/issues/9613
   - [ ] https://github.com/prisma/prisma/issues/4703
 ## Premium Todo's
-- [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
-- [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
-- [ ] Add Login functionality
 - [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
+- [ ] Add recurring spendings (abonnements), detection, management
+- [ ] Planned spendings, maybe in combination with ->
+- [ ] Forecasting balances, demo project tensorflow: https://github.com/jinglescode/time-series-forecasting-tensorflowjs
+- [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
+  - [ ] THIS IS HARD!
+- [ ] Online stuff:
+  - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
+  - [ ] Add Login functionality
 
 
 ---

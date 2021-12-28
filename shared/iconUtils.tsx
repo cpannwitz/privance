@@ -30,6 +30,8 @@ export function getIconByName(name: string) {
   return icons[name]
 }
 
+// add more Icons, liek paypal, amazon etc
+
 export const icons: { [key: string]: RemixiconReactIconComponentType } = {
   anchor: AnchorLineIcon,
   earth: EarthLineIcon,

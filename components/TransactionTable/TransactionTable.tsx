@@ -138,7 +138,7 @@ const TransactionTable = ({
     },
     [prepareRow, rows, tableStyles, transformedTransactions]
   )
-
+  // TODO: optimize Table for narrow display (monthly)
   return (
     <>
       <Box w="100%" h="4rem">

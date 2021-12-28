@@ -1,5 +1,13 @@
-import { Input, InputGroup, InputLeftElement, Icon } from "@chakra-ui/react"
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Icon,
+  IconButton,
+} from "@chakra-ui/react"
 import SearchIcon from "remixicon-react/SearchLineIcon"
+import ClearIcon from "remixicon-react/CloseCircleLineIcon"
 import { useState } from "react"
 import { useAsyncDebounce } from "react-table"
 
@@ -27,6 +35,18 @@ const Searchbar = ({ filterValue, setFilterValue }: SearchbarProps) => {
           onSearchValueChange(e.target.value)
         }}
       />
+      <InputRightElement
+        onClick={() => {
+          setSearchValue("")
+          onSearchValueChange("")
+        }}
+      >
+        <IconButton
+          aria-label="clear search"
+          icon={<Icon as={ClearIcon} boxSize={4} />}
+          variant="ghost"
+        />
+      </InputRightElement>
     </InputGroup>
   )
 }

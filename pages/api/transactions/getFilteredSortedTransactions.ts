@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
 import { TransactionWithCategories } from "../../../types/types"
+import qs from "query-string"
 
 const prisma = new PrismaClient()
 
@@ -10,16 +11,43 @@ type ResponseData = {
   data?: TransactionWithCategories[]
 }
 
-export default async function getTransactions(
+export default async function getFilteredSortedTransactions(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "GET") {
+    const { query } = qs.parseUrl(req.url ?? "", {
+      arrayFormat: "bracket",
+      parseBooleans: true,
+      parseNumbers: true,
+    })
+    // ! https://www.npmjs.com/package/query-string
+    const { sortDirection, startDate, endDate, onlyIncome, onlySpending } = query
+
+    // ! https://www.prisma.io/docs/concepts/components/prisma-client/filtering-and-sorting
     try {
+      const checkedOnlyIncome = Boolean(onlyIncome) ? 0 : undefined
+      const checkedOnlySpending = Boolean(onlySpending) ? 0 : undefined
+      const checkedStartDate = typeof startDate === "string" && startDate ? startDate : undefined
+      const checkedEndDate = typeof endDate === "string" && endDate ? endDate : undefined
+      const checkedSortDirection =
+        typeof sortDirection === "string" && sortDirection
+          ? (sortDirection as "asc" | "desc")
+          : "desc"
       const data = await prisma.transaction.findMany({
+        where: {
+          amount: {
+            gt: checkedOnlyIncome,
+            lt: checkedOnlySpending,
+          },
+          issuedate: {
+            gte: checkedStartDate,
+            lte: checkedEndDate,
+          },
+        },
         include: { categories: true, _count: true },
       })
-      const sortedData = sortTransactions(data, "desc")
+      const sortedData = sortTransactions(data, checkedSortDirection)
       res.json({ data: sortedData })
     } catch (err) {
       console.error(`ERROR | err`, err)
