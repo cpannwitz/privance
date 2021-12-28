@@ -21,11 +21,13 @@ export default async function getFilteredSortedTransactions(
       parseBooleans: true,
       parseNumbers: true,
     })
-    const { sortDirection, startDate, endDate } = query
-    // TODO: wtf, better query extracting -> querystring
     // ! https://www.npmjs.com/package/query-string
+    const { sortDirection, startDate, endDate, onlyIncome, onlySpending } = query
+
     // ! https://www.prisma.io/docs/concepts/components/prisma-client/filtering-and-sorting
     try {
+      const checkedOnlyIncome = Boolean(onlyIncome) ? 0 : undefined
+      const checkedOnlySpending = Boolean(onlySpending) ? 0 : undefined
       const checkedStartDate = typeof startDate === "string" && startDate ? startDate : undefined
       const checkedEndDate = typeof endDate === "string" && endDate ? endDate : undefined
       const checkedSortDirection =
@@ -34,22 +36,19 @@ export default async function getFilteredSortedTransactions(
           : "desc"
       const data = await prisma.transaction.findMany({
         where: {
+          amount: {
+            gt: checkedOnlyIncome,
+            lt: checkedOnlySpending,
+          },
           issuedate: {
             gte: checkedStartDate,
             lte: checkedEndDate,
           },
         },
-        orderBy: [
-          {
-            issuedate: checkedSortDirection,
-          },
-          {
-            balance: checkedSortDirection,
-          },
-        ],
         include: { categories: true, _count: true },
       })
-      res.json({ data })
+      const sortedData = sortTransactions(data, checkedSortDirection)
+      res.json({ data: sortedData })
     } catch (err) {
       console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })
@@ -57,4 +56,32 @@ export default async function getFilteredSortedTransactions(
   } else {
     res.status(405).json({ error: "wrong http method" })
   }
+}
+
+// TODO: replace with saved order to DB
+function sortTransactions(
+  transactions: TransactionWithCategories[],
+  sortDirection: "asc" | "desc" = "desc"
+) {
+  const isDesc = sortDirection === "desc"
+  const sorted = [...transactions].sort((a, b) => {
+    if (!a.issuedate || !b.issuedate) return 0
+
+    const aDate = new Date(a.issuedate).getTime()
+    const bDate = new Date(b.issuedate).getTime()
+
+    if (aDate < bDate) return isDesc ? 1 : -1
+
+    if (aDate > bDate) return isDesc ? -1 : 1
+
+    if (aDate === bDate) {
+      if (a.balance === null || a.amount === null || b.balance === null || b.amount === null) {
+        return 0
+      }
+
+      return isDesc ? 1 : -1
+    }
+    return 0
+  })
+  return sorted
 }

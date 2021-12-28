@@ -7,15 +7,19 @@ interface UseGetFilteredSortedTransactionsProps {
   sortDirection?: "asc" | "desc"
   startDate?: Date | string
   endDate?: Date | string
+  onlyIncome?: boolean
+  onlySpending?: boolean
 }
 export default function useGetFilteredSortedTransactions({
   sortDirection,
   startDate,
   endDate,
+  onlyIncome,
+  onlySpending,
 }: UseGetFilteredSortedTransactionsProps) {
   const requestConfig: AxiosRequestConfig = useMemo(
-    () => ({ params: { sortDirection, startDate, endDate } }),
-    [sortDirection, startDate, endDate]
+    () => ({ params: { sortDirection, startDate, endDate, onlyIncome, onlySpending } }),
+    [sortDirection, startDate, endDate, onlyIncome, onlySpending]
   )
   const { data, error, isValidating, mutate } = useSWR<{ data: TransactionWithCategories[] }>([
     `/api/transactions/getFilteredSortedTransactions`,

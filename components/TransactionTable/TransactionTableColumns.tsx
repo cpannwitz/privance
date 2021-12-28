@@ -28,7 +28,7 @@ const getPreviewColumns = ({
       accessor: "issuer",
       id: "issuer",
       Cell: DisplayTextRenderer,
-      width: "20%",
+      width: "15%",
     },
     {
       Header: "Type",
