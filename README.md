@@ -20,14 +20,14 @@
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
 - [x] Extend Transactions API with filtering sorting for charts
-- [ ] Create TAGS:
-  - [ ] Transaction with single category
-  - [ ] Transaction with multiple tags
-  - [ ] Tags get dedicated section for things
 - [ ] Charts!
   - [x] General over-time-chart
   - [x] monthly charts
   - [ ] categories charts
+- [ ] Create TAGS:
+  - [x] Transaction with single category
+  - [ ] Transaction with multiple tags
+  - [ ] Tags get dedicated section for things
 - [ ] Stability!
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
