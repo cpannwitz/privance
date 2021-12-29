@@ -1,24 +1,24 @@
 import { FormControl, FormLabel, FormErrorMessage } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
-import { AutomationRuleWithCategories } from "../../../types/types"
+import { AutomationRuleWithCategory } from "../../../types/types"
 
 import CategorySelect from "../../CategorySelect/CategorySelect"
 import useGetCategories from "../../hooks/useGetCategories"
 
-interface FieldPickerProps {}
+interface CategoryPickerProps {}
 
-const FieldPicker = ({}: FieldPickerProps) => {
-  const { control } = useFormContext<AutomationRuleWithCategories>()
+const CategoryPicker = ({}: CategoryPickerProps) => {
+  const { control } = useFormContext<AutomationRuleWithCategory>()
 
   const { data: categories, isError, isLoading } = useGetCategories()
   return (
     <Controller
-      name="categories"
+      name="category"
       control={control}
       render={({ field, fieldState: { error } }) => (
         <FormControl isInvalid={!!error}>
           <FormLabel fontSize="sm" color="gray.500">
-            Select Categories
+            Select Category
           </FormLabel>
           <CategorySelect
             onChange={val => field.onChange(val)}
@@ -26,8 +26,6 @@ const FieldPicker = ({}: FieldPickerProps) => {
             categories={categories || []}
             isDisabled={isError}
             isLoading={isLoading}
-            emptyDisplaySize="big"
-            avatarGroupLength={6}
           />
           <FormErrorMessage>{error?.message}</FormErrorMessage>
         </FormControl>
@@ -36,4 +34,4 @@ const FieldPicker = ({}: FieldPickerProps) => {
   )
 }
 
-export default FieldPicker
+export default CategoryPicker

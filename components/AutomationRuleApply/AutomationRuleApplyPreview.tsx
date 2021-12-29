@@ -1,7 +1,7 @@
 import { Category } from ".prisma/client"
-import { AutomationRuleWithCategories, TransactionWithCategories } from "../../types/types"
+import { AutomationRuleWithCategory, TransactionWithCategory } from "../../types/types"
 import TransactionTable from "../TransactionTable/TransactionTable"
-import assignTransactionCategories from "./assignTransactionCategories"
+import assignTransactionCategory from "./assignTransactionCategory"
 import {
   Box,
   HStack,
@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react"
 import { icons } from "../../shared/iconUtils"
-import { useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
@@ -29,8 +29,8 @@ import CancelIcon from "remixicon-react/CloseCircleLineIcon"
 import axios, { AxiosError } from "axios"
 
 interface AutomationRuleApplyPreviewProps {
-  automationRules: AutomationRuleWithCategories[]
-  transactions: TransactionWithCategories[]
+  automationRules: AutomationRuleWithCategory[]
+  transactions: TransactionWithCategory[]
   categories: Category[]
 }
 
@@ -39,17 +39,24 @@ const AutomationRuleApplyPreview = ({
   transactions,
   categories,
 }: AutomationRuleApplyPreviewProps) => {
-  const {
-    transformedTransactions,
-    allTransactions,
-    //  untouchedTransactions
-  } = useMemo(
-    () => assignTransactionCategories(transactions, automationRules),
-    [transactions, automationRules]
-  )
-
-  const [showTransformedOnly, setShowTransformedOnly] = useState(false)
+  const [showTransformedOnly, setShowTransformedOnly] = useState(true)
   const toggleShowTransformedOnly = () => setShowTransformedOnly(state => !state)
+
+  const [stateTransformedTransactions, setStateTransformedTransactions] = useState<
+    TransactionWithCategory[]
+  >([])
+  const [stateAllTransactions, setStateAllTransactions] = useState<TransactionWithCategory[]>([])
+
+  useEffect(() => {
+    const {
+      transformedTransactions,
+      allTransactions,
+      //  untouchedTransactions
+    } = assignTransactionCategory(transactions, automationRules)
+
+    setStateTransformedTransactions(transformedTransactions)
+    setStateAllTransactions(allTransactions)
+  }, [transactions, automationRules])
 
   const router = useRouter()
   function onCancel() {
@@ -57,15 +64,15 @@ const AutomationRuleApplyPreview = ({
   }
 
   const toast = useToast()
-  async function onApplyCategories() {
-    const bodyData = transformedTransactions.map(transaction => ({
+  function onApplyCategory() {
+    const bodyData = stateTransformedTransactions.map(transaction => ({
       id: transaction.id,
-      categoriesConnect: transaction.categories.map(cat => cat.id),
+      categoryConnect: transaction.category?.id,
     }))
 
     axios
-      .post<{ data: TransactionWithCategories[] }>(
-        "/api/transactions/updateTransactionsCategories",
+      .post<{ data: TransactionWithCategory[] }>(
+        "/api/transactions/updateTransactionsCategory",
         bodyData
       )
       .then(() => {
@@ -90,16 +97,19 @@ const AutomationRuleApplyPreview = ({
       <Alert status="info" mb={5}>
         <AlertIcon />
         <Text mr={3}>
-          Applied following categories to <b>{transformedTransactions.length}</b> transactions:
+          Applied following categories to <b>{stateTransformedTransactions.length}</b> transactions:
         </Text>
-        {automationRules
-          .flatMap(r => r.categories)
-          .map(cat => (
-            <Tag key={cat.id} size="lg" variant="solid" bgColor={cat.color || undefined}>
-              <TagLeftIcon boxSize={5} as={icons[cat.icon || "earth"]} />
-              <TagLabel>{cat.name}</TagLabel>
-            </Tag>
-          ))}
+        {automationRules.map(ar => (
+          <Tag
+            key={ar.category.id}
+            size="lg"
+            variant="solid"
+            bgColor={ar.category.color || undefined}
+          >
+            <TagLeftIcon boxSize={5} as={icons[ar.category.icon || "earth"]} />
+            <TagLabel>{ar.category.name}</TagLabel>
+          </Tag>
+        ))}
       </Alert>
 
       <HStack>
@@ -127,7 +137,7 @@ const AutomationRuleApplyPreview = ({
         </Button>
         <Button
           leftIcon={<Icon as={PlayIcon} boxSize={5} />}
-          onClick={onApplyCategories}
+          onClick={onApplyCategory}
           colorScheme="green"
         >
           Apply
@@ -138,8 +148,8 @@ const AutomationRuleApplyPreview = ({
       <Box w="100%" h="50%">
         <TransactionTable
           categories={categories}
-          transactions={showTransformedOnly ? transformedTransactions : allTransactions}
-          transformedTransactions={transformedTransactions.map(t => t.id)}
+          transactions={showTransformedOnly ? stateTransformedTransactions : stateAllTransactions}
+          transformedTransactions={stateTransformedTransactions.map(t => t.id)}
         />
       </Box>
     </>

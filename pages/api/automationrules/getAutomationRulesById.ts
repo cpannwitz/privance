@@ -1,13 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import { AutomationRuleWithCategories } from "../../../types/types"
+import { AutomationRuleWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AutomationRuleWithCategories[]
+  data?: AutomationRuleWithCategory[]
 }
 
 export default async function getAutomationRulesById(
@@ -33,7 +33,7 @@ export default async function getAutomationRulesById(
             in: automationRuleIds,
           },
         },
-        include: { categories: true },
+        include: { category: true },
       })
       res.json({ data })
     } catch (err) {

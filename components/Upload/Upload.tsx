@@ -6,14 +6,11 @@ import { useToast } from "@chakra-ui/react"
 import UploadPreview from "./UploadPreview"
 import UploadCSV from "../UploadCSV/UploadCSV"
 import { Category } from ".prisma/client"
-import {
-  AutomationRuleWithCategories,
-  TransactionCreateInputWithCategories,
-} from "../../types/types"
+import { AutomationRuleWithCategory, TransactionCreateInputWithCategory } from "../../types/types"
 
 interface UploadProps {
   categories: Category[]
-  automationRules: AutomationRuleWithCategories[]
+  automationRules: AutomationRuleWithCategory[]
 }
 
 const Upload = ({ categories, automationRules }: UploadProps) => {
@@ -21,10 +18,10 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
   const router = useRouter()
 
   const [uploadedTransactions, setUploadedTransactions] = useState<
-    TransactionCreateInputWithCategories[] | undefined
+    TransactionCreateInputWithCategory[] | undefined
   >(undefined)
 
-  function onUpdateTransaction(transaction: TransactionCreateInputWithCategories) {
+  function onUpdateTransaction(transaction: TransactionCreateInputWithCategory) {
     if (uploadedTransactions) {
       const index = uploadedTransactions.findIndex(t => t.identifier === transaction.identifier)
       setUploadedTransactions(state => {
@@ -37,7 +34,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
     }
   }
 
-  function onUploadRawTransactions(transactions: TransactionCreateInputWithCategories[]) {
+  function onUploadRawTransactions(transactions: TransactionCreateInputWithCategory[]) {
     setUploadedTransactions(transactions)
   }
 
@@ -48,7 +45,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
     if (uploadedTransactions) {
       const finalTransactions = uploadedTransactions.map(transaction => ({
         ...transaction,
-        categories: { connect: transaction.categories.map(cat => ({ id: cat.id })) },
+        categories: transaction.category ? { connect: { id: transaction.category.id } } : undefined,
       }))
 
       // TODO: extract api call

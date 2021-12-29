@@ -1,6 +1,6 @@
 import { Column } from "react-table"
 
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategory } from "../../types/types"
 import { Category } from ".prisma/client"
 import InteractiveCategoryRenderer from "./columnrenderer/InteractiveCategoryRenderer"
 import DisplayTextRenderer from "./columnrenderer/DisplayTextRenderer"
@@ -9,19 +9,19 @@ import DisplayNumberRenderer from "./columnrenderer/DisplayNumberRenderer"
 
 interface GetPreviewColumnsProps {
   categories: Category[]
-  onSelectCategories?: (transaction: TransactionWithCategories) => void
+  onSelectCategory?: (transaction: TransactionWithCategory) => void
 }
 const getPreviewColumns = ({
   categories,
-  onSelectCategories = () => {},
-}: GetPreviewColumnsProps): Column<TransactionWithCategories>[] => {
+  onSelectCategory = () => {},
+}: GetPreviewColumnsProps): Column<TransactionWithCategory>[] => {
   return [
     {
       Header: "Date",
       accessor: "issuedate",
       id: "issuedate",
       Cell: DisplayDateRenderer,
-      width: "10%",
+      width: "15%",
     },
     {
       Header: "Issuer",
@@ -34,6 +34,7 @@ const getPreviewColumns = ({
       Header: "Type",
       accessor: "type",
       id: "type",
+      Cell: DisplayTextRenderer,
       width: "10%",
     },
     {
@@ -41,20 +42,20 @@ const getPreviewColumns = ({
       accessor: "purpose",
       id: "purpose",
       Cell: DisplayTextRenderer,
-      width: "25%",
+      width: "30%",
     },
     {
-      Header: "Categories",
-      accessor: "categories",
-      id: "categories",
+      Header: "Categ.",
+      accessor: "category",
+      id: "category",
       Cell: p => (
         <InteractiveCategoryRenderer
           {...p}
           categories={categories}
-          onSelectCategories={onSelectCategories}
+          onSelectCategory={onSelectCategory}
         />
       ),
-      width: "15%",
+      width: "10%",
     },
     {
       Header: "Balance",

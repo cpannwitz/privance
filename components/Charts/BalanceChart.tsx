@@ -1,10 +1,10 @@
 import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from "@nivo/line"
 import { useMemo } from "react"
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategory } from "../../types/types"
 import { Box, useColorModeValue } from "@chakra-ui/react"
 import getSymbolFromCurrency from "currency-map-symbol"
 
-function lineChartTransformer(data: TransactionWithCategories[]): Datum[] {
+function lineChartTransformer(data: TransactionWithCategory[]): Datum[] {
   return data.map(t => ({
     x: new Date(t.issuedate || ""),
     y: t.balance,
@@ -12,7 +12,7 @@ function lineChartTransformer(data: TransactionWithCategories[]): Datum[] {
   }))
 }
 
-function getMinMaxBalance(data: TransactionWithCategories[]): { min: number; max: number } {
+function getMinMaxBalance(data: TransactionWithCategory[]): { min: number; max: number } {
   return data.reduce(
     (sum, t) => ({
       min: Math.min(sum.min, t.balance || 0),
@@ -23,7 +23,7 @@ function getMinMaxBalance(data: TransactionWithCategories[]): { min: number; max
 }
 
 interface BalanceChartProps {
-  data: TransactionWithCategories[]
+  data: TransactionWithCategory[]
   variant?: "default" | "small"
 }
 

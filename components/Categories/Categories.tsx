@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import useGetCategories from "../hooks/useGetCategories"
 import CategoryList from "./CategoryList"
-import { DataIsLoading, DataIsEmpty, DataIsError } from "./CategoriesStates"
+import { DataIsLoading, DataIsError } from "./CategoriesStates"
 
 interface CategoriesProps {}
 
@@ -15,8 +15,7 @@ const Categories = ({}: CategoriesProps) => {
   const retryCategories = useCallback(() => mutateCategories(), [mutateCategories])
 
   if (isLoadingCategories) return <DataIsLoading />
-  if (isErrorCategories) return <DataIsError retry={retryCategories} />
-  if (!categories || categories.length === 0) return <DataIsEmpty />
+  if (!categories || isErrorCategories) return <DataIsError retry={retryCategories} />
 
   return <CategoryList data={categories} />
 }

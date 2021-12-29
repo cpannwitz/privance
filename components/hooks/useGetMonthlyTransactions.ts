@@ -1,8 +1,8 @@
 import useSWR from "swr"
-import { MonthlyTransactionsWithCategories } from "../../types/types"
+import { MonthlyTransactions } from "../../types/types"
 
 export default function useGetMonthlyTransactions() {
-  const { data, error, isValidating, mutate } = useSWR<{ data: MonthlyTransactionsWithCategories }>(
+  const { data, error, isValidating, mutate } = useSWR<{ data: MonthlyTransactions }>(
     `/api/transactions/getMonthlyTransactions`
   )
 

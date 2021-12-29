@@ -1,10 +1,10 @@
 import { Text, Tooltip } from "@chakra-ui/react"
 import { memo, PropsWithChildren } from "react"
 import { CellProps } from "react-table"
-import { TransactionWithCategories } from "../../../types/types"
+import { TransactionWithCategory } from "../../../types/types"
 
 interface TextRendererProps
-  extends PropsWithChildren<CellProps<TransactionWithCategories, string | null>> {}
+  extends PropsWithChildren<CellProps<TransactionWithCategory, string | null>> {}
 
 const TextRenderer = memo(
   ({ value }: TextRendererProps) => (

@@ -6,20 +6,20 @@ import OpenModal from "../../OpenModal/OpenModal"
 
 import FieldPicker from "./FieldPicker"
 import OperationPicker from "./OperationPicker"
-import CategoriesPicker from "./CategoriesPicker"
+import CategoryPicker from "./CategoryPicker"
 import ValuePicker from "./ValuePicker"
 
 import { schema } from "./FormUtils"
-import { AutomationRuleWithCategories } from "../../../types/types"
+import { AutomationRuleWithCategory } from "../../../types/types"
 
 interface AutomationEditProps {
-  onSave: (automationRule: AutomationRuleWithCategories) => void
+  onSave: (automationRule: AutomationRuleWithCategory) => void
   onCancel: () => void
-  formValue?: AutomationRuleWithCategories
+  formValue?: AutomationRuleWithCategory
 }
 
 const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) => {
-  const onFormSubmit: SubmitHandler<AutomationRuleWithCategories> = data => {
+  const onFormSubmit: SubmitHandler<AutomationRuleWithCategory> = data => {
     // TODO: fragil typing
     onSave({
       ...data,
@@ -30,7 +30,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
   const defaultValues = {
     field: formValue?.field ?? undefined,
     operation: formValue?.operation ?? undefined,
-    categories: formValue?.categories ?? [],
+    categories: formValue?.category ?? undefined,
     numberValue: formValue?.numberValue ?? undefined,
     stringValue: formValue?.stringValue ?? undefined,
     dateValue: formValue?.dateValue || undefined,
@@ -50,7 +50,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
         </>
       }
     >
-      <FormWrapper<AutomationRuleWithCategories>
+      <FormWrapper<AutomationRuleWithCategory>
         onSubmit={onFormSubmit}
         defaultValues={defaultValues}
         formId="AutomationRulesForm"
@@ -60,7 +60,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
           <FieldPicker />
           <OperationPicker />
           <ValuePicker />
-          <CategoriesPicker />
+          <CategoryPicker />
         </VStack>
       </FormWrapper>
     </OpenModal>

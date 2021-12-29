@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import HomeIcon from "remixicon-react/Home4LineIcon"
 import MonthlyInsightIcon from "remixicon-react/Calendar2LineIcon"
 import UploadIcon from "remixicon-react/Upload2LineIcon"
-import TagIcon from "remixicon-react/PriceTag3LineIcon"
+import CategoriesIcon from "remixicon-react/StackLineIcon"
 import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
 import AutomationRuleIcon from "remixicon-react/Settings2LineIcon"
 
@@ -60,7 +60,7 @@ const NavbarLinks = () => {
         variant="ghost"
         colorScheme="gray"
         justifyContent="start"
-        leftIcon={<Icon as={TagIcon} boxSize={6} />}
+        leftIcon={<Icon as={CategoriesIcon} boxSize={6} />}
         onClick={linkToCategories}
       >
         Categories

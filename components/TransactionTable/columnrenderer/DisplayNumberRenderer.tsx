@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react"
 import { memo, PropsWithChildren } from "react"
 import { CellProps } from "react-table"
-import { TransactionWithCategories } from "../../../types/types"
+import { TransactionWithCategory } from "../../../types/types"
 import getSymbolFromCurrency from "currency-map-symbol"
 
 const colors = {
@@ -16,7 +16,7 @@ const colors = {
 }
 
 interface NumberRendererProps
-  extends PropsWithChildren<CellProps<TransactionWithCategories, number | null>> {
+  extends PropsWithChildren<CellProps<TransactionWithCategory, number | null>> {
   variant: "amount" | "balance"
 }
 

@@ -5,14 +5,14 @@ import { Box, Stack, Divider, Button, Icon, Spacer, Heading } from "@chakra-ui/r
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
 import CancelIcon from "remixicon-react/CloseCircleLineIcon"
-import { TransactionCreateInputWithCategories, TransactionWithCategories } from "../../types/types"
+import { TransactionCreateInputWithCategory, TransactionWithCategory } from "../../types/types"
 
 interface UploadPreviewProps {
-  transactions: TransactionCreateInputWithCategories[]
+  transactions: TransactionCreateInputWithCategory[]
   categories: Category[]
   onCancel: () => void
   onUpload: () => void
-  onUpdateTransaction?: (transaction: TransactionWithCategories) => void
+  onUpdateTransaction?: (transaction: TransactionCreateInputWithCategory) => void
 }
 
 const UploadPreview = ({
@@ -49,7 +49,7 @@ const UploadPreview = ({
         <TransactionTable
           categories={categories}
           // TODO: better typings, fragile
-          transactions={transactions as TransactionWithCategories[]}
+          transactions={transactions as TransactionWithCategory[]}
           variant="preview"
           updateTransaction={onUpdateTransaction}
         />

@@ -1,13 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import { TransactionWithCategories } from "../../../types/types"
+import { TransactionWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: TransactionWithCategories[]
+  data?: TransactionWithCategory[]
 }
 
 export default async function getTransactions(
@@ -17,7 +17,7 @@ export default async function getTransactions(
   if (req.method === "GET") {
     try {
       const data = await prisma.transaction.findMany({
-        include: { categories: true, _count: true },
+        include: { category: true, _count: true },
       })
       const sortedData = sortTransactions(data, "desc")
       res.json({ data: sortedData })
@@ -32,7 +32,7 @@ export default async function getTransactions(
 
 // TODO: replace with saved order to DB
 function sortTransactions(
-  transactions: TransactionWithCategories[],
+  transactions: TransactionWithCategory[],
   sortDirection: "asc" | "desc" = "desc"
 ) {
   const isDesc = sortDirection === "desc"

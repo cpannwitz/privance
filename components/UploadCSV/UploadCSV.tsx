@@ -6,15 +6,12 @@ import parseCSVToTransactions from "./parseCSVToJSON"
 import normalizeCSVTransactions from "./transformTransactions"
 
 import Dropzone from "./Dropzone"
-import assignNewTransactionCategories from "./assignNewTransactionCategories"
-import {
-  AutomationRuleWithCategories,
-  TransactionCreateInputWithCategories,
-} from "../../types/types"
+import assignNewTransactionCategory from "./assignNewTransactionCategory"
+import { AutomationRuleWithCategory, TransactionCreateInputWithCategory } from "../../types/types"
 
 interface UploadCSVProps {
-  onUpload?: (transaction: TransactionCreateInputWithCategories[]) => void
-  automationRules: AutomationRuleWithCategories[]
+  onUpload?: (transaction: TransactionCreateInputWithCategory[]) => void
+  automationRules: AutomationRuleWithCategory[]
 }
 
 const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => {
@@ -59,13 +56,18 @@ const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => 
     }
 
     const normalizedCSVTransactions = await normalizeCSVTransactions(parsedCSVTransactions.data)
-    const transactionsWithCategories = await assignNewTransactionCategories(
-      normalizedCSVTransactions,
-      automationRules
-    )
 
-    if (transactionsWithCategories) {
-      onUpload(transactionsWithCategories)
+    if (!automationRules || automationRules.length <= 0) {
+      onUpload(normalizedCSVTransactions)
+    } else {
+      const transactionsWithCategory = await assignNewTransactionCategory(
+        normalizedCSVTransactions,
+        automationRules
+      )
+
+      // if (transactionsWithCategory) {
+      onUpload(transactionsWithCategory)
+      // }
     }
   }
   return (

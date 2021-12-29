@@ -1,9 +1,9 @@
 import { useTable, useGlobalFilter } from "react-table"
 import axios, { AxiosError } from "axios"
-import { Box, useMultiStyleConfig, useToast } from "@chakra-ui/react"
-import { useSWRConfig } from "swr"
+import { Box, useMultiStyleConfig, useToast, useColorMode } from "@chakra-ui/react"
+import { KeyedMutator } from "swr"
 
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionCreateInputWithCategory, TransactionWithCategory } from "../../types/types"
 import getDefaultColumns from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Category, Prisma } from ".prisma/client"
@@ -15,11 +15,14 @@ import Autosizer from "react-virtualized-auto-sizer"
 
 export type TableVariant = "preview" | "default"
 interface TransactionTableProps {
-  transactions: TransactionWithCategories[]
+  transactions: TransactionWithCategory[]
   categories: Category[]
   transformedTransactions?: number[]
   variant?: TableVariant
-  updateTransaction?: (transaction: TransactionWithCategories) => void
+  updateTransaction?: (transaction: TransactionCreateInputWithCategory) => void
+  mutateTransactions?: KeyedMutator<{
+    data: TransactionWithCategory[]
+  }>
 }
 const DEFAULTTRANSFORMATIONS: number[] = []
 const TransactionTable = ({
@@ -28,43 +31,42 @@ const TransactionTable = ({
   transformedTransactions = DEFAULTTRANSFORMATIONS,
   variant = "default",
   updateTransaction,
+  mutateTransactions,
 }: TransactionTableProps) => {
   const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
   const toast = useToast()
-  const { mutate } = useSWRConfig()
+  const { colorMode } = useColorMode()
+  const isDark = colorMode === "dark"
 
-  const onSelectCategories = useCallback(
-    (transaction: TransactionWithCategories) => {
+  const onSelectCategory = useCallback(
+    (transaction: TransactionWithCategory) => {
       if (variant === "preview" && updateTransaction) {
-        updateTransaction(transaction)
+        updateTransaction(transaction as TransactionCreateInputWithCategory)
       } else {
         axios
-          .post<{ data: TransactionWithCategories }>(
-            "/api/transactions/updateTransactionCategories",
-            {
-              id: transaction.id,
-              categories: transaction.categories.map(cat => cat.id),
-            }
-          )
+          .post<{ data: TransactionWithCategory }>("/api/transactions/updateTransactionCategory", {
+            id: transaction.id,
+            category: transaction.category ? transaction.category.id : undefined,
+          })
           .then(res => {
             toast({
               title: `Updated your Transaction!`,
               status: "success",
             })
 
-            // ! causes performance issues
-            const updatedTransaction = res.data.data
-            mutate(
-              `/api/transactions/getTransactions`,
-              async (transactions: { data: TransactionWithCategories[] }) => {
-                const index = transactions.data.findIndex(val => val.id === updatedTransaction.id)
-                const updatedData = [...transactions.data]
-                updatedData[index] = updatedTransaction
-                // return transactions
-                return { data: updatedData }
-              },
-              false
-            )
+            // TODO: ! causes performance issues
+            if (mutateTransactions) {
+              const updatedTransaction = res.data.data
+              mutateTransactions(async transactions => {
+                if (transactions) {
+                  const index = transactions.data.findIndex(val => val.id === updatedTransaction.id)
+                  const updatedData = [...transactions.data]
+                  updatedData[index] = updatedTransaction
+                  return { data: updatedData }
+                }
+                return transactions
+              }, false)
+            }
           })
           .catch((error: AxiosError) => {
             if (error.response) {
@@ -76,13 +78,13 @@ const TransactionTable = ({
           })
       }
     },
-    [updateTransaction, variant, mutate, toast]
+    [updateTransaction, variant, toast, mutateTransactions]
   )
 
   // TODO: move categories in getColumns? or smth else...
   const columns = useMemo(() => {
-    return getDefaultColumns({ categories, onSelectCategories })
-  }, [categories, onSelectCategories])
+    return getDefaultColumns({ categories, onSelectCategory })
+  }, [categories, onSelectCategory])
 
   const {
     getTableProps,
@@ -108,7 +110,9 @@ const TransactionTable = ({
       const background =
         isTransactionWithCategories(row.original) &&
         transformedTransactions.includes(row.original.id)
-          ? "#edf7ed"
+          ? isDark
+            ? "#1c321c"
+            : "#edf7ed"
           : undefined
       const rowProps = row.getRowProps({ style: { ...style, background } })
       return (
@@ -197,7 +201,7 @@ const TransactionTable = ({
 export default TransactionTable
 
 export function isTransactionWithCategories(
-  transaction: TransactionWithCategories | Prisma.TransactionCreateInput
-): transaction is TransactionWithCategories {
+  transaction: TransactionWithCategory | Prisma.TransactionCreateInput
+): transaction is TransactionWithCategory {
   return "id" in transaction
 }

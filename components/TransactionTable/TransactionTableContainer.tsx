@@ -56,7 +56,11 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
       <Box>
         <Filterbar filterState={filterState} onChange={onFilterStateSet} />
       </Box>
-      <TransactionTable transactions={transactions} categories={categories || []} />
+      <TransactionTable
+        transactions={transactions}
+        categories={categories || []}
+        mutateTransactions={mutateTransactions}
+      />
     </Box>
   )
 }

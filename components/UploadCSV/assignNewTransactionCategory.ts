@@ -1,37 +1,42 @@
 import {
-  AutomationRuleWithCategories,
-  TransactionCreateInputWithCategories,
+  AutomationRuleWithCategory,
+  TransactionCreateInputWithCategory,
   ZAutomationRuleField,
 } from "../../types/types"
 import { Prisma, Category } from ".prisma/client"
 
 // TODO: centralize and deduplicate code
 
-function assignNewTransactionCategories(
+function assignNewTransactionCategory(
   transactions: Prisma.TransactionUncheckedCreateInput[],
-  rules: AutomationRuleWithCategories[]
+  rules: AutomationRuleWithCategory[]
 ) {
-  const transformedTransactions: TransactionCreateInputWithCategories[] = []
+  const transformedTransactions: TransactionCreateInputWithCategory[] = []
 
   transactions.forEach(transaction => {
     const categoriesToApply: Category[] = []
 
     rules.forEach(rule => {
       const result = applyRule(rule, transaction)
-      categoriesToApply.push(...result)
+      if (result) {
+        categoriesToApply.push(result)
+      }
     })
 
-    const newCategories = [...Array.from(new Map(categoriesToApply.map(c => [c.id, c])).values())]
-    const newTransaction = Object.assign({}, { ...transaction, categories: newCategories })
-    transformedTransactions.push(newTransaction)
+    // check for length of categories to apply, take first one
+    if (categoriesToApply.length > 0) {
+      const newCategory = categoriesToApply[0]
+      const newTransaction = Object.assign({}, { ...transaction, category: newCategory })
+      transformedTransactions.push(newTransaction)
+    }
   })
   return transformedTransactions
 }
 
-export default assignNewTransactionCategories
+export default assignNewTransactionCategory
 
 export function applyRule(
-  rule: AutomationRuleWithCategories,
+  rule: AutomationRuleWithCategory,
   transaction: Prisma.TransactionUncheckedCreateInput
 ) {
   const fieldValue = transaction[rule.field as ZAutomationRuleField]
@@ -43,9 +48,9 @@ export function applyRule(
         rule.stringValue &&
         fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
       ) {
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "excludes": {
@@ -55,9 +60,9 @@ export function applyRule(
         rule.stringValue &&
         !fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
       ) {
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "equal": {
@@ -67,9 +72,9 @@ export function applyRule(
         rule.numberValue &&
         fieldValue === rule.numberValue
       ) {
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "lessthan": {
@@ -79,9 +84,9 @@ export function applyRule(
         rule.numberValue &&
         fieldValue < rule.numberValue
       ) {
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "morethan": {
@@ -91,7 +96,7 @@ export function applyRule(
         rule.numberValue &&
         fieldValue > rule.numberValue
       ) {
-        return rule.categories
+        return rule.category
       }
     }
     case "before": {
@@ -102,9 +107,9 @@ export function applyRule(
         rule.dateValue &&
         fieldValue.getTime() < new Date(rule.dateValue).getTime()
       ) {
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "after": {
@@ -115,10 +120,10 @@ export function applyRule(
         rule.dateValue &&
         fieldValue.getTime() > new Date(rule.dateValue).getTime()
       ) {
-        return rule.categories
+        return rule.category
       }
     }
     default:
-      return []
+      return undefined
   }
 }

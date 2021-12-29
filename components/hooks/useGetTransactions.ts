@@ -1,8 +1,8 @@
 import useSWR from "swr"
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategory } from "../../types/types"
 
 export default function useGetTransactions() {
-  const { data, error, isValidating, mutate } = useSWR<{ data: TransactionWithCategories[] }>(
+  const { data, error, isValidating, mutate } = useSWR<{ data: TransactionWithCategory[] }>(
     `/api/transactions/getTransactions`
   )
 

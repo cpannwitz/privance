@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MonthlyTransactionsWithCategories, TransactionWithCategories } from "../../types/types"
+import { MonthlyTransactions, TransactionWithCategory } from "../../types/types"
 import {
   Icon,
   Heading,
@@ -22,8 +22,8 @@ import TransactionTable from "../TransactionTable/TransactionTable"
 import TableIcon from "remixicon-react/TableLineIcon"
 
 interface MonthlyInsightGridProps {
-  transactions: TransactionWithCategories[]
-  monthlyTransactions: MonthlyTransactionsWithCategories
+  transactions: TransactionWithCategory[]
+  monthlyTransactions: MonthlyTransactions
 }
 
 const MonthlyInsightGrid = ({ transactions, monthlyTransactions }: MonthlyInsightGridProps) => {
@@ -150,7 +150,7 @@ const MonthlyInsightGrid = ({ transactions, monthlyTransactions }: MonthlyInsigh
 
 export default MonthlyInsightGrid
 
-type MonthGridItemProps = MonthlyTransactionsWithCategories["years"][string]["months"][string] & {
+type MonthGridItemProps = MonthlyTransactions["years"][string]["months"][string] & {
   currency: string
 }
 const MonthGridItem = ({
