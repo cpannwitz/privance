@@ -1,5 +1,5 @@
 import * as yup from "yup"
-import { AutomationRuleWithCategories, TAutomationRuleField } from "../../../types/types"
+import { AutomationRuleWithCategory, TAutomationRuleField } from "../../../types/types"
 
 export const parseDateToString = (date?: Date | null) => {
   if (!date) return undefined
@@ -76,7 +76,7 @@ export function getOperationType(field: TAutomationRuleField) {
 }
 
 export interface OperationValue {
-  value: AutomationRuleWithCategories["operation"]
+  value: AutomationRuleWithCategory["operation"]
   label: string
 }
 export const dateOperationValues: OperationValue[] = [

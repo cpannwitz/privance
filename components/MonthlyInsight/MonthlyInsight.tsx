@@ -4,9 +4,9 @@ import useGetMonthlyTransactions from "../hooks/useGetMonthlyTransactions"
 import MonthlyInsightGrid from "./MonthlyInsightGrid"
 import { DataIsLoading, DataIsError, DataIsEmpty } from "./MonthlyInsightStates"
 
-interface CategoriesProps {}
+interface MonthlyInsightProps {}
 
-const Categories = ({}: CategoriesProps) => {
+const MonthlyInsight = ({}: MonthlyInsightProps) => {
   const {
     data: monthlyTransactions,
     isError: isErrorMonthlyTransactions,
@@ -38,4 +38,4 @@ const Categories = ({}: CategoriesProps) => {
   )
 }
 
-export default Categories
+export default MonthlyInsight

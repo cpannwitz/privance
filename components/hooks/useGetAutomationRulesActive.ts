@@ -1,8 +1,8 @@
 import useSWR from "swr"
-import { AutomationRuleWithCategories } from "../../types/types"
+import { AutomationRuleWithCategory } from "../../types/types"
 
 export default function useGetAutomationRulesActive() {
-  const { data, error, isValidating, mutate } = useSWR<{ data: AutomationRuleWithCategories[] }>(
+  const { data, error, isValidating, mutate } = useSWR<{ data: AutomationRuleWithCategory[] }>(
     `/api/automationrules/getAutomationRulesActive`
   )
 

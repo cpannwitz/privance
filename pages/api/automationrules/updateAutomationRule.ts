@@ -1,13 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, Prisma } from ".prisma/client"
-import { AutomationRuleWithCategories } from "../../../types/types"
+import { AutomationRuleWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AutomationRuleWithCategories
+  data?: AutomationRuleWithCategory
 }
 
 export default async function updateAutomationRule(
@@ -19,7 +19,7 @@ export default async function updateAutomationRule(
       Prisma.AutomationRuleWhereUniqueInput
 
     // TODO: better validation needed (runtypes?)
-    if (!bodydata.id || !bodydata.field || !bodydata.operation || !bodydata.categories) {
+    if (!bodydata.id || !bodydata.field || !bodydata.operation || !bodydata.category) {
       return res.status(400).json({ error: "Missing argument" })
     }
 
@@ -33,7 +33,7 @@ export default async function updateAutomationRule(
         },
         data: data,
         include: {
-          categories: true,
+          category: true,
         },
       })
 

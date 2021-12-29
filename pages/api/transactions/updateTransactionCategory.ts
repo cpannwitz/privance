@@ -1,22 +1,22 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { PrismaClient, Prisma } from ".prisma/client"
 import type { NextApiRequest, NextApiResponse } from "next"
-import { TransactionWithCategories } from "../../../types/types"
+import { TransactionWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: TransactionWithCategories
+  data?: TransactionWithCategory
 }
 
-export default async function updateTransactionCategories(
+export default async function updateTransactionCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
     const bodydata = req.body as Prisma.TransactionWhereUniqueInput & {
-      categories?: number[]
+      category?: number
     }
 
     if (bodydata.id) {
@@ -26,12 +26,13 @@ export default async function updateTransactionCategories(
             id: bodydata.id,
           },
           data: {
-            categories: {
-              set: bodydata.categories?.map(cat => ({ id: cat })) ?? [],
+            category: {
+              connect: bodydata.category ? { id: bodydata.category } : undefined,
+              disconnect: !bodydata.category ? true : undefined,
             },
           },
           include: {
-            categories: true,
+            category: true,
           },
         })
 

@@ -38,15 +38,3 @@ export default async function deleteCategories(
     res.status(405).json({ error: "wrong http method" })
   }
 }
-
-// axios
-//   .delete("/api/categories/deleteCategories", {
-//     params: { id: [category.id, 10, 11, 12, 13].join(",") },
-//   })
-//   .then(() => {
-//     toast({
-//       title: `Deleted your Category!`,
-//       status: "success",
-//     })
-//     mutate(`/api/categories/getCategories`)
-//   })

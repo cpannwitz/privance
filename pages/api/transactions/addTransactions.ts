@@ -2,13 +2,13 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, Prisma } from ".prisma/client"
 
-import { TransactionWithCategories } from "../../../types/types"
+import { TransactionWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: TransactionWithCategories[]
+  data?: TransactionWithCategory[]
 }
 
 export default async function addTransactions(
@@ -27,7 +27,7 @@ export default async function addTransactions(
             },
             update: data,
             create: data,
-            include: { categories: true },
+            include: { category: true },
           })
         )
       )

@@ -1,18 +1,15 @@
 import { Prisma, Transaction, Category, AutomationRule } from ".prisma/client"
 
-export type TransactionWithCategories = Transaction & {
-  categories: Category[]
+export type TransactionWithCategory = Transaction & {
+  category: Category | null
   _count?: Prisma.TransactionCountOutputType
 }
 
-export type TransactionCreateInputWithCategories = Omit<
-  Prisma.TransactionCreateInput,
-  "categories"
-> & {
-  categories: Category[]
+export type TransactionCreateInputWithCategory = Omit<Prisma.TransactionCreateInput, "category"> & {
+  category?: Category | null
 }
 
-export type MonthlyTransactionsWithCategories = {
+export type MonthlyTransactions = {
   totalPlus: number
   totalMinus: number
   preBalance: number
@@ -31,7 +28,7 @@ export type MonthlyTransactionsWithCategories = {
           month: number
           totalMonthPlus: number
           totalMonthMinus: number
-          transactions: TransactionWithCategories[]
+          transactions: TransactionWithCategory[]
           totalMonthPlusPercentage: number
           totalMonthMinusPercentage: number
         }
@@ -44,8 +41,8 @@ export type CategoryWithTransactions = Category & {
   transactions: Transaction[]
 }
 
-export type AutomationRuleWithCategories = AutomationRule & {
-  categories: Category[]
+export type AutomationRuleWithCategory = AutomationRule & {
+  category: Category
 }
 
 export interface ParsedCSVTransactions {

@@ -32,7 +32,7 @@ import AddIcon from "remixicon-react/AddLineIcon"
 import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
 
 import AutomationRulesEdit from "./AutomationRulesEdit/AutomationRulesEdit"
-import { AutomationRuleWithCategories } from "../../types/types"
+import { AutomationRuleWithCategory } from "../../types/types"
 import { DataIsEmpty } from "./AutomationRulesListStates"
 import { getValueType } from "./AutomationRulesEdit/FormUtils"
 import { icons } from "../../shared/iconUtils"
@@ -41,7 +41,7 @@ import { useRouter } from "next/router"
 import GeneralBadge from "../GeneralBadge/GeneralBadge"
 
 interface AutomationListProps {
-  data: AutomationRuleWithCategories[]
+  data: AutomationRuleWithCategory[]
 }
 
 const AutomationList = ({ data }: AutomationListProps) => {
@@ -49,13 +49,13 @@ const AutomationList = ({ data }: AutomationListProps) => {
   const toast = useToast()
 
   const [editedAutomationRule, setEditedAutomationRule] =
-    useState<AutomationRuleWithCategories | null>(null)
+    useState<AutomationRuleWithCategory | null>(null)
 
   function onAddAutomationRule() {
-    setEditedAutomationRule({} as AutomationRuleWithCategories)
+    setEditedAutomationRule({} as AutomationRuleWithCategory)
   }
 
-  function onEditAutomationRule(automationRule: AutomationRuleWithCategories) {
+  function onEditAutomationRule(automationRule: AutomationRuleWithCategory) {
     setEditedAutomationRule(automationRule)
   }
 
@@ -64,12 +64,11 @@ const AutomationList = ({ data }: AutomationListProps) => {
   }
 
   // TODO: badly needs better structure / external api requests
-  function onSaveAddEdit(automationRule: AutomationRuleWithCategories) {
+  function onSaveAddEdit(automationRule: AutomationRuleWithCategory) {
     if (!automationRule.id) {
-      const { categories } = automationRule
       const automationRuleCreateInput: Prisma.AutomationRuleCreateInput = {
         ...automationRule,
-        categories: { connect: categories.map(cat => ({ id: cat.id })) },
+        category: { connect: { id: automationRule.category.id } },
       }
       axios
         .post("/api/automationrules/addAutomationRule", automationRuleCreateInput)
@@ -92,11 +91,10 @@ const AutomationList = ({ data }: AutomationListProps) => {
           setEditedAutomationRule(null)
         })
     } else {
-      const { categories } = automationRule
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
-        categories: { set: categories.map(cat => ({ id: cat.id })) },
+        category: { connect: { id: automationRule.category.id } },
       }
       axios
         .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
@@ -122,7 +120,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
   }
 
   // TODO: badly needs external api requests
-  function onDeleteAutomationRule(automationRule: AutomationRuleWithCategories) {
+  function onDeleteAutomationRule(automationRule: AutomationRuleWithCategory) {
     if (automationRule?.id) {
       axios
         .delete("/api/automationrules/deleteAutomationRule", { params: { id: automationRule.id } })
@@ -146,13 +144,14 @@ const AutomationList = ({ data }: AutomationListProps) => {
     }
   }
 
-  function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategories) {
+  function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategory) {
     if (automationRule?.id) {
-      const { categories } = automationRule
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
-        categories: { set: categories.map(cat => ({ id: cat.id })) },
+        category: {
+          connect: { id: automationRule.category.id },
+        },
         activeOnUpload: !automationRule.activeOnUpload,
       }
       axios
@@ -179,7 +178,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
   }
 
   const router = useRouter()
-  function onRunAutomationRule(automationRule: AutomationRuleWithCategories) {
+  function onRunAutomationRule(automationRule: AutomationRuleWithCategory) {
     router.push({
       pathname: `/automationruleapply`,
       query: {
@@ -231,11 +230,11 @@ const AutomationList = ({ data }: AutomationListProps) => {
 export default AutomationList
 
 interface AutomationRuleListItemProps {
-  onRun: (automationRule: AutomationRuleWithCategories) => void
-  onEdit: (automationRule: AutomationRuleWithCategories) => void
-  onDelete: (automationRule: AutomationRuleWithCategories) => void
-  onToggleOnUploadRun: (automationRule: AutomationRuleWithCategories) => void
-  automationRule: AutomationRuleWithCategories
+  onRun: (automationRule: AutomationRuleWithCategory) => void
+  onEdit: (automationRule: AutomationRuleWithCategory) => void
+  onDelete: (automationRule: AutomationRuleWithCategory) => void
+  onToggleOnUploadRun: (automationRule: AutomationRuleWithCategory) => void
+  automationRule: AutomationRuleWithCategory
 }
 
 // TODO: i18n, plus better labels, better text structure (for string, number, date...)
@@ -272,12 +271,10 @@ const AutomationRuleListItem = ({
 
         <Stat>
           <StatLabel>then</StatLabel>
-          {automationRule.categories.map(cat => (
-            <Tag key={cat.id} size="lg" variant="solid" bgColor={cat.color || undefined}>
-              <TagLeftIcon boxSize={5} as={icons[cat.icon || "earth"]} />
-              <TagLabel>{cat.name}</TagLabel>
-            </Tag>
-          ))}
+          <Tag size="lg" variant="solid" bgColor={automationRule.category.color || undefined}>
+            <TagLeftIcon boxSize={5} as={icons[automationRule.category.icon || "earth"]} />
+            <TagLabel>{automationRule.category.name}</TagLabel>
+          </Tag>
           <StatHelpText>will be assigned.</StatHelpText>
         </Stat>
       </StatGroup>
@@ -326,7 +323,7 @@ const AutomationRuleListItem = ({
   )
 }
 
-const StringValueBlock = (automationRule: AutomationRuleWithCategories) => {
+const StringValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
     <Stat>
       <StatLabel>{automationRule.operation}</StatLabel>
@@ -335,7 +332,7 @@ const StringValueBlock = (automationRule: AutomationRuleWithCategories) => {
     </Stat>
   )
 }
-const NumberValueBlock = (automationRule: AutomationRuleWithCategories) => {
+const NumberValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
     <Stat>
       <StatLabel>has {automationRule.operation}</StatLabel>
@@ -344,7 +341,7 @@ const NumberValueBlock = (automationRule: AutomationRuleWithCategories) => {
     </Stat>
   )
 }
-const DateValueBlock = (automationRule: AutomationRuleWithCategories) => {
+const DateValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
     <Stat>
       <StatLabel>is {automationRule.operation}</StatLabel>

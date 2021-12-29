@@ -1,13 +1,13 @@
 import { FormControl, FormErrorMessage, FormLabel, Select } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
-import { AutomationRuleWithCategories } from "../../../types/types"
+import { AutomationRuleWithCategory } from "../../../types/types"
 
 import { fieldValues } from "./FormUtils"
 
 interface FieldPickerProps {}
 
 const FieldPicker = ({}: FieldPickerProps) => {
-  const { control } = useFormContext<AutomationRuleWithCategories>()
+  const { control } = useFormContext<AutomationRuleWithCategory>()
 
   return (
     <Controller

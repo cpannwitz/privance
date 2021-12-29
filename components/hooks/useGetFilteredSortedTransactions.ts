@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from "axios"
 import { useMemo } from "react"
 import useSWR from "swr"
-import { TransactionWithCategories } from "../../types/types"
+import { TransactionWithCategory } from "../../types/types"
 
 interface UseGetFilteredSortedTransactionsProps {
   sortDirection?: "asc" | "desc"
@@ -21,7 +21,7 @@ export default function useGetFilteredSortedTransactions({
     () => ({ params: { sortDirection, startDate, endDate, onlyIncome, onlySpending } }),
     [sortDirection, startDate, endDate, onlyIncome, onlySpending]
   )
-  const { data, error, isValidating, mutate } = useSWR<{ data: TransactionWithCategories[] }>([
+  const { data, error, isValidating, mutate } = useSWR<{ data: TransactionWithCategory[] }>([
     `/api/transactions/getFilteredSortedTransactions`,
     requestConfig,
   ])

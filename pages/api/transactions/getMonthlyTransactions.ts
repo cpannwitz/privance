@@ -1,13 +1,13 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import { MonthlyTransactionsWithCategories, TransactionWithCategories } from "../../../types/types"
+import { MonthlyTransactions, TransactionWithCategory } from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: MonthlyTransactionsWithCategories
+  data?: MonthlyTransactions
 }
 
 export default async function getMonthlyTransactions(
@@ -20,7 +20,7 @@ export default async function getMonthlyTransactions(
       // https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing
       const data = await prisma.transaction.findMany({
         orderBy: [{ issuedate: "desc" }],
-        include: { categories: true, _count: true },
+        include: { category: true, _count: true },
       })
       const firstTransaction = { ...data[data.length - 1] }
       const lastTransaction = { ...data[0] }
@@ -33,7 +33,7 @@ export default async function getMonthlyTransactions(
       const preBalance = (firstTransaction.balance || 0) - (firstTransaction.amount || 0)
 
       // split data into months
-      let monthlyData: MonthlyTransactionsWithCategories = sortedData.reduce(
+      let monthlyData: MonthlyTransactions = sortedData.reduce(
         (transformedData: any, transaction) => {
           // TODO: better typing of reducer
           if (!transaction.issuedate) return
@@ -106,7 +106,7 @@ export default async function getMonthlyTransactions(
 }
 // TODO: replace with saved order to DB
 function sortTransactions(
-  transactions: TransactionWithCategories[],
+  transactions: TransactionWithCategory[],
   sortDirection: "asc" | "desc" = "desc"
 ) {
   const isDesc = sortDirection === "desc"

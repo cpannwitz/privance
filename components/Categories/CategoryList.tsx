@@ -21,6 +21,7 @@ import AddIcon from "remixicon-react/AddLineIcon"
 import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
 
 import CategoryEdit from "./CategoryEdit/CategoryEdit"
+import { DataIsEmpty } from "./CategoriesStates"
 import { icons } from "../../shared/iconUtils"
 
 interface CategoryListProps {
@@ -109,16 +110,20 @@ const CategoryList = ({ data }: CategoryListProps) => {
           Add Category
         </Button>
       </Box>
-      <SimpleGrid spacing={5} minChildWidth="26rem">
-        {data.map(category => (
-          <CategoryListItem
-            key={category.name}
-            onEdit={onEditCategory}
-            onDelete={onDeleteCategory}
-            category={category}
-          />
-        ))}
-      </SimpleGrid>
+      {data.length <= 0 ? (
+        <DataIsEmpty />
+      ) : (
+        <SimpleGrid spacing={5} minChildWidth="26rem">
+          {data.map(category => (
+            <CategoryListItem
+              key={category.name}
+              onEdit={onEditCategory}
+              onDelete={onDeleteCategory}
+              category={category}
+            />
+          ))}
+        </SimpleGrid>
+      )}
     </>
   )
 }

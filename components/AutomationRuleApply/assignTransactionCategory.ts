@@ -1,31 +1,30 @@
 import {
-  AutomationRuleWithCategories,
-  TransactionWithCategories,
+  AutomationRuleWithCategory,
+  TransactionWithCategory,
   ZAutomationRuleField,
 } from "../../types/types"
 import { Prisma, Category } from ".prisma/client"
 
-function assignTransactionCategories(
-  transactions: TransactionWithCategories[],
-  rules: AutomationRuleWithCategories[],
+function assignTransactionCategory(
+  transactions: TransactionWithCategory[],
+  rules: AutomationRuleWithCategory[],
   fullTransform: boolean = false
 ) {
-  const transformedTransactions: TransactionWithCategories[] = []
-  const untouchedTransactions: TransactionWithCategories[] = []
-  const allTransactions: TransactionWithCategories[] = []
+  const transformedTransactions: TransactionWithCategory[] = []
+  const untouchedTransactions: TransactionWithCategory[] = []
+  const allTransactions: TransactionWithCategory[] = []
 
   transactions.forEach(transaction => {
     const categoriesToApply: Category[] = []
 
     rules.forEach(rule => {
       const result = applyRule(rule, transaction)
-      categoriesToApply.push(...result)
+      if (result) {
+        categoriesToApply.push(result)
+      }
     })
-
     if (fullTransform || categoriesToApply.length > 0) {
-      transaction.categories = [
-        ...Array.from(new Map(categoriesToApply.map(c => [c.id, c])).values()),
-      ]
+      transaction.category = categoriesToApply[0]
       transformedTransactions.push(transaction)
     } else {
       untouchedTransactions.push(transaction)
@@ -39,20 +38,20 @@ function assignTransactionCategories(
   }
 }
 
-export default assignTransactionCategories
+export default assignTransactionCategory
 
-export function isWithCategories(
-  transaction: TransactionWithCategories | Prisma.TransactionUncheckedCreateInput
-): transaction is TransactionWithCategories {
+export function isWithCategory(
+  transaction: TransactionWithCategory | Prisma.TransactionUncheckedCreateInput
+): transaction is TransactionWithCategory {
   return (
-    (transaction as TransactionWithCategories).categories !== undefined &&
-    (transaction as TransactionWithCategories).categories.length > 0
+    (transaction as TransactionWithCategory).category !== undefined &&
+    (transaction as TransactionWithCategory).category !== null
   )
 }
 
 export function applyRule(
-  rule: AutomationRuleWithCategories,
-  transaction: TransactionWithCategories | Prisma.TransactionUncheckedCreateInput
+  rule: AutomationRuleWithCategory,
+  transaction: TransactionWithCategory | Prisma.TransactionUncheckedCreateInput
 ) {
   const fieldValue = transaction[rule.field as ZAutomationRuleField]
   switch (rule.operation) {
@@ -63,12 +62,12 @@ export function applyRule(
         rule.stringValue &&
         fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "excludes": {
@@ -78,12 +77,12 @@ export function applyRule(
         rule.stringValue &&
         !fieldValue.toLowerCase().includes(rule.stringValue.toLowerCase())
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "equal": {
@@ -93,12 +92,12 @@ export function applyRule(
         rule.numberValue &&
         fieldValue === rule.numberValue
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "lessthan": {
@@ -108,12 +107,12 @@ export function applyRule(
         rule.numberValue &&
         fieldValue < rule.numberValue
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "morethan": {
@@ -123,10 +122,10 @@ export function applyRule(
         rule.numberValue &&
         fieldValue > rule.numberValue
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       }
     }
     case "before": {
@@ -137,12 +136,12 @@ export function applyRule(
         rule.dateValue &&
         fieldValue.getTime() < rule.dateValue.getTime()
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       } else {
-        return []
+        return undefined
       }
     }
     case "after": {
@@ -153,13 +152,13 @@ export function applyRule(
         rule.dateValue &&
         fieldValue.getTime() > rule.dateValue.getTime()
       ) {
-        if (isWithCategories(transaction)) {
-          return rule.categories.filter(element => transaction.categories.includes(element))
+        if (isWithCategory(transaction)) {
+          return undefined
         }
-        return rule.categories
+        return rule.category
       }
     }
     default:
-      return []
+      return undefined
   }
 }

@@ -1,40 +1,27 @@
 import {
-  AvatarGroup,
-  Avatar,
   Icon,
   Popover,
   PopoverTrigger,
   PopoverContent,
   useDisclosure,
-  Button,
+  IconButton,
   useColorMode,
 } from "@chakra-ui/react"
-import Select, { ActionMeta, components, GroupBase, MultiValue, OptionProps } from "react-select"
+import Select, { ActionMeta, components, GroupBase, OptionProps } from "react-select"
 
 import { Category } from ".prisma/client"
 import { icons } from "../../shared/iconUtils"
-import PlaceholderIcon from "remixicon-react/MoneyEuroCircleLineIcon"
-import IdeaIcon from "remixicon-react/AddCircleLineIcon"
+import PlaceholderIcon from "remixicon-react/QuestionLineIcon"
+import AddIcon from "remixicon-react/AddCircleLineIcon"
 
 interface CategorySelectProps {
-  value: Category[]
+  value?: Category | null
   categories: Category[]
-  onChange: (val: MultiValue<Category>, actionMeta: ActionMeta<Category>) => void
+  onChange: (option: Category | null, actionMeta: ActionMeta<Category>) => void
   isLoading?: boolean
   isDisabled?: boolean
   avatarGroupLength?: number
   emptyDisplaySize?: "small" | "big"
-}
-
-const emptyDisplayColor = {
-  small: {
-    default: "gray.300",
-    dark: "gray.600",
-  },
-  big: {
-    default: "gray.600",
-    dark: "gray.400",
-  },
 }
 
 const CategorySelect = ({
@@ -43,56 +30,36 @@ const CategorySelect = ({
   onChange,
   isLoading = false,
   isDisabled = false,
-  avatarGroupLength = 3,
-  emptyDisplaySize = "small",
 }: CategorySelectProps) => {
   const { onOpen, onClose, isOpen } = useDisclosure()
   const { colorMode } = useColorMode()
   const isDark = colorMode === "dark"
 
+  const buttonColor = value && value.color ? value.color : undefined
+  const buttonIcon = value ? (
+    <Icon as={value.icon ? icons[value.icon] : PlaceholderIcon} color="white" boxSize={6} />
+  ) : (
+    <Icon as={AddIcon} boxSize={6} />
+  )
+
   return (
     <Popover isOpen={isOpen} onClose={onClose} isLazy placement="bottom-start">
       <PopoverTrigger>
-        {!value || value.length < 1 ? (
-          <Button
-            colorScheme="gray"
-            color={
-              isDark
-                ? emptyDisplayColor[emptyDisplaySize].dark
-                : emptyDisplayColor[emptyDisplaySize].default
-            }
-            variant="ghost"
-            onClick={onOpen}
-            size={emptyDisplaySize === "small" ? "sm" : "md"}
-            leftIcon={<Icon as={IdeaIcon} boxSize={4} />}
-          >
-            Categories
-          </Button>
-        ) : (
-          <AvatarGroup onClick={onOpen} max={avatarGroupLength}>
-            {value.map(cat => (
-              <Avatar
-                boxSize={10}
-                key={cat.id}
-                bg={cat.color || "gray.300"}
-                size="md"
-                icon={
-                  <Icon as={cat.icon ? icons[cat.icon] : undefined} color="white" boxSize={6} />
-                }
-                _groupHover={{
-                  outline: "2px solid #bbb",
-                  cursor: "pointer",
-                }}
-              />
-            ))}
-          </AvatarGroup>
-        )}
+        <IconButton
+          aria-label="edit category"
+          bg={buttonColor}
+          icon={buttonIcon}
+          variant="ghost"
+          isRound
+          color={isDark ? "gray.600" : "gray.300"}
+          onClick={onOpen}
+        />
       </PopoverTrigger>
       <PopoverContent maxW="12rem">
-        <Select
+        <Select<Category>
           isSearchable
           autoFocus
-          isMulti
+          // isMulti={false}
           isLoading={isLoading}
           isDisabled={isDisabled}
           controlShouldRenderValue={false}
@@ -101,9 +68,10 @@ const CategorySelect = ({
           getOptionValue={cat => cat.name}
           getOptionLabel={cat => cat.name}
           defaultValue={value}
+          value={value}
           onChange={onChange}
-          isClearable={false}
-          closeMenuOnSelect={false}
+          isClearable={true}
+          closeMenuOnSelect={true}
           menuIsOpen={isOpen}
           placeholder="Search..."
           styles={{
@@ -142,7 +110,7 @@ const SelectOption = ({
   children,
   data,
   ...props
-}: OptionProps<Category, true, GroupBase<Category>>) => {
+}: OptionProps<Category, false, GroupBase<Category>>) => {
   return (
     <components.Option {...props} data={data}>
       <Icon

@@ -1,5 +1,5 @@
 import type { Prisma } from ".prisma/client"
-import { ParsedCSVTransactions } from "../../types/types"
+import { ParsedCSVTransactions, TransactionCreateInputWithCategory } from "../../types/types"
 
 // expects "19.03.2020"
 // returns "2020-03-19T00:00:00+00:00"
@@ -19,7 +19,8 @@ function transformNumber(value?: string) {
 }
 
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
-  const values: Prisma.TransactionUncheckedCreateInput[] = transactions
+  // const values: Prisma.TransactionUncheckedCreateInput[] = transactions
+  const values: TransactionCreateInputWithCategory[] = transactions
 
     .map(
       ({ issuedate, issuer, type, purpose, balance, balanceCurrency, amount, amountCurrency }) => ({
@@ -31,6 +32,7 @@ const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) =
         balanceCurrency: balanceCurrency,
         amount: transformNumber(amount),
         amountCurrency: amountCurrency,
+        category: undefined,
       })
     )
     .filter(value => {
