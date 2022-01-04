@@ -7,27 +7,25 @@ const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: CategoryWithTransactions | null
+  data?: CategoryWithTransactions[]
 }
 
-export default async function getCategoryTransactions(
+export default async function getCategoriesTransactions(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "GET") {
-    const { id } = req.query
     try {
-      const data = await prisma.category.findFirst({
-        where: {
-          id: Number(id),
-        },
+      const data = await prisma.category.findMany({
         include: {
           transactions: true,
           _count: true,
         },
       })
 
-      res.json({ data })
+      res.json({
+        data,
+      })
     } catch (err) {
       console.error(`ERROR | err`, err)
       res.status(500).json({ error: err })

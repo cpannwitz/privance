@@ -20,10 +20,10 @@
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
 - [x] Extend Transactions API with filtering sorting for charts
-- [ ] Charts!
+- [x] Charts!
   - [x] General over-time-chart
   - [x] monthly charts
-  - [ ] categories charts
+  - [x] categories charts
 - [ ] Create TAGS:
   - [x] Transaction with single category
   - [ ] Transaction with multiple tags
@@ -33,6 +33,7 @@
   - [ ] Optimize data usage (useSWR, API)
   - [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
   - [x] Add double currency (https://www.npmjs.com/package/currency-codes + https://github.com/ZakZubair/currency-map-symbol)
+  - [ ] User Setting: main currency
 - [ ] i18n
   - [ ] add i18n provider
   - [ ] add i18n management handle
@@ -44,11 +45,12 @@
   - [ ] https://github.com/prisma/prisma/issues/4703
 ## Premium Todo's
 - [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
+- [ ] Add Paypal transactions
+- [ ] Add ETF tracker: https://marketstack.com/
 - [ ] Add recurring spendings (abonnements), detection, management
 - [ ] Planned spendings, maybe in combination with ->
 - [ ] Forecasting balances, demo project tensorflow: https://github.com/jinglescode/time-series-forecasting-tensorflowjs
 - [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)
-  - [ ] THIS IS HARD!
 - [ ] Online stuff:
   - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
   - [ ] Add Login functionality

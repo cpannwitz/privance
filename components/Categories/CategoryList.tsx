@@ -1,13 +1,14 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 import { useSWRConfig } from "swr"
-import { Category, Prisma } from ".prisma/client"
+import { Category, Transaction, Prisma } from ".prisma/client"
 import {
   useToast,
   SimpleGrid,
-  HStack,
+  Stack,
   IconButton,
   Heading,
+  Text,
   Avatar,
   Icon,
   Spacer,
@@ -23,12 +24,18 @@ import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
 import CategoryEdit from "./CategoryEdit/CategoryEdit"
 import { DataIsEmpty } from "./CategoriesStates"
 import { icons } from "../../shared/iconUtils"
+import { CategoriesStatistics, CategoryWithTransactions } from "../../types/types"
+
+const getTransactionsBalance = (transactions: Transaction[]) =>
+  Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0))
 
 interface CategoryListProps {
-  data: Category[]
+  categories: CategoryWithTransactions[]
+  categoriesStatistics: CategoriesStatistics
 }
 
-const CategoryList = ({ data }: CategoryListProps) => {
+const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) => {
+  const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
   const { mutate } = useSWRConfig()
   const toast = useToast()
   const [editedCategory, setEditedCategory] = useState<Category | null>(null)
@@ -110,11 +117,18 @@ const CategoryList = ({ data }: CategoryListProps) => {
           Add Category
         </Button>
       </Box>
-      {data.length <= 0 ? (
+      <Box p={5}>
+        <Text as="em">
+          You currently have <b>{uncategorizedTransactionsCount}</b> (of {allTransactionsCount})
+          uncategorized transactions.
+        </Text>
+      </Box>
+
+      {categories.length <= 0 ? (
         <DataIsEmpty />
       ) : (
         <SimpleGrid spacing={5} minChildWidth="26rem">
-          {data.map(category => (
+          {categories.map(category => (
             <CategoryListItem
               key={category.name}
               onEdit={onEditCategory}
@@ -131,9 +145,9 @@ const CategoryList = ({ data }: CategoryListProps) => {
 export default CategoryList
 
 interface CategoryListItemProps {
-  category: Category
-  onEdit: (category: Category) => void
-  onDelete: (category: Category) => void
+  category: CategoryWithTransactions
+  onEdit: (category: CategoryWithTransactions) => void
+  onDelete: (category: CategoryWithTransactions) => void
 }
 
 export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListItemProps) => {
@@ -145,13 +159,29 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
     onDelete(category)
   }
   return (
-    <HStack p={3} shadow="md" borderWidth="1px" align="center" spacing={3} borderRadius="lg">
+    <Stack
+      direction="row"
+      p={3}
+      shadow="md"
+      borderWidth="1px"
+      align="center"
+      spacing={3}
+      borderRadius="lg"
+    >
       <Avatar
         boxSize={10}
         bg={color || "gray.100"}
         icon={<Icon as={icon ? icons[icon] : PlaceholderIcon} boxSize={6} color="white" />}
       />
-      <Heading fontSize="md">{name}</Heading>
+      <Stack direction="column">
+        <Heading fontSize="md">{name}</Heading>
+        <Text color="gray.500" fontSize="sm">
+          {getTransactionsBalance(category.transactions)} €
+        </Text>
+        <Text color="gray.500" fontSize="sm">
+          {category._count.transactions} transactions
+        </Text>
+      </Stack>
       <Spacer />
       <IconButton
         variant="ghost"
@@ -167,6 +197,6 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
         icon={<Icon as={EditIcon} color="gray.300" boxSize={5} />}
         onClick={onEditCategory}
       />
-    </HStack>
+    </Stack>
   )
 }
