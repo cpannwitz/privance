@@ -1,6 +1,5 @@
 import { useCallback } from "react"
-import useGetFilteredSortedTransactions from "../hooks/useGetFilteredSortedTransactions"
-import useGetMonthlyTransactions from "../hooks/useGetMonthlyTransactions"
+import useGetMonthlyAggregations from "../hooks/useGetMonthlyAggregations"
 import MonthlyInsightGrid from "./MonthlyInsightGrid"
 import { DataIsLoading, DataIsError, DataIsEmpty } from "./MonthlyInsightStates"
 
@@ -8,34 +7,21 @@ interface MonthlyInsightProps {}
 
 const MonthlyInsight = ({}: MonthlyInsightProps) => {
   const {
-    data: monthlyTransactions,
+    data: monthlyAggregations,
     isError: isErrorMonthlyTransactions,
     isLoading: isLoadingMonthlyTransactions,
     mutate: mutateMonthlyTransactions,
-  } = useGetMonthlyTransactions()
+  } = useGetMonthlyAggregations()
 
-  const retryMonthlyTransactions = useCallback(
-    () => mutateMonthlyTransactions(),
-    [mutateMonthlyTransactions]
-  )
+  const retry = useCallback(() => {
+    mutateMonthlyTransactions()
+  }, [mutateMonthlyTransactions])
 
-  const {
-    data: transactions,
-    isError: isErrorTransactions,
-    isLoading: isLoadingTransactions,
-    mutate: mutateTransactions,
-  } = useGetFilteredSortedTransactions({ sortDirection: "asc" })
-  const retryTransactions = useCallback(() => mutateTransactions(), [mutateTransactions])
+  if (isLoadingMonthlyTransactions) return <DataIsLoading />
+  if (isErrorMonthlyTransactions) return <DataIsError retry={retry} />
+  if (!monthlyAggregations) return <DataIsEmpty />
 
-  if (isLoadingTransactions || isLoadingMonthlyTransactions) return <DataIsLoading />
-  if (isErrorTransactions) return <DataIsError retry={retryTransactions} />
-  if (isErrorMonthlyTransactions || isErrorTransactions)
-    return <DataIsError retry={retryMonthlyTransactions} />
-  if (!transactions || transactions.length === 0 || !monthlyTransactions) return <DataIsEmpty />
-
-  return (
-    <MonthlyInsightGrid transactions={transactions} monthlyTransactions={monthlyTransactions} />
-  )
+  return <MonthlyInsightGrid monthlyAggregations={monthlyAggregations} />
 }
 
 export default MonthlyInsight

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MonthlyTransactions, TransactionWithCategory } from "../../types/types"
+import { MonthlyAggregations } from "../../types/types"
 import {
   Icon,
   Heading,
@@ -17,125 +17,35 @@ import {
 
 import getSymbolFromCurrency from "currency-map-symbol"
 import BalanceChart from "../Charts/BalanceChart"
+import CategoriesCharts from "../Charts/CategoriesChart"
 import TransactionTable from "../TransactionTable/TransactionTable"
 
 import TableIcon from "remixicon-react/TableLineIcon"
 
 interface MonthlyInsightGridProps {
-  transactions: TransactionWithCategory[]
-  monthlyTransactions: MonthlyTransactions
+  monthlyAggregations: MonthlyAggregations
 }
 
-const MonthlyInsightGrid = ({ transactions, monthlyTransactions }: MonthlyInsightGridProps) => {
+const MonthlyInsightGrid = ({ monthlyAggregations }: MonthlyInsightGridProps) => {
   return (
     <Stack direction="column" p={5}>
-      <Box>
-        <Heading as="h1" mb={5}>
-          Overall
-        </Heading>
-        <StatGroup>
-          <Stat>
-            <StatLabel>Total Gain/Loss</StatLabel>
-            <StatNumber
-              color={
-                Math.abs(monthlyTransactions.totalMinus) > Math.abs(monthlyTransactions.totalPlus)
-                  ? "red.500"
-                  : "green.500"
-              }
-            >
-              {Number(monthlyTransactions.totalMinus + monthlyTransactions.totalPlus).toFixed(2)} {}
-              {getSymbolFromCurrency(monthlyTransactions.currency)}
-            </StatNumber>
-            <StatHelpText>
-              <StatArrow
-                type={
-                  Math.abs(monthlyTransactions.totalMinus) > Math.abs(monthlyTransactions.totalPlus)
-                    ? "decrease"
-                    : "increase"
-                }
-              />
-              {new Date(monthlyTransactions.startDate).toLocaleDateString()} -{" "}
-              {new Date(monthlyTransactions.endDate).toLocaleDateString()}
-            </StatHelpText>
-          </Stat>
-
-          <Stat>
-            <StatLabel>Current Balance</StatLabel>
-            <StatNumber>
-              {Number(
-                monthlyTransactions.totalMinus +
-                  monthlyTransactions.totalPlus +
-                  monthlyTransactions.preBalance
-              ).toFixed(2)}{" "}
-              {}
-              {getSymbolFromCurrency(monthlyTransactions.currency)}
-            </StatNumber>
-            <StatHelpText>
-              {Number(monthlyTransactions.preBalance).toFixed(2)}
-              {getSymbolFromCurrency(monthlyTransactions.currency)} pre-existent
-            </StatHelpText>
-          </Stat>
-
-          <Stat>
-            <StatLabel>Spend</StatLabel>
-            <StatNumber color="red.500">
-              {Number(monthlyTransactions.totalMinus).toFixed(2)}
-              {getSymbolFromCurrency(monthlyTransactions.currency)}
-            </StatNumber>
-            <StatHelpText>
-              <StatArrow type="decrease" />
-              {Number(monthlyTransactions.totalMinusPercentage).toFixed(2)}%
-            </StatHelpText>
-          </Stat>
-
-          <Stat>
-            <StatLabel>Income</StatLabel>
-            <StatNumber color="green.500">
-              {Number(monthlyTransactions.totalPlus).toFixed(2)}
-              {getSymbolFromCurrency(monthlyTransactions.currency)}
-            </StatNumber>
-            <StatHelpText>
-              <StatArrow type="increase" />
-              {Number(monthlyTransactions.totalPlusPercentage).toFixed(2)}%
-            </StatHelpText>
-          </Stat>
-
-          <Stat>
-            {/* // TODO: add ETF API, save option fragments to DB */}
-            {/* https://marketstack.com/ */}
-            <StatLabel>ETF</StatLabel>
-            <StatNumber color="green.500">
-              123
-              {getSymbolFromCurrency(monthlyTransactions.currency)}
-            </StatNumber>
-            <StatHelpText>
-              <StatArrow type="increase" />
-              123
-            </StatHelpText>
-          </Stat>
-        </StatGroup>
-        <Box w="100%" h="200px">
-          <BalanceChart data={transactions} />
-        </Box>
-      </Box>
-
-      {Object.keys(monthlyTransactions.years)
+      {Object.keys(monthlyAggregations.years)
         .reverse()
         .map(year => {
           return (
             <Box key={year}>
-              <Heading as="h1" mb={5}>
+              <Heading size="2xl" mb={5}>
                 {year}
               </Heading>
               <SimpleGrid columns={2} spacing={10}>
-                {Object.keys(monthlyTransactions.years[year].months)
+                {Object.keys(monthlyAggregations.years[year].months)
                   .reverse()
                   .map(month => {
-                    const monthStats = monthlyTransactions.years[year].months[month]
+                    const monthStats = monthlyAggregations.years[year].months[month]
                     return (
                       <MonthGridItem
                         key={month + year}
-                        currency={monthlyTransactions.currency}
+                        currency={monthlyAggregations.currency}
                         {...monthStats}
                       />
                     )
@@ -150,7 +60,7 @@ const MonthlyInsightGrid = ({ transactions, monthlyTransactions }: MonthlyInsigh
 
 export default MonthlyInsightGrid
 
-type MonthGridItemProps = MonthlyTransactions["years"][string]["months"][string] & {
+type MonthGridItemProps = MonthlyAggregations["years"][string]["months"][string] & {
   currency: string
 }
 const MonthGridItem = ({
@@ -161,12 +71,13 @@ const MonthGridItem = ({
   totalMonthMinusPercentage,
   totalMonthPlusPercentage,
   transactions,
+  categories,
 }: MonthGridItemProps) => {
   const [showTable, setShowTable] = useState(false)
   return (
     <Box>
-      <Heading as="h1" mb={5}>
-        {month}
+      <Heading size="lg" mb={5}>
+        {getMonthName(month)}
       </Heading>
       <StatGroup>
         <Stat>
@@ -210,25 +121,30 @@ const MonthGridItem = ({
       <Box w="100%" h="200px">
         <BalanceChart data={transactions} variant="small" />
       </Box>
+      <Box w="100%" h="200px">
+        <CategoriesCharts categories={categories} />
+      </Box>
 
-      {showTable ? (
-        <Box w="100%" h="400px">
-          {/* // TODO: add categories to table itself */}
+      <Button
+        size="sm"
+        isFullWidth
+        variant="ghost"
+        colorScheme="gray"
+        color="gray.500"
+        leftIcon={<Icon as={TableIcon} />}
+        onClick={() => setShowTable(v => !v)}
+      >
+        Show Transactions
+      </Button>
+      {showTable && (
+        <Box w="100%" h="400px" mt={3}>
           <TransactionTable transactions={transactions} categories={[]} />
         </Box>
-      ) : (
-        <Button
-          size="sm"
-          isFullWidth
-          variant="ghost"
-          colorScheme="gray"
-          color="gray.500"
-          leftIcon={<Icon as={TableIcon} />}
-          onClick={() => setShowTable(true)}
-        >
-          Show Transactions
-        </Button>
       )}
     </Box>
   )
+}
+
+function getMonthName(month: number, locale = "en") {
+  return new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date().setMonth(month))
 }

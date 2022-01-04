@@ -8,7 +8,7 @@ import { Prisma, Category } from ".prisma/client"
 function assignTransactionCategory(
   transactions: TransactionWithCategory[],
   rules: AutomationRuleWithCategory[],
-  fullTransform: boolean = false
+  fullTransform = false
 ) {
   const transformedTransactions: TransactionWithCategory[] = []
   const untouchedTransactions: TransactionWithCategory[] = []

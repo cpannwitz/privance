@@ -1,39 +1,40 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import { MonthlyTransactions, TransactionWithCategory } from "../../../types/types"
+import {
+  CategoryWithTransactions,
+  MonthlyAggregations,
+  TransactionWithCategory,
+} from "../../../types/types"
 
 const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: MonthlyTransactions
+  data?: MonthlyAggregations
 }
 
-export default async function getMonthlyTransactions(
+export default async function getMonthlyAggregations(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "GET") {
     try {
-      // TODO: checkout Prisma groupBy/aggregate features to build this moloch easier?
-      // https://www.prisma.io/docs/concepts/components/prisma-client/aggregation-grouping-summarizing
       const data = await prisma.transaction.findMany({
         orderBy: [{ issuedate: "desc" }],
-        include: { category: true, _count: true },
+        include: {
+          category: true,
+          _count: true,
+        },
       })
-      const firstTransaction = { ...data[data.length - 1] }
-      const lastTransaction = { ...data[0] }
-
       const sortedData = sortTransactions(data, "desc")
 
-      const startDate = firstTransaction.issuedate || new Date()
-      const endDate = lastTransaction.issuedate || new Date()
+      // TODO: replace with user setting currency
+      const lastTransaction = { ...data[0] }
       const currency = lastTransaction.balanceCurrency || ""
-      const preBalance = (firstTransaction.balance || 0) - (firstTransaction.amount || 0)
 
       // split data into months
-      let monthlyData: MonthlyTransactions = sortedData.reduce(
+      const monthlyData: MonthlyAggregations = sortedData.reduce(
         (transformedData: any, transaction) => {
           // TODO: better typing of reducer
           if (!transaction.issuedate) return
@@ -54,23 +55,19 @@ export default async function getMonthlyTransactions(
       )
 
       // aggregate total minus/plus balance + meta display info
-      let totalPlus = 0
-      let totalMinus = 0
       Object.keys(monthlyData.years).forEach(year => {
         let totalYearPlus = 0
         let totalYearMinus = 0
         Object.keys(monthlyData.years[year].months).forEach(month => {
-          monthlyData.years[year].months[month].month = Number(month)
           const totalMonthPlus = monthlyData.years[year].months[month].transactions
             .filter(t => t && t.amount && t.amount > 0)
             .reduce((sum, t) => sum + (t.amount || 0), 0)
           const totalMonthMinus = monthlyData.years[year].months[month].transactions
             .filter(t => t && t.amount && t.amount <= 0)
             .reduce((sum, t) => sum + (t.amount || 0), 0)
-          totalPlus += totalMonthPlus
-          totalMinus += totalMonthMinus
           totalYearPlus += totalMonthPlus
           totalYearMinus += totalMonthMinus
+          monthlyData.years[year].months[month].month = Number(month)
           monthlyData.years[year].months[month].totalMonthPlus = totalMonthPlus
           monthlyData.years[year].months[month].totalMonthMinus = totalMonthMinus
           monthlyData.years[year].months[month].totalMonthPlusPercentage =
@@ -79,21 +76,39 @@ export default async function getMonthlyTransactions(
           monthlyData.years[year].months[month].totalMonthMinusPercentage =
             (Math.abs(totalMonthMinus) / (Math.abs(totalMonthPlus) + Math.abs(totalMonthMinus))) *
             100
+
+          const monthlyCategories = monthlyData.years[year].months[month].transactions.reduce(
+            (monthlyCategories, transaction) => {
+              if (!transaction.category) return monthlyCategories
+              if (!monthlyCategories[transaction.category.name]) {
+                monthlyCategories[transaction.category.name] = {
+                  ...transaction.category,
+                  transactions: [],
+                  _count: { transactions: 0, automationRules: 0 },
+                  transactionBalance: 0,
+                }
+              }
+              monthlyCategories[transaction.category.name].transactions.push(transaction)
+              monthlyCategories[transaction.category.name]._count.transactions += 1
+              monthlyCategories[transaction.category.name].transactionBalance +=
+                transaction.amount || 0
+              return monthlyCategories
+            },
+            {} as {
+              [key: string]: CategoryWithTransactions & {
+                transactionBalance: number
+              }
+            }
+          )
+          monthlyData.years[year].months[month].categories = Object.values(monthlyCategories).map(
+            c => ({ ...c, transactionBalance: Math.abs(c.transactionBalance) })
+          )
         })
         monthlyData.years[year].totalYearPlus = totalYearPlus
         monthlyData.years[year].totalYearMinus = totalYearMinus
         monthlyData.years[year].year = Number(year)
       })
-      monthlyData.totalPlus = totalPlus
-      monthlyData.totalMinus = totalMinus
-      monthlyData.startDate = startDate
-      monthlyData.endDate = endDate
       monthlyData.currency = currency
-      monthlyData.preBalance = preBalance
-      monthlyData.totalPlusPercentage =
-        (Math.abs(totalPlus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100
-      monthlyData.totalMinusPercentage =
-        (Math.abs(totalMinus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100
 
       res.json({ data: monthlyData })
     } catch (err) {

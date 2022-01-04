@@ -2,14 +2,14 @@ import { Prisma, Transaction, Category, AutomationRule } from ".prisma/client"
 
 export type TransactionWithCategory = Transaction & {
   category: Category | null
-  _count?: Prisma.TransactionCountOutputType
+  _count: Prisma.TransactionCountOutputType
 }
 
 export type TransactionCreateInputWithCategory = Omit<Prisma.TransactionCreateInput, "category"> & {
   category?: Category | null
 }
 
-export type MonthlyTransactions = {
+export type AllTimeAggregations = {
   totalPlus: number
   totalMinus: number
   preBalance: number
@@ -18,6 +18,14 @@ export type MonthlyTransactions = {
   currency: string
   startDate: Date
   endDate: Date
+  transactions: TransactionWithCategory[]
+  categories: (CategoryWithTransactions & {
+    transactionBalance: number
+  })[]
+}
+
+export type MonthlyAggregations = {
+  currency: string
   years: {
     [key: number | string]: {
       year: number
@@ -28,9 +36,12 @@ export type MonthlyTransactions = {
           month: number
           totalMonthPlus: number
           totalMonthMinus: number
-          transactions: TransactionWithCategory[]
           totalMonthPlusPercentage: number
           totalMonthMinusPercentage: number
+          transactions: TransactionWithCategory[]
+          categories: (CategoryWithTransactions & {
+            transactionBalance: number
+          })[]
         }
       }
     }
@@ -39,6 +50,12 @@ export type MonthlyTransactions = {
 
 export type CategoryWithTransactions = Category & {
   transactions: Transaction[]
+  _count: Prisma.CategoryCountOutputType
+}
+
+export type CategoriesStatistics = {
+  uncategorizedTransactionsCount: number
+  allTransactionsCount: number
 }
 
 export type AutomationRuleWithCategory = AutomationRule & {

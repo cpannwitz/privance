@@ -1,10 +1,10 @@
 import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from "@nivo/line"
 import { useMemo } from "react"
-import { TransactionWithCategory } from "../../types/types"
 import { Box, useColorModeValue } from "@chakra-ui/react"
 import getSymbolFromCurrency from "currency-map-symbol"
+import { Transaction } from ".prisma/client"
 
-function lineChartTransformer(data: TransactionWithCategory[]): Datum[] {
+function lineChartTransformer(data: Transaction[]): Datum[] {
   return data.map(t => ({
     x: new Date(t.issuedate || ""),
     y: t.balance,
@@ -12,7 +12,7 @@ function lineChartTransformer(data: TransactionWithCategory[]): Datum[] {
   }))
 }
 
-function getMinMaxBalance(data: TransactionWithCategory[]): { min: number; max: number } {
+function getMinMaxBalance(data: Transaction[]): { min: number; max: number } {
   return data.reduce(
     (sum, t) => ({
       min: Math.min(sum.min, t.balance || 0),
@@ -23,7 +23,7 @@ function getMinMaxBalance(data: TransactionWithCategory[]): { min: number; max: 
 }
 
 interface BalanceChartProps {
-  data: TransactionWithCategory[]
+  data: Transaction[]
   variant?: "default" | "small"
 }
 
@@ -43,7 +43,11 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
   return (
     <ResponsiveLine
       data={lineData}
-      margin={{ top: 20, right: 20, bottom: 30, left: 20 }}
+      margin={
+        isVariantDefault
+          ? { top: 20, right: 20, bottom: 30, left: 20 }
+          : { top: 10, right: 10, bottom: 10, left: 10 }
+      }
       xScale={{
         type: "time",
       }}
@@ -63,7 +67,7 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
         {
           axis: "y",
           value: minMaxBalance.min,
-          lineStyle: { stroke: "rgba(255, 0, 0, .35)", strokeWidth: 1 },
+          lineStyle: { stroke: "rgba(255, 0, 0, .4)", strokeWidth: 1, strokeDasharray: 4 },
           legend: `min. ${minMaxBalance.min}`,
           textStyle: {
             fill: "#818181",
@@ -73,7 +77,7 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
         {
           axis: "y",
           value: minMaxBalance.max,
-          lineStyle: { stroke: "rgba(0, 255, 0, .35)", strokeWidth: 1 },
+          lineStyle: { stroke: "rgba(0, 255, 0, .4)", strokeWidth: 1, strokeDasharray: 4 },
           legend: `max. ${minMaxBalance.max}`,
           textStyle: {
             fill: "#818181",
@@ -101,9 +105,8 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
         },
       ]}
       fill={[{ match: "*", id: "areaGradient" }]}
-      // TODO: make colors responsive to darkmode
       theme={{
-        textColor: "#dddddd",
+        textColor: "#888888",
         grid: {
           line: {
             stroke: "#ccc",

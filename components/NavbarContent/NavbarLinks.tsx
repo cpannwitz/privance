@@ -2,6 +2,7 @@ import { useCallback } from "react"
 import { useRouter } from "next/router"
 
 import HomeIcon from "remixicon-react/Home4LineIcon"
+import AllTimeInsightIcon from "remixicon-react/CalendarLineIcon"
 import MonthlyInsightIcon from "remixicon-react/Calendar2LineIcon"
 import UploadIcon from "remixicon-react/Upload2LineIcon"
 import CategoriesIcon from "remixicon-react/StackLineIcon"
@@ -15,6 +16,7 @@ import { VStack, Button, Icon } from "@chakra-ui/react"
 const NavbarLinks = () => {
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
+  const linkToAllTimeInsight = useCallback(() => router.push(`/alltimeinsight`), [router])
   const linkToMonthlyInsight = useCallback(() => router.push(`/monthlyinsight`), [router])
   const linkToUpload = useCallback(() => router.push(`/upload`), [router])
   const linkToCategories = useCallback(() => router.push(`/categories`), [router])
@@ -31,6 +33,17 @@ const NavbarLinks = () => {
         onClick={linkToOverview}
       >
         Overview
+      </Button>
+
+      <Button
+        isFullWidth
+        variant="ghost"
+        colorScheme="gray"
+        justifyContent="start"
+        leftIcon={<Icon as={AllTimeInsightIcon} boxSize={6} />}
+        onClick={linkToAllTimeInsight}
+      >
+        All-Time Insight
       </Button>
 
       <Button

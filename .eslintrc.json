@@ -1,6 +1,7 @@
 {
-  "extends": ["next/core-web-vitals", "next"],
+  "plugins": ["@typescript-eslint"],
+  "extends": ["next/core-web-vitals", "next", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "no-unused-vars": 1
+    "no-empty-interface": false
   }
 }
