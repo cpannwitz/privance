@@ -13,6 +13,9 @@ function lineChartTransformer(data: Transaction[]): Datum[] {
 }
 
 function getMinMaxBalance(data: Transaction[]): { min: number; max: number } {
+  if (data.length <= 0) {
+    return { min: 0, max: 0 }
+  }
   return data.reduce(
     (sum, t) => ({
       min: Math.min(sum.min, t.balance || 0),

@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: MonthlyAggregations
+  data?: MonthlyAggregations | undefined
 }
 
 export default async function getMonthlyAggregations(
@@ -20,17 +20,22 @@ export default async function getMonthlyAggregations(
 ) {
   if (req.method === "GET") {
     try {
-      const data = await prisma.transaction.findMany({
+      const transactions = await prisma.transaction.findMany({
         orderBy: [{ issuedate: "desc" }],
         include: {
           category: true,
           _count: true,
         },
       })
-      const sortedData = sortTransactions(data, "desc")
+
+      if (transactions.length <= 0) {
+        return res.status(200).json({ data: undefined })
+      }
+
+      const sortedData = sortTransactions(transactions, "desc")
 
       // TODO: replace with user setting currency
-      const lastTransaction = { ...data[0] }
+      const lastTransaction = { ...transactions[0] }
       const currency = lastTransaction.balanceCurrency || ""
 
       // split data into months

@@ -10,6 +10,7 @@ import DataIsLoading from "../DataStates/DataIsLoading"
 import TransactionTable from "./TransactionTable"
 
 import Filterbar from "../Filterbar/Filterbar"
+import { routerLinks } from "../../shared/config"
 
 interface DefaultFilterState {
   sortDirection: "asc" | "desc"
@@ -60,7 +61,7 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
     return <DataIsError retry={retry} />
   }
   if (transactions.length === 0) {
-    return <DataIsEmpty />
+    return <DataIsEmpty linkUrl={routerLinks.UPLOAD} />
   }
   return (
     <Box h="100%">

@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any
-  data?: AllTimeAggregations
+  data?: AllTimeAggregations | undefined
 }
 
 export default async function getAllTimeAggregations(
@@ -20,6 +20,11 @@ export default async function getAllTimeAggregations(
         orderBy: [{ issuedate: "desc" }],
         include: { category: true, _count: true },
       })
+
+      if (transactions.length <= 0) {
+        return res.status(200).json({ data: undefined })
+      }
+
       const firstTransaction = { ...transactions[transactions.length - 1] }
       const lastTransaction = { ...transactions[0] }
 
@@ -39,9 +44,9 @@ export default async function getAllTimeAggregations(
         .reduce((sum, t) => sum + (t.amount || 0), 0)
 
       const totalPlusPercentage =
-        (Math.abs(totalPlus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100
+        (Math.abs(totalPlus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100 || 0
       const totalMinusPercentage =
-        (Math.abs(totalMinus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100
+        (Math.abs(totalMinus) / (Math.abs(totalPlus) + Math.abs(totalMinus))) * 100 || 0
 
       const categoriesRaw = await prisma.category.findMany({
         include: {
