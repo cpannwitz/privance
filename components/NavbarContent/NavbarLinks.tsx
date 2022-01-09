@@ -1,4 +1,4 @@
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { useRouter } from "next/router"
 
 import HomeIcon from "remixicon-react/Home4LineIcon"
@@ -10,96 +10,84 @@ import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
 import AutomationRuleIcon from "remixicon-react/Settings2LineIcon"
 
 import { VStack, Button, Icon } from "@chakra-ui/react"
-
-// TODO: add styling for active link
+import { routerLinks } from "../../shared/config"
 
 const NavbarLinks = () => {
   const router = useRouter()
-  const linkToOverview = useCallback(() => router.push(`/overview`), [router])
-  const linkToAllTimeInsight = useCallback(() => router.push(`/alltimeinsight`), [router])
-  const linkToMonthlyInsight = useCallback(() => router.push(`/monthlyinsight`), [router])
-  const linkToUpload = useCallback(() => router.push(`/upload`), [router])
-  const linkToCategories = useCallback(() => router.push(`/categories`), [router])
-  const linkToAutomationRules = useCallback(() => router.push(`/automationrules`), [router])
-  const linkToPlayground = useCallback(() => router.push(`/playground`), [router])
+  const linkToOverview = useCallback(() => router.push(routerLinks.OVERVIEW), [router])
+  const linkToAllTimeInsight = useCallback(() => router.push(routerLinks.ALLTIMEINSIGHT), [router])
+  const linkToMonthlyInsight = useCallback(() => router.push(routerLinks.MONTHLYINSIGHT), [router])
+  const linkToUpload = useCallback(() => router.push(routerLinks.UPLOAD), [router])
+  const linkToCategories = useCallback(() => router.push(routerLinks.CATEGORIES), [router])
+  const linkToAutomationRules = useCallback(
+    () => router.push(routerLinks.AUTOMATIONRULES),
+    [router]
+  )
+  const linkToPlayground = useCallback(() => router.push(routerLinks.PLAYGROUND), [router])
+
+  const navbarLinks = useMemo(
+    () => [
+      {
+        icon: HomeIcon,
+        link: linkToOverview,
+        label: `Overview`,
+        isActive: router.pathname === routerLinks.OVERVIEW,
+      },
+      {
+        icon: AllTimeInsightIcon,
+        link: linkToAllTimeInsight,
+        label: `All-Time Insight`,
+        isActive: router.pathname === routerLinks.ALLTIMEINSIGHT,
+      },
+      {
+        icon: MonthlyInsightIcon,
+        link: linkToMonthlyInsight,
+        label: `Monthly Insight`,
+        isActive: router.pathname === routerLinks.MONTHLYINSIGHT,
+      },
+      {
+        icon: UploadIcon,
+        link: linkToUpload,
+        label: `Upload`,
+        isActive: router.pathname === routerLinks.UPLOAD,
+      },
+      {
+        icon: CategoriesIcon,
+        link: linkToCategories,
+        label: `Categories`,
+        isActive: router.pathname === routerLinks.CATEGORIES,
+      },
+      {
+        icon: AutomationRuleIcon,
+        link: linkToAutomationRules,
+        label: `Automation Rules`,
+        isActive: router.pathname === routerLinks.AUTOMATIONRULES,
+      },
+      {
+        icon: PlaygroundIcon,
+        link: linkToPlayground,
+        label: `[DEV] Playground`,
+        isActive: router.pathname === routerLinks.PLAYGROUND,
+      },
+    ],
+    [router.pathname]
+  )
+
   return (
     <VStack spacing={4} align="stretch" w="100%" py={3}>
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={HomeIcon} boxSize={6} />}
-        onClick={linkToOverview}
-      >
-        Overview
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={AllTimeInsightIcon} boxSize={6} />}
-        onClick={linkToAllTimeInsight}
-      >
-        All-Time Insight
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={MonthlyInsightIcon} boxSize={6} />}
-        onClick={linkToMonthlyInsight}
-      >
-        Monthly Insight
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={UploadIcon} boxSize={6} />}
-        onClick={linkToUpload}
-      >
-        Upload
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={CategoriesIcon} boxSize={6} />}
-        onClick={linkToCategories}
-      >
-        Categories
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={AutomationRuleIcon} boxSize={6} />}
-        onClick={linkToAutomationRules}
-      >
-        Automation Rules
-      </Button>
-
-      <Button
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        justifyContent="start"
-        leftIcon={<Icon as={PlaygroundIcon} boxSize={6} />}
-        onClick={linkToPlayground}
-      >
-        [DEV] Playground
-      </Button>
+      {navbarLinks.map(nav => (
+        <Button
+          key={nav.label}
+          isFullWidth
+          variant="ghost"
+          colorScheme={nav.isActive ? "blue" : "gray"}
+          justifyContent="start"
+          leftIcon={<Icon as={nav.icon} boxSize={6} />}
+          onClick={nav.link}
+        >
+          {nav.label}
+        </Button>
+      ))}
     </VStack>
   )
 }
