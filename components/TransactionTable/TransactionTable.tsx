@@ -6,7 +6,7 @@ import { KeyedMutator } from "swr"
 import { TransactionCreateInputWithCategory, TransactionWithCategory } from "../../types/types"
 import getDefaultColumns from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
-import { Category, Prisma } from ".prisma/client"
+import { Prisma } from ".prisma/client"
 import { useCallback, useMemo } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import Autosizer from "react-virtualized-auto-sizer"
@@ -16,7 +16,6 @@ import Autosizer from "react-virtualized-auto-sizer"
 export type TableVariant = "preview" | "default"
 interface TransactionTableProps {
   transactions: TransactionWithCategory[]
-  categories: Category[]
   transformedTransactions?: number[]
   variant?: TableVariant
   updateTransaction?: (transaction: TransactionCreateInputWithCategory) => void
@@ -27,7 +26,6 @@ interface TransactionTableProps {
 const DEFAULTTRANSFORMATIONS: number[] = []
 const TransactionTable = ({
   transactions,
-  categories,
   transformedTransactions = DEFAULTTRANSFORMATIONS,
   variant = "default",
   updateTransaction,
@@ -81,10 +79,9 @@ const TransactionTable = ({
     [updateTransaction, variant, toast, mutateTransactions]
   )
 
-  // TODO: move categories in getColumns? or smth else...
   const columns = useMemo(() => {
-    return getDefaultColumns({ categories, onSelectCategory })
-  }, [categories, onSelectCategory])
+    return getDefaultColumns({ onSelectCategory })
+  }, [onSelectCategory])
 
   const {
     getTableProps,

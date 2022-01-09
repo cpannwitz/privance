@@ -1,7 +1,9 @@
 {
+  "root": true,
   "plugins": ["@typescript-eslint"],
   "extends": ["next/core-web-vitals", "next", "plugin:@typescript-eslint/recommended"],
   "rules": {
-    "no-empty-interface": false
+    "@typescript-eslint/no-empty-interface": 0,
+    "@typescript-eslint/no-empty-function": 1
   }
 }

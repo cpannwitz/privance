@@ -1,6 +1,5 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
-import { useSWRConfig } from "swr"
 import {
   useToast,
   HStack,
@@ -39,13 +38,14 @@ import { icons } from "../../shared/iconUtils"
 
 import { useRouter } from "next/router"
 import GeneralBadge from "../GeneralBadge/GeneralBadge"
+import useGetAutomationRules from "../hooks/useGetAutomationRules"
 
 interface AutomationListProps {
   data: AutomationRuleWithCategory[]
 }
 
 const AutomationList = ({ data }: AutomationListProps) => {
-  const { mutate } = useSWRConfig()
+  const { mutate: mutateAutomationRules } = useGetAutomationRules()
   const toast = useToast()
 
   const [editedAutomationRule, setEditedAutomationRule] =
@@ -87,7 +87,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
           }
         })
         .finally(() => {
-          mutate(`/api/automationrules/getAutomationRules`)
+          mutateAutomationRules()
           setEditedAutomationRule(null)
         })
     } else {
@@ -113,7 +113,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
           }
         })
         .finally(() => {
-          mutate(`/api/automationrules/getAutomationRules`)
+          mutateAutomationRules()
           setEditedAutomationRule(null)
         })
     }
@@ -139,7 +139,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
           }
         })
         .finally(() => {
-          mutate(`/api/automationrules/getAutomationRules`)
+          mutateAutomationRules()
         })
     }
   }
@@ -171,7 +171,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
           }
         })
         .finally(() => {
-          mutate(`/api/automationrules/getAutomationRules`)
+          mutateAutomationRules()
           setEditedAutomationRule(null)
         })
     }

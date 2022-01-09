@@ -2,7 +2,6 @@ import { useCallback, useState } from "react"
 import { Box } from "@chakra-ui/react"
 
 import useGetFilteredSortedTransactions from "../hooks/useGetFilteredSortedTransactions"
-import useGetCategories from "../hooks/useGetCategories"
 
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import DataIsError from "../DataStates/DataIsError"
@@ -42,22 +41,14 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
     mutate: mutateTransactions,
   } = useGetFilteredSortedTransactions(filterState)
 
-  const {
-    data: categories,
-    isError: isErrorCategories,
-    isLoading: isLoadingCategories,
-    mutate: mutateCategories,
-  } = useGetCategories()
-
   const retry = useCallback(() => {
     mutateTransactions()
-    mutateCategories()
-  }, [mutateCategories])
+  }, [mutateTransactions])
 
-  if (isLoadingTransactions || isLoadingCategories) {
+  if (isLoadingTransactions) {
     return <DataIsLoading />
   }
-  if (!transactions || isErrorTransactions || !categories || isErrorCategories) {
+  if (!transactions || isErrorTransactions) {
     return <DataIsError retry={retry} />
   }
   if (transactions.length === 0) {
@@ -68,11 +59,7 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
       <Box>
         <Filterbar filterState={filterState} onChange={onFilterStateSet} />
       </Box>
-      <TransactionTable
-        transactions={transactions}
-        categories={categories}
-        mutateTransactions={mutateTransactions}
-      />
+      <TransactionTable transactions={transactions} mutateTransactions={mutateTransactions} />
     </Box>
   )
 }

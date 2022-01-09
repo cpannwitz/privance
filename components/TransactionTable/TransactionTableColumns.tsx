@@ -1,19 +1,18 @@
 import { Column } from "react-table"
 
 import { TransactionWithCategory } from "../../types/types"
-import { Category } from ".prisma/client"
 import InteractiveCategoryRenderer from "./columnrenderer/InteractiveCategoryRenderer"
 import DisplayTextRenderer from "./columnrenderer/DisplayTextRenderer"
 import DisplayDateRenderer from "./columnrenderer/DisplayDateRenderer"
 import DisplayNumberRenderer from "./columnrenderer/DisplayNumberRenderer"
 
 interface GetPreviewColumnsProps {
-  categories: Category[]
   onSelectCategory?: (transaction: TransactionWithCategory) => void
 }
 const getPreviewColumns = ({
-  categories,
-  onSelectCategory = () => {},
+  onSelectCategory = () => {
+    return
+  },
 }: GetPreviewColumnsProps): Column<TransactionWithCategory>[] => {
   return [
     {
@@ -48,13 +47,7 @@ const getPreviewColumns = ({
       Header: "Categ.",
       accessor: "category",
       id: "category",
-      Cell: p => (
-        <InteractiveCategoryRenderer
-          {...p}
-          categories={categories}
-          onSelectCategory={onSelectCategory}
-        />
-      ),
+      Cell: p => <InteractiveCategoryRenderer {...p} onSelectCategory={onSelectCategory} />,
       width: "10%",
     },
     {

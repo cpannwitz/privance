@@ -48,6 +48,8 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     icon: formValue?.icon ?? "",
   }
 
+  const title = formValue ? "Customize category" : "Add category"
+
   return (
     <Modal
       size="xl"
@@ -60,7 +62,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
       <ModalOverlay />
       <ModalContent>
         <FormWrapper<CategoryEditFormValues> onSubmit={onFormSubmit} defaultValues={defaultValues}>
-          <ModalHeader>Customize category</ModalHeader>
+          <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton onClick={onCancel} />
           <ModalBody>
             <VStack spacing={5}>

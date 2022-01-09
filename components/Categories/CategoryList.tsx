@@ -1,6 +1,5 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
-import { useSWRConfig } from "swr"
 import { Category, Transaction, Prisma } from ".prisma/client"
 import {
   useToast,
@@ -25,6 +24,7 @@ import CategoryEdit from "./CategoryEdit/CategoryEdit"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import { icons } from "../../shared/iconUtils"
 import { CategoriesStatistics, CategoryWithTransactions } from "../../types/types"
+import useGetCategoriesTransactions from "../hooks/useGetCategoriesTransactions"
 
 const getTransactionsBalance = (transactions: Transaction[]) =>
   Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0))
@@ -35,10 +35,11 @@ interface CategoryListProps {
 }
 
 const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) => {
+  const { mutate: mutateCategories } = useGetCategoriesTransactions()
+
   const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
-  const { mutate } = useSWRConfig()
   const toast = useToast()
-  const [editedCategory, setEditedCategory] = useState<Category | null>(null)
+  const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined)
 
   function onAddCategory() {
     setEditedCategory({} as Category)
@@ -49,7 +50,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
   }
 
   function onCloseAddEdit() {
-    setEditedCategory(null)
+    setEditedCategory(undefined)
   }
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
@@ -71,8 +72,8 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
           }
         })
         .finally(() => {
-          mutate(`/api/categories/getCategories`)
-          setEditedCategory(null)
+          mutateCategories()
+          setEditedCategory(undefined)
         })
     }
   }
@@ -96,7 +97,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
           }
         })
         .finally(() => {
-          mutate(`/api/categories/getCategories`)
+          mutateCategories()
         })
     }
   }

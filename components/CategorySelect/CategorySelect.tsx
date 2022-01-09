@@ -1,4 +1,5 @@
 import {
+  Button,
   Icon,
   Popover,
   PopoverTrigger,
@@ -7,30 +8,23 @@ import {
   IconButton,
   useColorMode,
 } from "@chakra-ui/react"
-import Select, { ActionMeta, components, GroupBase, OptionProps } from "react-select"
+import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from "react-select"
 
 import { Category } from ".prisma/client"
 import { icons } from "../../shared/iconUtils"
 import PlaceholderIcon from "remixicon-react/QuestionLineIcon"
 import AddIcon from "remixicon-react/AddCircleLineIcon"
+import useGetCategories from "../hooks/useGetCategories"
+import CategoryAddStandalone from "../Categories/CategoryAddStandalone"
+import { useState } from "react"
 
 interface CategorySelectProps {
   value?: Category | null
-  categories: Category[]
-  onChange: (option: Category | null, actionMeta: ActionMeta<Category>) => void
-  isLoading?: boolean
-  isDisabled?: boolean
-  avatarGroupLength?: number
-  emptyDisplaySize?: "small" | "big"
+  onChange: (option: Category | null, actionMeta?: ActionMeta<Category>) => void
 }
 
-const CategorySelect = ({
-  value,
-  categories,
-  onChange,
-  isLoading = false,
-  isDisabled = false,
-}: CategorySelectProps) => {
+const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
+  const { data: categories, isError, isLoading } = useGetCategories()
   const { onOpen, onClose, isOpen } = useDisclosure()
   const { colorMode } = useColorMode()
   const isDark = colorMode === "dark"
@@ -42,65 +36,91 @@ const CategorySelect = ({
     <Icon as={AddIcon} boxSize={6} />
   )
 
+  const [isAddingCategory, setIsAddingCategory] = useState(false)
+  const toggleSetIsAddingCategory = () => setIsAddingCategory(!isAddingCategory)
+
+  function onCloseAddCategory() {
+    setIsAddingCategory(false)
+  }
+  function onAddCategory(category: Category | null) {
+    if (category) {
+      onChange(category)
+      setIsAddingCategory(false)
+    } else {
+      onCloseAddCategory()
+    }
+  }
+
   return (
-    <Popover isOpen={isOpen} onClose={onClose} isLazy placement="bottom-start">
-      <PopoverTrigger>
-        <IconButton
-          aria-label="edit category"
-          bg={buttonColor}
-          icon={buttonIcon}
-          variant="ghost"
-          isRound
-          color={isDark ? "gray.600" : "gray.300"}
-          onClick={onOpen}
-        />
-      </PopoverTrigger>
-      <PopoverContent maxW="12rem">
-        <Select<Category>
-          isSearchable
-          autoFocus
-          // isMulti={false}
-          isLoading={isLoading}
-          isDisabled={isDisabled}
-          controlShouldRenderValue={false}
-          hideSelectedOptions={false}
-          options={categories}
-          getOptionValue={cat => cat.name}
-          getOptionLabel={cat => cat.name}
-          defaultValue={value}
-          value={value}
-          onChange={onChange}
-          isClearable={true}
-          closeMenuOnSelect={true}
-          menuIsOpen={isOpen}
-          placeholder="Search..."
-          styles={{
-            option: base => ({
-              ...base,
-              display: "flex",
-              alignItems: "center",
-              color: "inherit",
-            }),
-            menu: base => ({
-              ...base,
-              margin: 0,
-            }),
-          }}
-          theme={theme => ({
-            ...theme,
-            colors: {
-              ...theme.colors,
-              ...(isDark ? darkColors : lightColors),
-            },
-          })}
-          components={{
-            DropdownIndicator: null,
-            IndicatorSeparator: null,
-            Option: SelectOption,
-          }}
-        />
-      </PopoverContent>
-    </Popover>
+    <>
+      {isAddingCategory ? (
+        <CategoryAddStandalone onClose={onCloseAddCategory} onAddCategory={onAddCategory} />
+      ) : null}
+
+      <Popover isOpen={isOpen} onClose={onClose} isLazy placement="bottom-start">
+        <PopoverTrigger>
+          <IconButton
+            aria-label="edit category"
+            bg={buttonColor}
+            icon={buttonIcon}
+            variant="ghost"
+            isRound
+            color={isDark ? "gray.600" : "gray.300"}
+            onClick={onOpen}
+          />
+        </PopoverTrigger>
+        <PopoverContent maxW="12rem">
+          <Select<Category>
+            isSearchable
+            autoFocus
+            // isMulti={false}
+            isLoading={isLoading}
+            isDisabled={isError}
+            controlShouldRenderValue={false}
+            hideSelectedOptions={false}
+            options={categories}
+            getOptionValue={cat => cat.name}
+            getOptionLabel={cat => cat.name}
+            defaultValue={value}
+            value={value}
+            onChange={onChange}
+            isClearable={true}
+            closeMenuOnSelect={true}
+            menuIsOpen={isOpen}
+            placeholder="Search..."
+            styles={{
+              option: base => ({
+                ...base,
+                display: "flex",
+                alignItems: "center",
+                color: "inherit",
+              }),
+              menu: base => ({
+                ...base,
+                margin: 0,
+              }),
+              menuList: base => ({
+                ...base,
+                padding: 0,
+              }),
+            }}
+            theme={theme => ({
+              ...theme,
+              colors: {
+                ...theme.colors,
+                ...(isDark ? darkColors : lightColors),
+              },
+            })}
+            components={{
+              DropdownIndicator: null,
+              IndicatorSeparator: null,
+              Option: SelectOption,
+              MenuList: props => <SelectMenuList onClick={toggleSetIsAddingCategory} {...props} />,
+            }}
+          />
+        </PopoverContent>
+      </Popover>
+    </>
   )
 }
 
@@ -123,6 +143,19 @@ const SelectOption = ({
       />
       {children}
     </components.Option>
+  )
+}
+
+const SelectMenuList = (
+  props: MenuListProps<Category, false, GroupBase<Category>> & { onClick: () => void }
+) => {
+  return (
+    <components.MenuList {...props}>
+      {props.children}
+      <Button isFullWidth colorScheme="blue" size="sm" onClick={props.onClick}>
+        Add new category
+      </Button>
+    </components.MenuList>
   )
 }
 
