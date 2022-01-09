@@ -22,7 +22,7 @@ import AddIcon from "remixicon-react/AddLineIcon"
 import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
 
 import CategoryEdit from "./CategoryEdit/CategoryEdit"
-import { DataIsEmpty } from "./CategoriesStates"
+import DataIsEmpty from "../DataStates/DataIsEmpty"
 import { icons } from "../../shared/iconUtils"
 import { CategoriesStatistics, CategoryWithTransactions } from "../../types/types"
 

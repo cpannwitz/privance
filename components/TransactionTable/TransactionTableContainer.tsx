@@ -2,10 +2,12 @@ import { useCallback, useState } from "react"
 import { Box } from "@chakra-ui/react"
 
 import useGetFilteredSortedTransactions from "../hooks/useGetFilteredSortedTransactions"
-
-import { DataIsEmpty, DataIsError, DataIsLoading } from "./TransactionTableStates"
-import TransactionTable from "./TransactionTable"
 import useGetCategories from "../hooks/useGetCategories"
+
+import DataIsEmpty from "../DataStates/DataIsEmpty"
+import DataIsError from "../DataStates/DataIsError"
+import DataIsLoading from "../DataStates/DataIsLoading"
+import TransactionTable from "./TransactionTable"
 
 import Filterbar from "../Filterbar/Filterbar"
 
@@ -38,19 +40,28 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
     isLoading: isLoadingTransactions,
     mutate: mutateTransactions,
   } = useGetFilteredSortedTransactions(filterState)
-  const retryTransactions = useCallback(() => mutateTransactions(), [mutateTransactions])
+
   const {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
     mutate: mutateCategories,
   } = useGetCategories()
-  const retryCategories = useCallback(() => mutateCategories(), [mutateCategories])
 
-  if (isLoadingTransactions || isLoadingCategories) return <DataIsLoading />
-  if (isErrorTransactions) return <DataIsError retry={retryTransactions} />
-  if (isErrorCategories) return <DataIsError retry={retryCategories} />
-  if (!transactions || transactions.length === 0) return <DataIsEmpty />
+  const retry = useCallback(() => {
+    mutateTransactions()
+    mutateCategories()
+  }, [mutateCategories])
+
+  if (isLoadingTransactions || isLoadingCategories) {
+    return <DataIsLoading />
+  }
+  if (!transactions || isErrorTransactions || !categories || isErrorCategories) {
+    return <DataIsError retry={retry} />
+  }
+  if (transactions.length === 0) {
+    return <DataIsEmpty />
+  }
   return (
     <Box h="100%">
       <Box>
@@ -58,7 +69,7 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
       </Box>
       <TransactionTable
         transactions={transactions}
-        categories={categories || []}
+        categories={categories}
         mutateTransactions={mutateTransactions}
       />
     </Box>

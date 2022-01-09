@@ -24,6 +24,16 @@
   - [x] General over-time-chart
   - [x] monthly charts
   - [x] categories charts
+- [ ] In-Table-Handling:
+  - [ ] Add automation rule from table
+  - [ ] Add category from table
+- [ ] Create views for questions:
+  - [ ] "How much more did I spend over regular spendings?"
+  - [ ] "Whats the average spending per category? per month?"
+- [ ] Add recurring spendings (abonnements), detection, management
+- [ ] Make data editable
+  - [ ] Add unique ordering of transactions on upload
+  - [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
 - [ ] Create TAGS:
   - [x] Transaction with single category
   - [ ] Transaction with multiple tags
@@ -31,9 +41,8 @@
 - [ ] Stability!
   - [ ] Runtypes in API
   - [ ] Optimize data usage (useSWR, API)
-  - [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
-  - [x] Add double currency (https://www.npmjs.com/package/currency-codes + https://github.com/ZakZubair/currency-map-symbol)
   - [ ] User Setting: main currency
+  - [x] Add double currency (https://www.npmjs.com/package/currency-codes + https://github.com/ZakZubair/currency-map-symbol)
 - [ ] i18n
   - [ ] add i18n provider
   - [ ] add i18n management handle
@@ -47,7 +56,6 @@
 - [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
 - [ ] Add Paypal transactions
 - [ ] Add ETF tracker: https://marketstack.com/
-- [ ] Add recurring spendings (abonnements), detection, management
 - [ ] Planned spendings, maybe in combination with ->
 - [ ] Forecasting balances, demo project tensorflow: https://github.com/jinglescode/time-series-forecasting-tensorflowjs
 - [ ] Import data from Kontoauszug? (pdf-to-csv, pdf-to-json) (https://www.npmjs.com/package/pdf2json)

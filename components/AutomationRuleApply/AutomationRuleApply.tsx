@@ -3,7 +3,8 @@ import useGetTransactions from "../hooks/useGetTransactions"
 import useGetAutomationRulesById from "../hooks/useGetAutomationRulesById"
 
 import AutomationRuleApplyPreview from "./AutomationRuleApplyPreview"
-import { DataIsError, DataIsLoading } from "./AutomationRuleApplyStates"
+import DataIsLoading from "../DataStates/DataIsLoading"
+import DataIsError from "../DataStates/DataIsError"
 import useGetCategories from "../hooks/useGetCategories"
 
 interface AutomationRuleApplyProps {
@@ -38,8 +39,9 @@ const AutomationRuleApply = ({ rules }: AutomationRuleApplyProps) => {
     mutateCategories()
   }, [mutateTransactions, mutateAutomationRules, mutateCategories])
 
-  if (isLoadingAutomationRules || isLoadingTransactions || isLoadingCategories)
+  if (isLoadingAutomationRules || isLoadingTransactions || isLoadingCategories) {
     return <DataIsLoading />
+  }
   if (
     !automationRules ||
     isErrorAutomationRules ||
@@ -47,8 +49,9 @@ const AutomationRuleApply = ({ rules }: AutomationRuleApplyProps) => {
     isErrorTransactions ||
     !categories ||
     isErrorCategories
-  )
+  ) {
     return <DataIsError retry={retry} />
+  }
 
   return (
     <AutomationRuleApplyPreview

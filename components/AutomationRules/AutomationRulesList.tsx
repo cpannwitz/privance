@@ -33,7 +33,7 @@ import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
 
 import AutomationRulesEdit from "./AutomationRulesEdit/AutomationRulesEdit"
 import { AutomationRuleWithCategory } from "../../types/types"
-import { DataIsEmpty } from "./AutomationRulesListStates"
+import DataIsEmpty from "../DataStates/DataIsEmpty"
 import { getValueType } from "./AutomationRulesEdit/FormUtils"
 import { icons } from "../../shared/iconUtils"
 

@@ -1,7 +1,8 @@
 import { useCallback } from "react"
 
 import Upload from "./Upload"
-import { DataIsError, DataIsLoading } from "./UploadStates"
+import DataIsError from "../DataStates/DataIsError"
+import DataIsLoading from "../DataStates/DataIsLoading"
 import useGetCategories from "../hooks/useGetCategories"
 import useGetAutomationRulesActive from "../hooks/useGetAutomationRulesActive"
 
@@ -27,9 +28,12 @@ const UploadContainer = ({}: UploadContainerProps) => {
     mutateCategories()
   }, [mutateAutomationRules, mutateCategories])
 
-  if (isLoadingAutomationRules || isLoadingCategories) return <DataIsLoading />
-  if (!automationRules || isErrorAutomationRules || !categories || isErrorCategories)
+  if (isLoadingAutomationRules || isLoadingCategories) {
+    return <DataIsLoading />
+  }
+  if (!automationRules || isErrorAutomationRules || !categories || isErrorCategories) {
     return <DataIsError retry={retry} />
+  }
 
   return <Upload automationRules={automationRules} categories={categories} />
 }

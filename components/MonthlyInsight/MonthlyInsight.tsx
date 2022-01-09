@@ -1,7 +1,10 @@
 import { useCallback } from "react"
 import useGetMonthlyAggregations from "../hooks/useGetMonthlyAggregations"
 import MonthlyInsightGrid from "./MonthlyInsightGrid"
-import { DataIsLoading, DataIsError, DataIsEmpty } from "./MonthlyInsightStates"
+import DataIsEmpty from "../DataStates/DataIsEmpty"
+import DataIsError from "../DataStates/DataIsError"
+import DataIsLoading from "../DataStates/DataIsLoading"
+import { routerLinks } from "../../shared/config"
 
 interface MonthlyInsightProps {}
 
@@ -17,9 +20,15 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
     mutateMonthlyTransactions()
   }, [mutateMonthlyTransactions])
 
-  if (isLoadingMonthlyTransactions) return <DataIsLoading />
-  if (isErrorMonthlyTransactions) return <DataIsError retry={retry} />
-  if (!monthlyAggregations) return <DataIsEmpty />
+  if (isLoadingMonthlyTransactions) {
+    return <DataIsLoading />
+  }
+  if (isErrorMonthlyTransactions) {
+    return <DataIsError retry={retry} />
+  }
+  if (!monthlyAggregations) {
+    return <DataIsEmpty linkUrl={routerLinks.UPLOAD} />
+  }
 
   return <MonthlyInsightGrid monthlyAggregations={monthlyAggregations} />
 }

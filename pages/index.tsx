@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType } from "next"
 import { useRouter } from "next/router"
-import { useEffect } from "react"
+import { useLayoutEffect } from "react"
 
 export const getStaticProps = async () => {
   return { props: {} }
@@ -8,7 +8,7 @@ export const getStaticProps = async () => {
 
 const IndexPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter()
-  useEffect(() => {
+  useLayoutEffect(() => {
     router.replace("/overview")
   }, [router])
   return null

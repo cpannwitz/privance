@@ -2,7 +2,8 @@ import React, { useCallback } from "react"
 import useGetCategoriesTransactions from "../hooks/useGetCategoriesTransactions"
 import useGetCategoriesStatistics from "../hooks/useGetCategoriesStatistics"
 import CategoryList from "./CategoryList"
-import { DataIsLoading, DataIsError } from "./CategoriesStates"
+import DataIsLoading from "../DataStates/DataIsLoading"
+import DataIsError from "../DataStates/DataIsError"
 
 interface CategoriesProps {}
 
@@ -26,9 +27,12 @@ const Categories = ({}: CategoriesProps) => {
     mutateCategoriesStatistics()
   }, [mutateCategories, mutateCategoriesStatistics])
 
-  if (isLoadingCategories || isLoadingCategoriesStatistics) return <DataIsLoading />
-  if (!categories || isErrorCategories || !categoriesStatistics || isErrorCategoriesStatistics)
+  if (isLoadingCategories || isLoadingCategoriesStatistics) {
+    return <DataIsLoading />
+  }
+  if (!categories || isErrorCategories || !categoriesStatistics || isErrorCategoriesStatistics) {
     return <DataIsError retry={retry} />
+  }
 
   return <CategoryList categories={categories} categoriesStatistics={categoriesStatistics} />
 }
