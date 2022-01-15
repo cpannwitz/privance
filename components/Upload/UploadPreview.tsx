@@ -1,26 +1,24 @@
-import { Category } from ".prisma/client"
-
 import TransactionTable from "../TransactionTable/TransactionTable"
 import { Box, Stack, Divider, Button, Icon, Spacer, Heading } from "@chakra-ui/react"
 
 import PlayIcon from "remixicon-react/PlayLineIcon"
 import CancelIcon from "remixicon-react/CloseCircleLineIcon"
-import { TransactionCreateInputWithCategory, TransactionWithCategory } from "../../types/types"
+import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
 
 interface UploadPreviewProps {
-  transactions: TransactionCreateInputWithCategory[]
-  categories: Category[]
+  transactions: TransactionBeforeUpload[]
   onCancel: () => void
   onUpload: () => void
-  onUpdateTransaction?: (transaction: TransactionCreateInputWithCategory) => void
+  onUpdateTransaction?: (transaction: TransactionBeforeUpload) => void
 }
 
 const UploadPreview = ({
   transactions,
-  categories,
   onCancel,
   onUpload,
-  onUpdateTransaction = () => {},
+  onUpdateTransaction = () => {
+    return
+  },
 }: UploadPreviewProps) => {
   return (
     <>
@@ -47,7 +45,6 @@ const UploadPreview = ({
       <Divider my={6} />
       <Box w="100%" h="85%">
         <TransactionTable
-          categories={categories}
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategory[]}
           variant="preview"

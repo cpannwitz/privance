@@ -3,18 +3,23 @@ import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
 import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
 
 import parseCSVToTransactions from "./parseCSVToJSON"
-import normalizeCSVTransactions from "./transformTransactions"
+import normalizeCSVTransactions from "./normalizeCSVTransactions"
 
 import Dropzone from "./Dropzone"
 import assignNewTransactionCategory from "./assignNewTransactionCategory"
-import { AutomationRuleWithCategory, TransactionCreateInputWithCategory } from "../../types/types"
+import { AutomationRuleWithCategory, TransactionBeforeUpload } from "../../types/types"
 
 interface UploadCSVProps {
-  onUpload?: (transaction: TransactionCreateInputWithCategory[]) => void
+  onUpload?: (transaction: TransactionBeforeUpload[]) => void
   automationRules: AutomationRuleWithCategory[]
 }
 
-const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => {
+const UploadCSV = ({
+  automationRules,
+  onUpload = () => {
+    return
+  },
+}: UploadCSVProps) => {
   const toast = useToast()
 
   async function onDrop(files: File[]) {
@@ -65,9 +70,7 @@ const UploadCSV = ({ automationRules, onUpload = () => {} }: UploadCSVProps) => 
         automationRules
       )
 
-      // if (transactionsWithCategory) {
       onUpload(transactionsWithCategory)
-      // }
     }
   }
   return (

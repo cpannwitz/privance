@@ -26,7 +26,7 @@
   - [x] categories charts
 - [ ] In-Table-Handling:
   - [ ] Add automation rule from table
-  - [ ] Add category from table
+  - [x] Add category from table
 - [ ] Create views for questions:
   - [ ] "How much more did I spend over regular spendings?"
   - [ ] "Whats the average spending per category? per month?"
@@ -62,7 +62,6 @@
 - [ ] Online stuff:
   - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
   - [ ] Add Login functionality
-
 
 ---
 

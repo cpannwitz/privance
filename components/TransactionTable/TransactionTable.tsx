@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios"
 import { Box, useMultiStyleConfig, useToast, useColorMode } from "@chakra-ui/react"
 import { KeyedMutator } from "swr"
 
-import { TransactionCreateInputWithCategory, TransactionWithCategory } from "../../types/types"
+import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
 import getDefaultColumns from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
 import { Prisma } from ".prisma/client"
@@ -18,7 +18,7 @@ interface TransactionTableProps {
   transactions: TransactionWithCategory[]
   transformedTransactions?: number[]
   variant?: TableVariant
-  updateTransaction?: (transaction: TransactionCreateInputWithCategory) => void
+  updateTransaction?: (transaction: TransactionBeforeUpload) => void
   mutateTransactions?: KeyedMutator<{
     data: TransactionWithCategory[]
   }>
@@ -39,7 +39,7 @@ const TransactionTable = ({
   const onSelectCategory = useCallback(
     (transaction: TransactionWithCategory) => {
       if (variant === "preview" && updateTransaction) {
-        updateTransaction(transaction as TransactionCreateInputWithCategory)
+        updateTransaction(transaction as TransactionBeforeUpload)
       } else {
         axios
           .post<{ data: TransactionWithCategory }>("/api/transactions/updateTransactionCategory", {
@@ -137,7 +137,7 @@ const TransactionTable = ({
         </Box>
       )
     },
-    [prepareRow, rows, tableStyles, transformedTransactions]
+    [prepareRow, rows, tableStyles, transformedTransactions, isDark]
   )
   // TODO: optimize Table for narrow display (monthly)
   return (

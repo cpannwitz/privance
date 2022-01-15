@@ -118,12 +118,16 @@ const MonthGridItem = ({
           </StatHelpText>
         </Stat>
       </StatGroup>
-      <Box w="100%" h="200px">
-        <BalanceChart data={transactions} variant="small" />
-      </Box>
-      <Box w="100%" h="200px">
-        <CategoriesCharts categories={categories} />
-      </Box>
+      {transactions.length > 0 && (
+        <Box w="100%" h="200px">
+          <BalanceChart data={transactions} variant="small" />
+        </Box>
+      )}
+      {categories.length > 0 && (
+        <Box w="100%" h="200px">
+          <CategoriesCharts categories={categories} />
+        </Box>
+      )}
 
       <Button
         size="sm"
@@ -138,7 +142,7 @@ const MonthGridItem = ({
       </Button>
       {showTable && (
         <Box w="100%" h="400px" mt={3}>
-          <TransactionTable transactions={transactions} categories={[]} />
+          <TransactionTable transactions={transactions} />
         </Box>
       )}
     </Box>
