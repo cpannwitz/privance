@@ -5,7 +5,6 @@ import useGetAutomationRulesById from "../hooks/useGetAutomationRulesById"
 import AutomationRuleApplyPreview from "./AutomationRuleApplyPreview"
 import DataIsLoading from "../DataStates/DataIsLoading"
 import DataIsError from "../DataStates/DataIsError"
-import useGetCategories from "../hooks/useGetCategories"
 
 interface AutomationRuleApplyProps {
   rules: number[]
@@ -26,39 +25,20 @@ const AutomationRuleApply = ({ rules }: AutomationRuleApplyProps) => {
     mutate: mutateAutomationRules,
   } = useGetAutomationRulesById(rules)
 
-  const {
-    data: categories,
-    isError: isErrorCategories,
-    isLoading: isLoadingCategories,
-    mutate: mutateCategories,
-  } = useGetCategories()
-
   const retry = useCallback(() => {
     mutateTransactions()
     mutateAutomationRules()
-    mutateCategories()
-  }, [mutateTransactions, mutateAutomationRules, mutateCategories])
+  }, [mutateTransactions, mutateAutomationRules])
 
-  if (isLoadingAutomationRules || isLoadingTransactions || isLoadingCategories) {
+  if (isLoadingAutomationRules || isLoadingTransactions) {
     return <DataIsLoading />
   }
-  if (
-    !automationRules ||
-    isErrorAutomationRules ||
-    !transactions ||
-    isErrorTransactions ||
-    !categories ||
-    isErrorCategories
-  ) {
+  if (!automationRules || isErrorAutomationRules || !transactions || isErrorTransactions) {
     return <DataIsError retry={retry} />
   }
 
   return (
-    <AutomationRuleApplyPreview
-      transactions={transactions}
-      automationRules={automationRules}
-      categories={categories}
-    />
+    <AutomationRuleApplyPreview transactions={transactions} automationRules={automationRules} />
   )
 }
 

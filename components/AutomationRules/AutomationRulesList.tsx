@@ -146,9 +146,11 @@ const AutomationList = ({ data }: AutomationListProps) => {
 
   function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategory) {
     if (automationRule?.id) {
+      // TODO: better removal of unused property
+      const { categoryId, ...automationRuleSafe } = automationRule
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
-        ...automationRule,
+        ...automationRuleSafe,
         category: {
           connect: { id: automationRule.category.id },
         },
