@@ -29,6 +29,9 @@
   - [ ] Ordering of Categories in chart (Desc)
   - [ ] Optional: uncategorized rest value as "category" in chart
   - [ ] Maybe max. height for bar (income bar too high for other bars)
+- [ ] Refactoring of Uploading Transactions
+  - [ ] add Transactions CRUD
+  - [ ] upload -> add to db -> display added / updated transactions -> category assignment
 - [ ] Refactoring of Automation rules
   - [ ] "assign this category, when: issuer a, issuer b, purpose a, purpose b"
 - [ ] In-Table-Handling:
