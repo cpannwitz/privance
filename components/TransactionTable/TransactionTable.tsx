@@ -6,7 +6,6 @@ import { KeyedMutator } from "swr"
 import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
 import getDefaultColumns from "./TransactionTableColumns"
 import Searchbar from "../Searchbar/Searchbar"
-import { Prisma } from ".prisma/client"
 import { useCallback, useMemo } from "react"
 import { FixedSizeList, ListChildComponentProps } from "react-window"
 import Autosizer from "react-virtualized-auto-sizer"
@@ -15,7 +14,7 @@ import Autosizer from "react-virtualized-auto-sizer"
 
 export type TableVariant = "preview" | "default"
 interface TransactionTableProps {
-  transactions: TransactionWithCategory[]
+  transactions: TransactionWithCategory[] | TransactionBeforeUpload[]
   transformedTransactions?: number[]
   variant?: TableVariant
   updateTransaction?: (transaction: TransactionBeforeUpload) => void
@@ -23,10 +22,10 @@ interface TransactionTableProps {
     data: TransactionWithCategory[]
   }>
 }
-const DEFAULTTRANSFORMATIONS: number[] = []
+const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
 const TransactionTable = ({
   transactions,
-  transformedTransactions = DEFAULTTRANSFORMATIONS,
+  transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
   variant = "default",
   updateTransaction,
   mutateTransactions,
@@ -94,7 +93,7 @@ const TransactionTable = ({
   } = useTable(
     {
       columns: columns,
-      data: transactions || [],
+      data: (transactions as TransactionWithCategory[]) || [],
     },
     useGlobalFilter
   )
@@ -198,7 +197,7 @@ const TransactionTable = ({
 export default TransactionTable
 
 export function isTransactionWithCategories(
-  transaction: TransactionWithCategory | Prisma.TransactionCreateInput
+  transaction: TransactionWithCategory | TransactionBeforeUpload
 ): transaction is TransactionWithCategory {
   return "id" in transaction
 }
