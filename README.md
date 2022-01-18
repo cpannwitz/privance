@@ -19,7 +19,7 @@
   - [x] Add Preview Page
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
-  - [ ] add Transactions CRUD
+  - [x] add Transactions CRUD
   - [ ] upload -> add to db -> display added / updated transactions -> category assignment
 - [x] Extend Transactions API with filtering sorting for charts
 - [x] Charts!

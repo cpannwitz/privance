@@ -1,6 +1,6 @@
-import { useTable, useGlobalFilter } from "react-table"
+import { useTable, useGlobalFilter, useRowSelect, UseRowSelectRowProps } from "react-table"
 import axios, { AxiosError } from "axios"
-import { Box, useMultiStyleConfig, useToast, useColorMode } from "@chakra-ui/react"
+import { Box, Checkbox, useMultiStyleConfig, useToast, useColorMode } from "@chakra-ui/react"
 import { KeyedMutator } from "swr"
 
 import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
@@ -88,14 +88,32 @@ const TransactionTable = ({
     headerGroups,
     rows,
     prepareRow,
-    state,
+    state: { globalFilter, selectedRowIds },
     setGlobalFilter,
   } = useTable(
     {
       columns: columns,
       data: (transactions as TransactionWithCategory[]) || [],
     },
-    useGlobalFilter
+    useGlobalFilter,
+    useRowSelect,
+    hooks => {
+      hooks.visibleColumns.push(columns => [
+        {
+          id: "selection",
+          width: "3%",
+          Header: ({ getToggleAllRowsSelectedProps }) => {
+            const { indeterminate, checked, ...props } = getToggleAllRowsSelectedProps()
+            return <Checkbox {...props} isChecked={checked} isIndeterminate={indeterminate} />
+          },
+          Cell: ({ row }: { row: UseRowSelectRowProps<object> }) => {
+            const { indeterminate, checked, ...props } = row.getToggleRowSelectedProps()
+            return <Checkbox {...props} isChecked={checked} isIndeterminate={indeterminate} />
+          },
+        },
+        ...columns,
+      ])
+    }
   )
 
   const RenderRow = useCallback(
@@ -136,13 +154,13 @@ const TransactionTable = ({
         </Box>
       )
     },
-    [prepareRow, rows, tableStyles, transformedTransactions, isDark]
+    [prepareRow, rows, tableStyles, transformedTransactions, isDark, selectedRowIds]
   )
   // TODO: optimize Table for narrow display (monthly)
   return (
     <>
       <Box w="100%" h="4rem">
-        <Searchbar filterValue={state.globalFilter as string} setFilterValue={setGlobalFilter} />
+        <Searchbar filterValue={globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
       <Box __css={tableStyles.table} {...getTableProps()} h="calc(100% - 5rem)">
         <Box __css={tableStyles.thead}>

@@ -41,7 +41,7 @@ const getPreviewColumns = ({
       accessor: "purpose",
       id: "purpose",
       Cell: DisplayTextRenderer,
-      width: "30%",
+      width: "20%",
     },
     {
       Header: "Categ.",
