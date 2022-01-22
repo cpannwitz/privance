@@ -7,17 +7,23 @@ function barChartTransformer(
     transactionBalance: number
   })[]
 ) {
-  return data.map(category => ({
-    name: category.name,
-    transactionBalance: category.transactionBalance,
-    count: category._count.transactions,
-  }))
+  return data
+    .map(category => ({
+      name: category.name,
+      transactionBalance: category.transactionBalance,
+      count: category._count.transactions,
+      color: category.color || "#336699",
+    }))
+    .sort((a, b) => b.transactionBalance - a.transactionBalance)
+    .slice(0, 8)
+  // TODO maybe do this dynamic?
 }
 
 type BarCategory = {
   name: string
   transactionBalance: number
   count: number
+  color: string
 }
 
 interface CategoriesChartsProps {
@@ -33,12 +39,12 @@ const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
     <ResponsiveBar<BarCategory>
       data={transformedData}
       keys={["transactionBalance"]}
-      indexBy={d => d.name as string}
+      indexBy={d => d.name}
       margin={{ top: 20, right: 20, bottom: 30, left: 20 }}
       padding={0.3}
       valueScale={{ type: "linear" }}
       indexScale={{ type: "band", round: true }}
-      colors={{ scheme: "category10" }}
+      colors={d => d.data.color}
       axisTop={null}
       axisRight={null}
       axisLeft={null}

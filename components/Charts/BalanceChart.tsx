@@ -64,6 +64,8 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
       yScale={{
         type: "linear",
         nice: true,
+        // min: minMaxBalance.min * 0.95,
+        max: minMaxBalance.max * 1.1,
       }}
       axisLeft={null}
       markers={[
@@ -103,7 +105,7 @@ const BalanceChart = ({ data, variant = "default" }: BalanceChartProps) => {
           type: "linearGradient",
           colors: [
             { offset: 10, color: "#2076b4" },
-            { offset: 100, color: "crimson" },
+            { offset: 100, color: "#2076b400" },
           ],
         },
       ]}

@@ -28,8 +28,8 @@
   - [x] categories charts
   - [ ] Add percentage to categories chart ("1234€ total - 32% of all", monthly all time)
   - [ ] Diverging Bar Chart for categories chart (plus, minus per category)
-  - [ ] Ordering of Categories in chart (Desc)
-  - [ ] Optional: uncategorized rest value as "category" in chart
+  - [x] Ordering of Categories in chart (Desc)
+  - [x] Optional: uncategorized rest value as "category" in chart
   - [ ] Maybe max. height for bar (income bar too high for other bars)
 - [ ] Refactoring of Automation rules
   - [ ] "assign this category, when: issuer a, issuer b, purpose a, purpose b"
