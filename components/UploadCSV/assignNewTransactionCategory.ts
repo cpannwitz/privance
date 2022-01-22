@@ -1,17 +1,17 @@
 import {
   AutomationRuleWithCategory,
-  TransactionCreateInputWithCategory,
+  TransactionBeforeUpload,
   ZAutomationRuleField,
 } from "../../types/types"
-import { Prisma, Category } from ".prisma/client"
+import { Category } from ".prisma/client"
 
 // TODO: centralize and deduplicate code
 
 function assignNewTransactionCategory(
-  transactions: Prisma.TransactionUncheckedCreateInput[],
+  transactions: TransactionBeforeUpload[],
   rules: AutomationRuleWithCategory[]
 ) {
-  const transformedTransactions: TransactionCreateInputWithCategory[] = []
+  const transformedTransactions: TransactionBeforeUpload[] = []
 
   transactions.forEach(transaction => {
     const categoriesToApply: Category[] = []
@@ -35,10 +35,7 @@ function assignNewTransactionCategory(
 
 export default assignNewTransactionCategory
 
-export function applyRule(
-  rule: AutomationRuleWithCategory,
-  transaction: Prisma.TransactionUncheckedCreateInput
-) {
+export function applyRule(rule: AutomationRuleWithCategory, transaction: TransactionBeforeUpload) {
   const fieldValue = transaction[rule.field as ZAutomationRuleField]
   switch (rule.operation) {
     case "includes": {

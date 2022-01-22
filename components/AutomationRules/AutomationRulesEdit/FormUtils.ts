@@ -15,7 +15,7 @@ export const schema = yup
   .object({
     field: yup.string().required("Please select the desired field to operate on."),
     operation: yup.string().required("Please select the desired operation."),
-    categories: yup.array().min(1, "Please select atleast 1 category."),
+    category: yup.object().required("Please select a category."),
     stringValue: yup.string().when("field", {
       is: (fieldValue: TAutomationRuleField) => getFieldType(fieldValue) === "string",
       then: yup.string().required("Please fill in an appropiate value."),

@@ -19,21 +19,37 @@
   - [x] Add Preview Page
   - [x] Add automatic category assignment to hardcoded strings
   - [x] Add management tooling for dynamic category assignment
+  - [x] add Transactions CRUD
+  - [ ] upload -> add to db -> display added / updated transactions -> category assignment
 - [x] Extend Transactions API with filtering sorting for charts
 - [x] Charts!
   - [x] General over-time-chart
   - [x] monthly charts
   - [x] categories charts
+  - [ ] Add percentage to categories chart ("1234€ total - 32% of all", monthly all time)
+  - [ ] Diverging Bar Chart for categories chart (plus, minus per category)
+  - [x] Ordering of Categories in chart (Desc)
+  - [x] Optional: uncategorized rest value as "category" in chart
+  - [ ] Maybe max. height for bar (income bar too high for other bars)
+- [ ] Refactoring of Automation rules
+  - [ ] "assign this category, when: issuer a, issuer b, purpose a, purpose b"
 - [ ] In-Table-Handling:
+  - [x] Add category from table
   - [ ] Add automation rule from table
-  - [ ] Add category from table
 - [ ] Create views for questions:
   - [ ] "How much more did I spend over regular spendings?"
   - [ ] "Whats the average spending per category? per month?"
 - [ ] Add recurring spendings (abonnements), detection, management
-- [ ] Make data editable
-  - [ ] Add unique ordering of transactions on upload
-  - [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
+  - [ ] Mark specific transactions as recurring?
+- [ ] Add "Monthly-Base Spendings"
+  - [ ] maybe via category property "essential"
+  - [ ] maybe via recurring spendings
+- [ ] i18n
+  - [ ] add i18n provider
+  - [ ] add i18n management handle
+  - [ ] add strings etc.
+- [ ] Duplicate entries handling (same day, same data, same amount, different balance?)
+- [ ] Optional: Make data editable
 - [ ] Create TAGS:
   - [x] Transaction with single category
   - [ ] Transaction with multiple tags
@@ -43,10 +59,6 @@
   - [ ] Optimize data usage (useSWR, API)
   - [ ] User Setting: main currency
   - [x] Add double currency (https://www.npmjs.com/package/currency-codes + https://github.com/ZakZubair/currency-map-symbol)
-- [ ] i18n
-  - [ ] add i18n provider
-  - [ ] add i18n management handle
-  - [ ] add strings etc.
 - [ ] Convert into Electron app (https://github.com/saltyshiomix/nextron)
   - [ ] https://blog.logrocket.com/electron-ipc-response-request-architecture-with-typescript/
   - [ ] https://github.com/vercel/next.js/tree/canary/examples/with-electron-typescript
@@ -62,7 +74,6 @@
 - [ ] Online stuff:
   - [ ] Add possibility for online database (https://github.com/prisma/prisma/issues/2443#issuecomment-630679118)
   - [ ] Add Login functionality
-
 
 ---
 

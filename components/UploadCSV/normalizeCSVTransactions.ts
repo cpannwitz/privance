@@ -1,27 +1,24 @@
-import type { Prisma } from ".prisma/client"
-import { ParsedCSVTransactions, TransactionCreateInputWithCategory } from "../../types/types"
+import { ParsedCSVTransactions, TransactionBeforeUpload } from "../../types/types"
 
 // expects "19.03.2020"
 // returns "2020-03-19T00:00:00+00:00"
 function transformDate(value?: string) {
-  if (!value) return null
+  if (!value) return undefined
   const date = value.split(".").reverse().join("-") + "T00:00:00+00:00"
-  if (isNaN(Date.parse(date))) return null
+  if (isNaN(Date.parse(date))) return undefined
   return new Date(date)
 }
 // expects "-19,23"
 // returns -19.23
 function transformNumber(value?: string) {
-  if (!value) return null
+  if (!value) return undefined
   const number = Number(value.replaceAll(".", "").replaceAll(",", "."))
-  if (isNaN(number)) return null
+  if (isNaN(number)) return undefined
   return number
 }
 
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
-  // const values: Prisma.TransactionUncheckedCreateInput[] = transactions
-  const values: TransactionCreateInputWithCategory[] = transactions
-
+  const values: TransactionBeforeUpload[] = transactions
     .map(
       ({ issuedate, issuer, type, purpose, balance, balanceCurrency, amount, amountCurrency }) => ({
         issuedate: transformDate(issuedate),
@@ -33,19 +30,14 @@ const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) =
         amount: transformNumber(amount),
         amountCurrency: amountCurrency,
         category: undefined,
+        identifier: undefined,
       })
     )
+    // TODO: remove when properties not optional anymore
     .filter(value => {
       if (!value.amount || !value.balance || !value.issuedate) return false
       return true
     })
-    .map(transaction => ({
-      ...transaction,
-      identifier:
-        (transaction.amount || 0) +
-        (transaction.balance || 0) +
-        (transaction.issuedate?.getTime() || 0),
-    }))
   return values
 }
 

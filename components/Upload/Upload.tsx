@@ -5,23 +5,21 @@ import { useToast } from "@chakra-ui/react"
 
 import UploadPreview from "./UploadPreview"
 import UploadCSV from "../UploadCSV/UploadCSV"
-import { Category } from ".prisma/client"
-import { AutomationRuleWithCategory, TransactionCreateInputWithCategory } from "../../types/types"
+import { AutomationRuleWithCategory, TransactionBeforeUpload } from "../../types/types"
 
 interface UploadProps {
-  categories: Category[]
   automationRules: AutomationRuleWithCategory[]
 }
 
-const Upload = ({ categories, automationRules }: UploadProps) => {
+const Upload = ({ automationRules }: UploadProps) => {
   const toast = useToast()
   const router = useRouter()
 
   const [uploadedTransactions, setUploadedTransactions] = useState<
-    TransactionCreateInputWithCategory[] | undefined
+    TransactionBeforeUpload[] | undefined
   >(undefined)
 
-  function onUpdateTransaction(transaction: TransactionCreateInputWithCategory) {
+  function onUpdateTransaction(transaction: TransactionBeforeUpload) {
     if (uploadedTransactions) {
       const index = uploadedTransactions.findIndex(t => t.identifier === transaction.identifier)
       setUploadedTransactions(state => {
@@ -34,7 +32,7 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
     }
   }
 
-  function onUploadRawTransactions(transactions: TransactionCreateInputWithCategory[]) {
+  function onUploadRawTransactions(transactions: TransactionBeforeUpload[]) {
     setUploadedTransactions(transactions)
   }
 
@@ -43,14 +41,9 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
   }
   function onUploadTransactions() {
     if (uploadedTransactions) {
-      const finalTransactions = uploadedTransactions.map(transaction => ({
-        ...transaction,
-        categories: transaction.category ? { connect: { id: transaction.category.id } } : undefined,
-      }))
-
       // TODO: extract api call
       axios
-        .post("/api/transactions/addTransactions", finalTransactions)
+        .post("/api/transactions/addTransactions", uploadedTransactions)
         .then(() => {
           toast({
             title: `Added your transactions!`,
@@ -76,7 +69,6 @@ const Upload = ({ categories, automationRules }: UploadProps) => {
     return (
       <UploadPreview
         transactions={uploadedTransactions}
-        categories={categories}
         onCancel={onCancelUploadTransactions}
         onUpload={onUploadTransactions}
         onUpdateTransaction={onUpdateTransaction}

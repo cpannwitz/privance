@@ -1,8 +1,16 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
-import { PrismaClient, Prisma } from ".prisma/client"
+import { PrismaClient } from ".prisma/client"
 
-import { TransactionWithCategory } from "../../../types/types"
+import { TransactionBeforeUpload, TransactionWithCategory } from "../../../types/types"
+
+function createIdentifier(transaction: TransactionBeforeUpload) {
+  return (
+    (new Date(transaction.issuedate!)?.getTime() || 0) +
+    (transaction.balance || 0) +
+    (transaction.amount || 0)
+  )
+}
 
 const prisma = new PrismaClient()
 
@@ -16,18 +24,24 @@ export default async function addTransactions(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
-    const bodydata = req.body as Prisma.TransactionCreateInput[]
+    const transactions = req.body as TransactionBeforeUpload[]
+
+    const finalTransactions = transactions.map(transaction => ({
+      ...transaction,
+      category: transaction.category ? { connect: { id: transaction.category.id } } : undefined,
+      identifier: createIdentifier(transaction),
+    }))
 
     try {
       const insertedData = await prisma.$transaction(
-        bodydata.map(data =>
+        finalTransactions.map(data =>
           prisma.transaction.upsert({
             where: {
               identifier: data.identifier ?? undefined,
             },
             update: data,
             create: data,
-            include: { category: true },
+            include: { category: true, _count: true },
           })
         )
       )

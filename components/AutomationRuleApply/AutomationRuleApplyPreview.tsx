@@ -31,13 +31,11 @@ import axios, { AxiosError } from "axios"
 interface AutomationRuleApplyPreviewProps {
   automationRules: AutomationRuleWithCategory[]
   transactions: TransactionWithCategory[]
-  categories: Category[]
 }
 
 const AutomationRuleApplyPreview = ({
   automationRules,
   transactions,
-  categories,
 }: AutomationRuleApplyPreviewProps) => {
   const [showTransformedOnly, setShowTransformedOnly] = useState(true)
   const toggleShowTransformedOnly = () => setShowTransformedOnly(state => !state)
@@ -147,7 +145,6 @@ const AutomationRuleApplyPreview = ({
       <Divider my={6} />
       <Box w="100%" h="50%">
         <TransactionTable
-          categories={categories}
           transactions={showTransformedOnly ? stateTransformedTransactions : stateAllTransactions}
           transformedTransactions={stateTransformedTransactions.map(t => t.id)}
         />

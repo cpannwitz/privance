@@ -1,11 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient } from ".prisma/client"
-import {
-  CategoryWithTransactions,
-  MonthlyAggregations,
-  TransactionWithCategory,
-} from "../../../types/types"
+import { CategoryWithTransactions, MonthlyAggregations } from "../../../types/types"
+import sortTransactions from "../../../shared/sortTransactions"
+import categoryUncategorized from "../../../shared/categoryUncategorized"
 
 const prisma = new PrismaClient()
 
@@ -84,7 +82,21 @@ export default async function getMonthlyAggregations(
 
           const monthlyCategories = monthlyData.years[year].months[month].transactions.reduce(
             (monthlyCategories, transaction) => {
-              if (!transaction.category) return monthlyCategories
+              if (!transaction.category) {
+                if (!monthlyCategories[categoryUncategorized.name]) {
+                  monthlyCategories[categoryUncategorized.name] = {
+                    ...categoryUncategorized,
+                    transactions: [],
+                    _count: { transactions: 0, automationRules: 0 },
+                    transactionBalance: 0,
+                  }
+                }
+                monthlyCategories[categoryUncategorized.name].transactions.push(transaction)
+                monthlyCategories[categoryUncategorized.name]._count.transactions += 1
+                monthlyCategories[categoryUncategorized.name].transactionBalance +=
+                  transaction.amount || 0
+                return monthlyCategories
+              }
               if (!monthlyCategories[transaction.category.name]) {
                 monthlyCategories[transaction.category.name] = {
                   ...transaction.category,
@@ -123,30 +135,4 @@ export default async function getMonthlyAggregations(
   } else {
     res.status(405).json({ error: "wrong http method" })
   }
-}
-// TODO: replace with saved order to DB
-function sortTransactions(
-  transactions: TransactionWithCategory[],
-  sortDirection: "asc" | "desc" = "desc"
-) {
-  const isDesc = sortDirection === "desc"
-  const sorted = [...transactions].sort((a, b) => {
-    if (!a.issuedate || !b.issuedate) return 0
-
-    const aDate = new Date(a.issuedate).getTime()
-    const bDate = new Date(b.issuedate).getTime()
-
-    if (aDate < bDate) return isDesc ? 1 : -1
-
-    if (aDate > bDate) return isDesc ? -1 : 1
-
-    if (aDate === bDate) {
-      if (a.balance === null || a.amount === null || b.balance === null || b.amount === null) {
-        return 0
-      }
-      return isDesc ? 1 : -1
-    }
-    return 0
-  })
-  return sorted
 }

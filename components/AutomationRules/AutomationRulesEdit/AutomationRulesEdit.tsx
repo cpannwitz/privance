@@ -30,7 +30,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
   const defaultValues = {
     field: formValue?.field ?? undefined,
     operation: formValue?.operation ?? undefined,
-    categories: formValue?.category ?? undefined,
+    category: formValue?.category ?? undefined,
     numberValue: formValue?.numberValue ?? undefined,
     stringValue: formValue?.stringValue ?? undefined,
     dateValue: formValue?.dateValue || undefined,

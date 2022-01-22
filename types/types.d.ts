@@ -5,8 +5,12 @@ export type TransactionWithCategory = Transaction & {
   _count: Prisma.TransactionCountOutputType
 }
 
-export type TransactionCreateInputWithCategory = Omit<Prisma.TransactionCreateInput, "category"> & {
+export type TransactionBeforeUpload = Omit<
+  Prisma.TransactionCreateInput,
+  "category" | "identifier"
+> & {
   category?: Category | null
+  identifier?: number | null
 }
 
 export type AllTimeAggregations = {
