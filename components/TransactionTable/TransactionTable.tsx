@@ -90,7 +90,7 @@ const TransactionTable = ({
     prepareRow,
     state: { globalFilter, selectedRowIds },
     setGlobalFilter,
-  } = useTable(
+  } = useTable<TransactionWithCategory>(
     {
       columns: columns,
       data: (transactions as TransactionWithCategory[]) || [],
@@ -131,7 +131,7 @@ const TransactionTable = ({
       const rowProps = row.getRowProps({ style: { ...style, background } })
       return (
         <Box
-          {...rowProps}
+          // {...rowProps}
           key={rowProps.key}
           __css={tableStyles.tr}
           d="grid"
@@ -141,7 +141,7 @@ const TransactionTable = ({
             const cellProps = cell.getCellProps()
             return (
               <Box
-                {...cellProps}
+                // {...cellProps}
                 key={cellProps.key}
                 __css={tableStyles.td}
                 d="flex"
@@ -162,7 +162,7 @@ const TransactionTable = ({
       <Box w="100%" h="4rem">
         <Searchbar filterValue={globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
-      <Box __css={tableStyles.table} {...getTableProps()} h="calc(100% - 5rem)">
+      <Box __css={tableStyles.table} {...getTableProps()} h="calc(100% - 8rem)">
         <Box __css={tableStyles.thead}>
           {headerGroups.map(headerGroup => {
             const headerProps = headerGroup.getHeaderGroupProps()
