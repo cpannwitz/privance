@@ -1,3 +1,10 @@
+import "@fontsource/source-sans-pro"
+import CssBaseline from "@mui/material/CssBaseline"
+import { ThemeProvider as MUIThemeProvider } from "@mui/material/styles"
+import { CacheProvider } from "@emotion/react"
+import createCache from "@emotion/cache"
+import muiTheme from "./theme"
+
 import {
   theme as baseTheme,
   Theme as BaseTheme,
@@ -100,7 +107,20 @@ interface ThemeProviderProps {
   children?: React.ReactNode
 }
 
+function createEmotionCache() {
+  return createCache({ key: "css" })
+}
+const cache = createEmotionCache()
 const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  return <ChakraProvider theme={theme}>{children}</ChakraProvider>
+  return (
+    <CacheProvider value={cache}>
+      <MUIThemeProvider theme={muiTheme}>
+        <ChakraProvider theme={theme}>
+          <CssBaseline enableColorScheme />
+          {children}
+        </ChakraProvider>
+      </MUIThemeProvider>
+    </CacheProvider>
+  )
 }
 export default ThemeProvider
