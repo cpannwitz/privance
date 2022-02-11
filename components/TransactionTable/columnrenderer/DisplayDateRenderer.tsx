@@ -1,15 +1,19 @@
 import { PropsWithChildren, memo } from "react"
+
+import Tooltip from "@mui/material/Tooltip"
+import Typography from "@mui/material/Typography"
+
 import { CellProps } from "react-table"
-import { TransactionWithCategory } from "../../../types/types"
-import { Text, Tooltip } from "@chakra-ui/react"
 import dayjs from "dayjs"
+
+import { TransactionWithCategory } from "../../../types/types"
 
 const DateRenderer = memo(
   ({ value }: PropsWithChildren<CellProps<TransactionWithCategory, Date | null>>) => {
     const dateValue = dayjs(value).format("D. MMM YYYY")
     return (
-      <Tooltip hasArrow openDelay={200} placement="bottom" label={dateValue}>
-        <Text noOfLines={1}>{dateValue}</Text>
+      <Tooltip arrow enterDelay={200} placement="bottom" title={dateValue}>
+        <Typography noWrap>{dateValue}</Typography>
       </Tooltip>
     )
   },

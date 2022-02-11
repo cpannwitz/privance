@@ -1,15 +1,20 @@
 import { useCallback, useMemo } from "react"
 import { useRouter } from "next/router"
 
-import HomeIcon from "remixicon-react/Home4LineIcon"
-import AllTimeInsightIcon from "remixicon-react/CalendarLineIcon"
-import MonthlyInsightIcon from "remixicon-react/Calendar2LineIcon"
-import UploadIcon from "remixicon-react/Upload2LineIcon"
-import CategoriesIcon from "remixicon-react/StackLineIcon"
-import PlaygroundIcon from "remixicon-react/BasketballLineIcon"
-import AutomationRuleIcon from "remixicon-react/Settings2LineIcon"
+import Box from "@mui/material/Box"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemIcon from "@mui/material/ListItemIcon"
+import ListItemText from "@mui/material/ListItemText"
 
-import { VStack, Button, Icon } from "@chakra-ui/react"
+import HomeIcon from "@mui/icons-material/HomeOutlined"
+import AllTimeInsightIcon from "@mui/icons-material/DateRangeOutlined"
+import MonthlyInsightIcon from "@mui/icons-material/TodayOutlined"
+import UploadIcon from "@mui/icons-material/CloudUpload"
+import CategoriesIcon from "@mui/icons-material/CategoryOutlined"
+import PlaygroundIcon from "@mui/icons-material/SportsBaseballOutlined"
+import AutomationRuleIcon from "@mui/icons-material/MotionPhotosAutoOutlined"
+
 import { routerLinks } from "../../shared/config"
 
 const NavbarLinks = () => {
@@ -28,67 +33,71 @@ const NavbarLinks = () => {
   const navbarLinks = useMemo(
     () => [
       {
-        icon: HomeIcon,
+        icon: <HomeIcon />,
         link: linkToOverview,
         label: `Overview`,
         isActive: router.pathname === routerLinks.OVERVIEW,
       },
       {
-        icon: AllTimeInsightIcon,
+        icon: <AllTimeInsightIcon />,
         link: linkToAllTimeInsight,
         label: `All-Time Insight`,
         isActive: router.pathname === routerLinks.ALLTIMEINSIGHT,
       },
       {
-        icon: MonthlyInsightIcon,
+        icon: <MonthlyInsightIcon />,
         link: linkToMonthlyInsight,
         label: `Monthly Insight`,
         isActive: router.pathname === routerLinks.MONTHLYINSIGHT,
       },
       {
-        icon: UploadIcon,
+        icon: <UploadIcon />,
         link: linkToUpload,
         label: `Upload`,
         isActive: router.pathname === routerLinks.UPLOAD,
       },
       {
-        icon: CategoriesIcon,
+        icon: <CategoriesIcon />,
         link: linkToCategories,
         label: `Categories`,
         isActive: router.pathname === routerLinks.CATEGORIES,
       },
       {
-        icon: AutomationRuleIcon,
+        icon: <AutomationRuleIcon />,
         link: linkToAutomationRules,
         label: `Automation Rules`,
         isActive: router.pathname === routerLinks.AUTOMATIONRULES,
       },
       {
-        icon: PlaygroundIcon,
+        icon: <PlaygroundIcon />,
         link: linkToPlayground,
         label: `[DEV] Playground`,
         isActive: router.pathname === routerLinks.PLAYGROUND,
       },
     ],
-    [router.pathname]
+    [
+      router.pathname,
+      linkToOverview,
+      linkToAllTimeInsight,
+      linkToMonthlyInsight,
+      linkToUpload,
+      linkToCategories,
+      linkToAutomationRules,
+      linkToPlayground,
+    ]
   )
 
   return (
-    <VStack spacing={4} align="stretch" w="100%" py={3}>
-      {navbarLinks.map(nav => (
-        <Button
-          key={nav.label}
-          isFullWidth
-          variant="ghost"
-          colorScheme={nav.isActive ? "blue" : "gray"}
-          justifyContent="start"
-          leftIcon={<Icon as={nav.icon} boxSize={6} />}
-          onClick={nav.link}
-        >
-          {nav.label}
-        </Button>
-      ))}
-    </VStack>
+    <Box sx={{ overflow: "auto" }}>
+      <List>
+        {navbarLinks.map(nav => (
+          <ListItem key={nav.label} button selected={nav.isActive} onClick={nav.link}>
+            <ListItemIcon>{nav.icon}</ListItemIcon>
+            <ListItemText primary={nav.label} />
+          </ListItem>
+        ))}
+      </List>
+    </Box>
   )
 }
 

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios"
 import { Category, Prisma } from ".prisma/client"
-import { useToast } from "@chakra-ui/react"
+import { useSnackbar } from "notistack"
 
 import CategoryEdit from "./CategoryEdit/CategoryEdit"
 
@@ -10,24 +10,22 @@ interface CategoryAddStandaloneProps {
 }
 
 const CategoryAddStandalone = ({ onAddCategory, onClose }: CategoryAddStandaloneProps) => {
-  const toast = useToast()
+  const { enqueueSnackbar } = useSnackbar()
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
     axios
       .post("/api/categories/upsertCategory", category)
       .then(res => {
         const category = res.data.data
-        toast({
-          title: `Added or updated your category!`,
-          status: "success",
+        enqueueSnackbar(`Added or updated your category!`, {
+          variant: "success",
         })
         onAddCategory(category)
       })
       .catch((error: AxiosError) => {
         if (error.response) {
-          toast({
-            title: `Couldn't add/update your category: ${error.response.data.error}`,
-            status: "error",
+          enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
+            variant: "error",
           })
         }
         onAddCategory(null)

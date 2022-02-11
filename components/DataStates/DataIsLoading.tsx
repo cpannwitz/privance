@@ -1,8 +1,9 @@
-import { Center, Spinner } from "@chakra-ui/react"
+import CircularProgress from "@mui/material/CircularProgress"
+import Center from "../shared/Center"
 
 const DataIsLoading = () => (
-  <Center h="12rem">
-    <Spinner thickness="4px" speed="1s" emptyColor="gray.200" color="blue.500" size="xl" />
+  <Center sx={{ height: "12rem" }}>
+    <CircularProgress />
   </Center>
 )
 

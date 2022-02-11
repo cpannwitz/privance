@@ -1,5 +1,7 @@
-import { Button, VStack } from "@chakra-ui/react"
 import { SubmitHandler } from "react-hook-form"
+
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
 
 import FormWrapper from "../../FormWrapper/FormWrapper"
 import OpenModal from "../../OpenModal/OpenModal"
@@ -41,10 +43,10 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
       onCancel={onCancel}
       footerChildren={
         <>
-          <Button variant="ghost" size="sm" mr={3} onClick={onCancel}>
+          <Button variant="text" sx={{ marginRight: "1rem" }} onClick={onCancel}>
             Cancel
           </Button>
-          <Button size="sm" colorScheme="blue" type="submit" form="AutomationRulesForm">
+          <Button variant="contained" type="submit" form="AutomationRulesForm">
             Save
           </Button>
         </>
@@ -56,12 +58,12 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
         formId="AutomationRulesForm"
         schema={schema}
       >
-        <VStack spacing={4}>
+        <Stack spacing={5}>
           <FieldPicker />
           <OperationPicker />
           <ValuePicker />
           <CategoryPicker />
-        </VStack>
+        </Stack>
       </FormWrapper>
     </OpenModal>
   )

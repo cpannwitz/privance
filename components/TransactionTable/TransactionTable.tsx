@@ -1,6 +1,19 @@
 import { useTable, useGlobalFilter, useRowSelect, UseRowSelectRowProps } from "react-table"
 import axios, { AxiosError } from "axios"
-import { Box, Checkbox, useMultiStyleConfig, useToast, useColorMode } from "@chakra-ui/react"
+
+import Box from "@mui/material/Box"
+import Checkbox from "@mui/material/Checkbox"
+
+import TableRow from "@mui/material/TableRow"
+import TableBody from "@mui/material/TableBody"
+import TableHead from "@mui/material/TableHead"
+import TableCell from "@mui/material/TableCell"
+import Table from "@mui/material/Table"
+import TableContainer from "@mui/material/TableContainer"
+
+import { useTheme } from "@mui/material/styles"
+import { useSnackbar } from "notistack"
+
 import { KeyedMutator } from "swr"
 
 import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
@@ -30,10 +43,11 @@ const TransactionTable = ({
   updateTransaction,
   mutateTransactions,
 }: TransactionTableProps) => {
-  const tableStyles = useMultiStyleConfig("Table", { size: "sm" })
-  const toast = useToast()
-  const { colorMode } = useColorMode()
-  const isDark = colorMode === "dark"
+  const { enqueueSnackbar } = useSnackbar()
+  const {
+    palette: { mode },
+  } = useTheme()
+  const isDark = mode === "dark"
 
   const onSelectCategory = useCallback(
     (transaction: TransactionWithCategory) => {
@@ -46,9 +60,8 @@ const TransactionTable = ({
             category: transaction.category ? transaction.category.id : undefined,
           })
           .then(res => {
-            toast({
-              title: `Updated your Transaction!`,
-              status: "success",
+            enqueueSnackbar(`Updated your Transaction!`, {
+              variant: "success",
             })
 
             // TODO: ! causes performance issues
@@ -67,15 +80,14 @@ const TransactionTable = ({
           })
           .catch((error: AxiosError) => {
             if (error.response) {
-              toast({
-                title: `Couldn't update your transaction: ${error.response.data.error}`,
-                status: "error",
+              enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
+                variant: "error",
               })
             }
           })
       }
     },
-    [updateTransaction, variant, toast, mutateTransactions]
+    [updateTransaction, variant, enqueueSnackbar, mutateTransactions]
   )
 
   const columns = useMemo(() => {
@@ -104,11 +116,11 @@ const TransactionTable = ({
           width: "3%",
           Header: ({ getToggleAllRowsSelectedProps }) => {
             const { indeterminate, checked, ...props } = getToggleAllRowsSelectedProps()
-            return <Checkbox {...props} isChecked={checked} isIndeterminate={indeterminate} />
+            return <Checkbox {...props} checked={checked} indeterminate={indeterminate} />
           },
           Cell: ({ row }: { row: UseRowSelectRowProps<object> }) => {
             const { indeterminate, checked, ...props } = row.getToggleRowSelectedProps()
-            return <Checkbox {...props} isChecked={checked} isIndeterminate={indeterminate} />
+            return <Checkbox {...props} checked={checked} indeterminate={indeterminate} />
           },
         },
         ...columns,
@@ -130,84 +142,89 @@ const TransactionTable = ({
           : undefined
       const rowProps = row.getRowProps({ style: { ...style, background } })
       return (
-        <Box
+        <TableRow
+          component="div"
           // {...rowProps}
           key={rowProps.key}
-          __css={tableStyles.tr}
-          d="grid"
-          gridTemplateColumns={row.cells.map(cell => cell.column.width).join(" ")}
+          sx={{
+            display: "grid",
+            gridTemplateColumns: row.cells.map(cell => cell.column.width).join(" "),
+          }}
         >
           {row.cells.map(cell => {
             const cellProps = cell.getCellProps()
             return (
-              <Box
+              <TableCell
+                component="div"
                 // {...cellProps}
                 key={cellProps.key}
-                __css={tableStyles.td}
-                d="flex"
-                alignItems="center"
+                sx={{ display: "flex", alignItems: "center" }}
               >
                 {cell.render("Cell")}
-              </Box>
+              </TableCell>
             )
           })}
-        </Box>
+        </TableRow>
       )
     },
-    [prepareRow, rows, tableStyles, transformedTransactions, isDark, selectedRowIds]
+    [prepareRow, rows, transformedTransactions, isDark, selectedRowIds]
   )
   // TODO: optimize Table for narrow display (monthly)
   return (
     <>
-      <Box w="100%" h="4rem">
+      <Box sx={{ width: "100%", height: "4rem" }}>
         <Searchbar filterValue={globalFilter as string} setFilterValue={setGlobalFilter} />
       </Box>
-      <Box __css={tableStyles.table} {...getTableProps()} h="calc(100% - 8rem)">
-        <Box __css={tableStyles.thead}>
-          {headerGroups.map(headerGroup => {
-            const headerProps = headerGroup.getHeaderGroupProps()
-            return (
-              <Box
-                {...headerProps}
-                key={headerProps.key}
-                __css={tableStyles.tr}
-                d="grid"
-                gridTemplateColumns={headerGroup.headers.map(col => col.width).join(" ")}
-              >
-                {headerGroup.headers.map(column => {
-                  const columnHeaderProps = column.getHeaderProps()
-                  return (
-                    <Box
-                      {...columnHeaderProps}
-                      key={columnHeaderProps.key}
-                      __css={tableStyles.th}
-                      d="flex"
-                      alignItems="center"
-                    >
-                      {column.render("Header")}
-                    </Box>
-                  )
-                })}
-              </Box>
-            )
-          })}
-        </Box>
-        <Box __css={tableStyles.tbody} {...getTableBodyProps()} h="100%">
-          <Autosizer>
-            {({ height, width }) => (
-              <FixedSizeList
-                height={height}
-                itemCount={rows.length}
-                itemSize={65}
-                overscanCount={40}
-                width={width}
-              >
-                {RenderRow}
-              </FixedSizeList>
-            )}
-          </Autosizer>
-        </Box>
-      </Box>
+      <TableContainer sx={{ height: "calc(100% - 8rem)" }}>
+        <Table component="div" {...getTableProps()} sx={{ height: "100%" }}>
+          <TableHead component="div">
+            {headerGroups.map(headerGroup => {
+              const headerProps = headerGroup.getHeaderGroupProps()
+              return (
+                <TableRow
+                  component="div"
+                  // {...headerProps}
+                  key={headerProps.key}
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: headerGroup.headers.map(col => col.width).join(" "),
+                  }}
+                  // gridTemplateColumns={headerGroup.headers.map(col => col.width).join(" ")}
+                >
+                  {headerGroup.headers.map(column => {
+                    const columnHeaderProps = column.getHeaderProps()
+                    return (
+                      <TableCell
+                        component="div"
+                        // {...columnHeaderProps}
+                        key={columnHeaderProps.key}
+                        sx={{ display: "flex", alignItems: "center" }}
+                      >
+                        {column.render("Header")}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })}
+          </TableHead>
+          <TableBody {...getTableBodyProps()} component="div" sx={{ height: "100%" }}>
+            <Autosizer>
+              {({ height, width }) => (
+                <FixedSizeList
+                  height={height}
+                  itemCount={rows.length}
+                  itemSize={65}
+                  overscanCount={40}
+                  width={width}
+                >
+                  {RenderRow}
+                </FixedSizeList>
+              )}
+            </Autosizer>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </>
   )
 }

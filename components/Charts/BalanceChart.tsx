@@ -1,6 +1,9 @@
-import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from "@nivo/line"
 import { useMemo } from "react"
-import { Box, useColorModeValue } from "@chakra-ui/react"
+
+import Box from "@mui/material/Box"
+
+import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from "@nivo/line"
+
 import getSymbolFromCurrency from "currency-map-symbol"
 import { Transaction } from ".prisma/client"
 
@@ -139,10 +142,17 @@ interface PointTooltipProps extends TooltipType {
   }
 }
 const PointTooltip = ({ point }: PointTooltipProps) => {
-  const bg = useColorModeValue("white", "gray.600")
-
   return (
-    <Box p={1} borderRadius={3} fontSize="sm" bg={bg} d="flex" flexDirection="column" shadow="md">
+    <Box
+      sx={{
+        p: 1,
+        borderRadius: 3,
+        backgroundColor: theme => (theme.palette.mode === "dark" ? "grey.600" : "white"),
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: 2,
+      }}
+    >
       <span>{(point.data.x as Date).toLocaleDateString()}</span>
       <span>
         {point.data.y} {getSymbolFromCurrency(point.data.currency)}

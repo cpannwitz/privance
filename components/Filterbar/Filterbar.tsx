@@ -1,20 +1,19 @@
-import {
-  Box,
-  Stack,
-  Icon,
-  IconButton,
-  Button,
-  Select,
-  Switch,
-  FormControl,
-  FormLabel,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@chakra-ui/react"
+import Box from "@mui/material/Box"
+import Switch from "@mui/material/Switch"
+import Select from "@mui/material/Select"
+import MenuItem from "@mui/material/MenuItem"
+import Stack from "@mui/material/Stack"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import FormGroup from "@mui/material/FormGroup"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import Popover from "@mui/material/Popover"
+
+import { usePopupState, bindTrigger, bindPopover } from "material-ui-popup-state/hooks"
+
 import DateRangePicker from "../DatePicker/DateRangePicker"
 
-import ClearIcon from "remixicon-react/CloseCircleLineIcon"
+import CancelIcon from "@mui/icons-material/CancelOutlined"
 
 interface DefaultFilterState {
   sortDirection: "asc" | "desc"
@@ -31,67 +30,72 @@ interface FilterbarProps {
 
 // TODO: extract onC functions
 const Filterbar = ({ filterState, onChange }: FilterbarProps) => {
+  const popupState = usePopupState({
+    variant: "popover",
+    popupId: "categorySelect",
+  })
   return (
-    <Stack direction="row" p={3} mb={2}>
+    <Stack direction="row" justifyContent="space-between" sx={{ py: 1, mb: 2 }}>
       <Select
-        value={filterState.sortDirection}
+        placeholder="Sort Direction"
         onChange={e => onChange({ sortDirection: e.target.value as "asc" | "desc" })}
+        value={filterState.sortDirection}
       >
-        <option value="asc">Sort ASC</option>
-        <option value="desc">Sort DESC</option>
+        <MenuItem value="asc">Sort ASC</MenuItem>
+        <MenuItem value="desc">Sort DESC</MenuItem>
       </Select>
 
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="only-income" mb="0">
-          Only Income
-        </FormLabel>
-        <Switch
-          id="only-income"
-          isChecked={filterState.onlyIncome}
-          onChange={e => onChange({ onlyIncome: e.target.checked })}
-        />
-      </FormControl>
+      <Box sx={{ display: "flex" }}>
+        <FormGroup>
+          <FormControlLabel
+            label="Only Income"
+            control={
+              <Switch
+                checked={filterState.onlyIncome}
+                onChange={e => onChange({ onlyIncome: e.target.checked })}
+              />
+            }
+          />
+        </FormGroup>
 
-      <FormControl display="flex" alignItems="center">
-        <FormLabel htmlFor="only-spending" mb="0">
-          Only Spending
-        </FormLabel>
-        <Switch
-          id="only-spending"
-          isChecked={filterState.onlySpending}
-          onChange={e => onChange({ onlySpending: e.target.checked })}
-        />
-      </FormControl>
-      <Box d="flex">
-        <Popover isLazy placement="bottom-start">
-          <PopoverTrigger>
-            <Button size="sm" w="12rem">
-              {filterState.startDate && filterState.endDate ? (
-                <span>
-                  {new Date(filterState.startDate).toLocaleDateString()}
-                  &nbsp;-&nbsp;
-                  {new Date(filterState.endDate).toLocaleDateString()}
-                </span>
-              ) : (
-                <span>Filter by date</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent w="auto">
-            <DateRangePicker
-              startDate={filterState.startDate}
-              endDate={filterState.endDate}
-              onChange={({ startDate, endDate }) => onChange({ startDate, endDate })}
-            />
-          </PopoverContent>
+        <FormGroup>
+          <FormControlLabel
+            label="Only Spending"
+            control={
+              <Switch
+                checked={filterState.onlySpending}
+                onChange={e => onChange({ onlySpending: e.target.checked })}
+              />
+            }
+          />
+        </FormGroup>
+      </Box>
+
+      <Box sx={{ display: "flex" }}>
+        <Button size="small" sx={{ width: "12rem" }} {...bindTrigger(popupState)}>
+          {filterState.startDate && filterState.endDate ? (
+            <span>
+              {new Date(filterState.startDate).toLocaleDateString()}
+              &nbsp;-&nbsp;
+              {new Date(filterState.endDate).toLocaleDateString()}
+            </span>
+          ) : (
+            <span>Filter by date</span>
+          )}
+        </Button>
+        <Popover {...bindPopover(popupState)}>
+          <DateRangePicker
+            startDate={filterState.startDate}
+            endDate={filterState.endDate}
+            onChange={({ startDate, endDate }) => onChange({ startDate, endDate })}
+          />
         </Popover>
         <IconButton
           aria-label="clear date range"
-          variant="ghost"
-          size="sm"
-          icon={<Icon as={ClearIcon} boxSize={4} />}
           onClick={() => onChange({ startDate: undefined, endDate: undefined })}
-        />
+        >
+          <CancelIcon />
+        </IconButton>
       </Box>
     </Stack>
   )

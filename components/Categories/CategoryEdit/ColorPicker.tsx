@@ -1,7 +1,9 @@
-import { FormControl, FormLabel } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
 import { CategoryEditFormValues } from "./CategoryEdit"
 import { CirclePicker } from "react-color"
+
+import FormControl from "@mui/material/FormControl"
+import FormLabel from "@mui/material/FormLabel"
 
 interface ColorPickerProps {}
 
@@ -13,9 +15,7 @@ const ColorPicker = ({}: ColorPickerProps) => {
       control={control}
       render={({ field }) => (
         <FormControl>
-          <FormLabel fontSize="sm" color="gray.500">
-            Color
-          </FormLabel>
+          <FormLabel>Color</FormLabel>
           <CirclePicker
             color={field.value}
             onChangeComplete={({ hex }) => field.onChange(hex)}

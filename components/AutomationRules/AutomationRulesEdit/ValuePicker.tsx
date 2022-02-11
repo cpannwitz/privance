@@ -1,16 +1,11 @@
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 import { useEffect } from "react"
-import {
-  Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-} from "@chakra-ui/react"
+
+import TextField from "@mui/material/TextField"
+import FormControl from "@mui/material/FormControl"
+import FormLabel from "@mui/material/FormLabel"
+import FormHelperText from "@mui/material/FormHelperText"
+
 import { getFieldType, parseDateToString, parseStringToDate } from "./FormUtils"
 
 import { AutomationRuleWithCategory } from "../../../types/types"
@@ -34,12 +29,10 @@ const ValuePicker = ({}: ValuePickerProps) => {
 export default ValuePicker
 
 const DisabledInputField = () => (
-  <FormControl isInvalid={true}>
-    <FormLabel fontSize="sm" color="gray.500">
-      Select field first
-    </FormLabel>
-    <Input disabled placeholder="Select field first" />
-    <FormErrorMessage>Please fill in an appropiate value.</FormErrorMessage>
+  <FormControl error={true}>
+    <FormLabel>Select field first</FormLabel>
+    <TextField disabled placeholder="Select field first" />
+    <FormHelperText>Please fill in an appropiate value.</FormHelperText>
   </FormControl>
 )
 
@@ -55,12 +48,10 @@ const TextInputField = () => {
     }
   }, [unregister])
   return (
-    <FormControl isInvalid={!!errors.stringValue}>
-      <FormLabel fontSize="sm" color="gray.500">
-        Insert value
-      </FormLabel>
-      <Input {...register("stringValue", {})} />
-      <FormErrorMessage>{errors.stringValue?.message}</FormErrorMessage>
+    <FormControl error={!!errors.stringValue}>
+      <FormLabel>Insert value</FormLabel>
+      <TextField {...register("stringValue", {})} />
+      <FormHelperText>{errors.stringValue?.message}</FormHelperText>
     </FormControl>
   )
 }
@@ -77,18 +68,15 @@ const NumericalInputField = () => {
     }
   }, [unregister])
   return (
-    <FormControl isInvalid={!!errors.numberValue}>
-      <FormLabel fontSize="sm" color="gray.500">
-        Insert value
-      </FormLabel>
-      <NumberInput>
-        <NumberInputField {...register("numberValue", {})} />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
-      <FormErrorMessage>{errors.numberValue?.message}</FormErrorMessage>
+    <FormControl error={!!errors.numberValue}>
+      <FormLabel>Insert value</FormLabel>
+      <TextField
+        inputProps={{
+          type: "number",
+        }}
+        {...register("numberValue", {})}
+      />
+      <FormHelperText>{errors.numberValue?.message}</FormHelperText>
     </FormControl>
   )
 }
@@ -101,18 +89,18 @@ const DateInputField = () => {
       name="dateValue"
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <FormControl isInvalid={!!error}>
-          <FormLabel fontSize="sm" color="gray.500">
-            Insert value
-          </FormLabel>
-          <Input
+        <FormControl error={!!error}>
+          <FormLabel>Insert value</FormLabel>
+          <TextField
             {...field}
-            pattern="d{4}-d{2}-d{2}"
             type="date"
+            inputProps={{
+              pattern: "d{4}-d{2}-d{2}",
+            }}
             value={parseDateToString(field.value)}
             onChange={e => field.onChange(parseStringToDate(e.target.value))}
           />
-          <FormErrorMessage>{error?.message}</FormErrorMessage>
+          <FormHelperText>{error?.message}</FormHelperText>
         </FormControl>
       )}
     />

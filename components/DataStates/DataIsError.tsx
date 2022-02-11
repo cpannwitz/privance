@@ -1,13 +1,18 @@
-import { Center, VStack, Text, Button } from "@chakra-ui/react"
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
+import Center from "../shared/Center"
 
 const DataIsError = ({ retry }: { retry: () => void }) => (
-  <Center h="12rem">
-    <VStack>
-      <Text color="gray">Couldn&apos;t fetch your data. Please retry.</Text>
-      <Button variant="outline" colorScheme="violet" size="sm" onClick={retry}>
+  <Center sx={{ height: "12rem" }}>
+    <Stack direction="column">
+      <Typography sx={{ mb: 2 }} color="GrayText">
+        Couldn&apos;t fetch your data. Please retry.
+      </Typography>
+      <Button variant="outlined" color="warning" size="small" onClick={retry}>
         Reload
       </Button>
-    </VStack>
+    </Stack>
   </Center>
 )
 export default DataIsError

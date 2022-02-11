@@ -1,62 +1,67 @@
-import AnchorLineIcon from "remixicon-react/AnchorLineIcon"
-import EarthLineIcon from "remixicon-react/EarthLineIcon"
-import RocketLineIcon from "remixicon-react/RocketLineIcon"
-import CarLineIcon from "remixicon-react/CarLineIcon"
-import TrainLineIcon from "remixicon-react/TrainLineIcon"
-import FlightTakeoffLineIcon from "remixicon-react/FlightTakeoffLineIcon"
-import WalkLineIcon from "remixicon-react/WalkLineIcon"
-import RidingLineIcon from "remixicon-react/RidingLineIcon"
-import Restaurant2LineIcon from "remixicon-react/Restaurant2LineIcon"
-import SuitcaseLineIcon from "remixicon-react/SuitcaseLineIcon"
-import Movie2LineIcon from "remixicon-react/Movie2LineIcon"
-import Music2LineIcon from "remixicon-react/Music2LineIcon"
-import AppsLineIcon from "remixicon-react/AppsLineIcon"
-import StarLineIcon from "remixicon-react/StarLineIcon"
-import Settings3LineIcon from "remixicon-react/Settings3LineIcon"
-import GroupLineIcon from "remixicon-react/GroupLineIcon"
-import BearSmileLineIcon from "remixicon-react/BearSmileLineIcon"
-import Cake2LineIcon from "remixicon-react/Cake2LineIcon"
-import BasketballLineIcon from "remixicon-react/BasketballLineIcon"
-import LightbulbLineIcon from "remixicon-react/LightbulbLineIcon"
-import TShirtLineIcon from "remixicon-react/TShirtLineIcon"
-import PlantLineIcon from "remixicon-react/PlantLineIcon"
-import Home3LineIcon from "remixicon-react/Home3LineIcon"
-import PhoneLineIcon from "remixicon-react/PhoneLineIcon"
-import TvLineIcon from "remixicon-react/TvLineIcon"
-import BankCardLineIcon from "remixicon-react/BankCardLineIcon"
-import { RemixiconReactIconComponentType } from "remixicon-react"
+import AnchorIcon from "@mui/icons-material/AnchorOutlined"
+import EarthIcon from "@mui/icons-material/PublicOutlined"
+import RocketIcon from "@mui/icons-material/RocketOutlined"
+import CarIcon from "@mui/icons-material/DirectionsCarOutlined"
+import TrainIcon from "@mui/icons-material/DirectionsTransitOutlined"
+import FlightIcon from "@mui/icons-material/FlightTakeoffOutlined"
+import WalkIcon from "@mui/icons-material/DirectionsWalkOutlined"
+import BikeIcon from "@mui/icons-material/DirectionsBikeOutlined"
+import RestaurantIcon from "@mui/icons-material/RestaurantMenuOutlined"
+import WorkIcon from "@mui/icons-material/WorkOutline"
+import MovieIcon from "@mui/icons-material/LocalMoviesOutlined"
+import MusicIcon from "@mui/icons-material/MusicNoteOutlined"
+import AppIcon from "@mui/icons-material/AppShortcutOutlined"
+import StarIcon from "@mui/icons-material/StarBorderOutlined"
+import SettingsIcon from "@mui/icons-material/SettingsOutlined"
+import GroupIcon from "@mui/icons-material/GroupOutlined"
+import PetIcon from "@mui/icons-material/PetsOutlined"
+import CakeIcon from "@mui/icons-material/CakeOutlined"
+import BallIcon from "@mui/icons-material/SportsBaseballOutlined"
+import LightbulbIcon from "@mui/icons-material/LightbulbOutlined"
+import ShoppingIcon from "@mui/icons-material/ShoppingBagOutlined"
+import PlantIcon from "@mui/icons-material/YardOutlined"
+import HomeIcon from "@mui/icons-material/HomeOutlined"
+import PhoneIcon from "@mui/icons-material/PhoneOutlined"
+import TvIcon from "@mui/icons-material/TvOutlined"
+import CreditCardIcon from "@mui/icons-material/CreditCardOutlined"
+
+import PlaceholderIcon from "@mui/icons-material/HelpOutlineOutlined"
+
+import { ReactElement } from "react"
 
 export function getIconByName(name: string) {
   return icons[name]
 }
 
+export const placeholderIcon = <PlaceholderIcon />
+
 // add more Icons, liek paypal, amazon etc
 
-export const icons: { [key: string]: RemixiconReactIconComponentType } = {
-  anchor: AnchorLineIcon,
-  earth: EarthLineIcon,
-  rocket: RocketLineIcon,
-  car: CarLineIcon,
-  train: TrainLineIcon,
-  flight: FlightTakeoffLineIcon,
-  walk: WalkLineIcon,
-  riding: RidingLineIcon,
-  restaurant: Restaurant2LineIcon,
-  suitcase: SuitcaseLineIcon,
-  movie: Movie2LineIcon,
-  music: Music2LineIcon,
-  apps: AppsLineIcon,
-  star: StarLineIcon,
-  settings: Settings3LineIcon,
-  group: GroupLineIcon,
-  bearsmile: BearSmileLineIcon,
-  cake: Cake2LineIcon,
-  basketball: BasketballLineIcon,
-  lightbulb: LightbulbLineIcon,
-  tshirt: TShirtLineIcon,
-  plant: PlantLineIcon,
-  home: Home3LineIcon,
-  phone: PhoneLineIcon,
-  tv: TvLineIcon,
-  bankcard: BankCardLineIcon,
+export const icons: { [key: string]: ReactElement } = {
+  anchor: <AnchorIcon />,
+  earth: <EarthIcon />,
+  rocket: <RocketIcon />,
+  car: <CarIcon />,
+  train: <TrainIcon />,
+  flight: <FlightIcon />,
+  walk: <WalkIcon />,
+  riding: <BikeIcon />,
+  restaurant: <RestaurantIcon />,
+  suitcase: <WorkIcon />,
+  movie: <MovieIcon />,
+  music: <MusicIcon />,
+  apps: <AppIcon />,
+  star: <StarIcon />,
+  settings: <SettingsIcon />,
+  group: <GroupIcon />,
+  bearsmile: <PetIcon />,
+  cake: <CakeIcon />,
+  basketball: <BallIcon />,
+  lightbulb: <LightbulbIcon />,
+  tshirt: <ShoppingIcon />,
+  plant: <PlantIcon />,
+  home: <HomeIcon />,
+  phone: <PhoneIcon />,
+  tv: <TvIcon />,
+  bankcard: <CreditCardIcon />,
 }

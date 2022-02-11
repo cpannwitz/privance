@@ -1,32 +1,26 @@
-import { Category } from ".prisma/client"
+import { useEffect, useState } from "react"
+import axios, { AxiosError } from "axios"
+import { useRouter } from "next/router"
+
 import { AutomationRuleWithCategory, TransactionWithCategory } from "../../types/types"
 import TransactionTable from "../TransactionTable/TransactionTable"
 import assignTransactionCategory from "./assignTransactionCategory"
-import {
-  Box,
-  HStack,
-  Spacer,
-  Divider,
-  Text,
-  Tag,
-  TagLeftIcon,
-  TagLabel,
-  Button,
-  FormLabel,
-  Switch,
-  FormControl,
-  Alert,
-  AlertIcon,
-  Icon,
-  useToast,
-} from "@chakra-ui/react"
-import { icons } from "../../shared/iconUtils"
-import { useEffect, useState } from "react"
-import { useRouter } from "next/router"
 
-import PlayIcon from "remixicon-react/PlayLineIcon"
-import CancelIcon from "remixicon-react/CloseCircleLineIcon"
-import axios, { AxiosError } from "axios"
+import { icons, placeholderIcon } from "../../shared/iconUtils"
+
+import Box from "@mui/material/Box"
+import Divider from "@mui/material/Divider"
+import Chip from "@mui/material/Chip"
+import Alert from "@mui/material/Alert"
+import Button from "@mui/material/Button"
+import Switch from "@mui/material/Switch"
+import FormGroup from "@mui/material/FormGroup"
+import FormControlLabel from "@mui/material/FormControlLabel"
+
+import { useSnackbar } from "notistack"
+
+import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
+import CancelIcon from "@mui/icons-material/CancelOutlined"
 
 interface AutomationRuleApplyPreviewProps {
   automationRules: AutomationRuleWithCategory[]
@@ -61,7 +55,7 @@ const AutomationRuleApplyPreview = ({
     router.push(`/automationrules`)
   }
 
-  const toast = useToast()
+  const { enqueueSnackbar } = useSnackbar()
   function onApplyCategory() {
     const bodyData = stateTransformedTransactions.map(transaction => ({
       id: transaction.id,
@@ -74,17 +68,15 @@ const AutomationRuleApplyPreview = ({
         bodyData
       )
       .then(() => {
-        toast({
-          title: `Updated your transactions!`,
-          status: "success",
+        enqueueSnackbar(`Updated your transactions!`, {
+          variant: "success",
         })
         router.push(`/overview`)
       })
       .catch((error: AxiosError) => {
         if (error.response) {
-          toast({
-            title: `Couldn't update your transactions: ${error.response.data.error}`,
-            status: "error",
+          enqueueSnackbar(`Couldn't update your transactions: ${error.response.data.error}`, {
+            variant: "error",
           })
         }
       })
@@ -92,58 +84,57 @@ const AutomationRuleApplyPreview = ({
 
   return (
     <>
-      <Alert status="info" mb={5}>
-        <AlertIcon />
-        <Text mr={3}>
+      <Alert severity="info" sx={{ mb: 5 }}>
+        <Box sx={{ mr: 1, display: "inline" }}>
           Applied following categories to <b>{stateTransformedTransactions.length}</b> transactions:
-        </Text>
-        {automationRules.map(ar => (
-          <Tag
-            key={ar.category.id}
-            size="lg"
-            variant="solid"
-            bgColor={ar.category.color || undefined}
-          >
-            <TagLeftIcon boxSize={5} as={icons[ar.category.icon || "earth"]} />
-            <TagLabel>{ar.category.name}</TagLabel>
-          </Tag>
+        </Box>
+        {automationRules.map(automationRule => (
+          <Chip
+            key={automationRule.id}
+            label={automationRule.category.name}
+            icon={
+              automationRule.category.icon ? icons[automationRule.category.icon] : placeholderIcon
+            }
+            sx={{
+              backgroundColor: automationRule.category.color || undefined,
+              color: "white",
+              "& .MuiChip-icon": { color: "white" },
+            }}
+          />
         ))}
       </Alert>
 
-      <HStack>
-        <FormControl display="flex" alignItems="center">
-          <FormLabel htmlFor="email-alerts" mb="0">
-            Show affected only
-          </FormLabel>
-          <Switch
-            id="email-alerts"
-            colorScheme="green"
-            isChecked={showTransformedOnly}
-            onChange={toggleShowTransformedOnly}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <FormGroup>
+          <FormControlLabel
+            label="Show affected only"
+            control={<Switch checked={showTransformedOnly} onChange={toggleShowTransformedOnly} />}
           />
-        </FormControl>
+        </FormGroup>
 
-        <Spacer />
-
-        <Button
-          leftIcon={<Icon as={CancelIcon} boxSize={5} />}
-          onClick={onCancel}
-          variant="ghost"
-          colorScheme="red"
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            "& > *": { ml: 2 },
+          }}
         >
-          Cancel
-        </Button>
-        <Button
-          leftIcon={<Icon as={PlayIcon} boxSize={5} />}
-          onClick={onApplyCategory}
-          colorScheme="green"
-        >
-          Apply
-        </Button>
-      </HStack>
+          <Button startIcon={<CancelIcon />} onClick={onCancel} variant="text" color="error">
+            Cancel
+          </Button>
+          <Button
+            startIcon={<PlayIcon />}
+            onClick={onApplyCategory}
+            color="primary"
+            variant="contained"
+          >
+            Apply
+          </Button>
+        </Box>
+      </Box>
 
-      <Divider my={6} />
-      <Box w="100%" h="50%">
+      <Divider sx={{ my: 5 }} />
+      <Box sx={{ width: "100%", height: "50%" }}>
         <TransactionTable
           transactions={showTransformedOnly ? stateTransformedTransactions : stateAllTransactions}
           transformedTransactions={stateTransformedTransactions.map(t => t.id)}

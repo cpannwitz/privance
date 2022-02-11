@@ -1,5 +1,8 @@
-import { Text, Tooltip } from "@chakra-ui/react"
 import { memo, PropsWithChildren } from "react"
+
+import Tooltip from "@mui/material/Tooltip"
+import Typography from "@mui/material/Typography"
+
 import { CellProps } from "react-table"
 import { TransactionWithCategory } from "../../../types/types"
 
@@ -8,8 +11,8 @@ interface TextRendererProps
 
 const TextRenderer = memo(
   ({ value }: TextRendererProps) => (
-    <Tooltip hasArrow openDelay={200} placement="bottom" label={value}>
-      <Text noOfLines={1}>{value}</Text>
+    <Tooltip arrow enterDelay={200} placement="bottom" title={value || ""}>
+      <Typography noWrap>{value}</Typography>
     </Tooltip>
   ),
   (prev, post) => prev.value !== post.value

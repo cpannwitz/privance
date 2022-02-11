@@ -1,8 +1,14 @@
 import TransactionTable from "../TransactionTable/TransactionTable"
-import { Box, Stack, Divider, Button, Icon, Spacer, Heading } from "@chakra-ui/react"
 
-import PlayIcon from "remixicon-react/PlayLineIcon"
-import CancelIcon from "remixicon-react/CloseCircleLineIcon"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import Divider from "@mui/material/Divider"
+
+import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
+import CancelIcon from "@mui/icons-material/CancelOutlined"
+
 import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
 
 interface UploadPreviewProps {
@@ -22,28 +28,27 @@ const UploadPreview = ({
 }: UploadPreviewProps) => {
   return (
     <>
-      <Stack direction="row">
-        <Heading size="md">You uploaded {transactions.length} transactions.</Heading>
-        <Spacer />
-        <Button
-          leftIcon={<Icon as={CancelIcon} boxSize={5} />}
-          onClick={onCancel}
-          variant="ghost"
-          colorScheme="red"
-        >
-          Cancel
-        </Button>
-        <Button
-          leftIcon={<Icon as={PlayIcon} boxSize={5} />}
-          onClick={onUpload}
-          colorScheme="green"
-        >
-          Upload Transactions
-        </Button>
+      <Stack direction="row" justifyContent="space-between">
+        <Typography variant="h5">You uploaded {transactions.length} transactions.</Typography>
+
+        <Box>
+          <Button
+            startIcon={<CancelIcon />}
+            onClick={onCancel}
+            variant="text"
+            color="error"
+            sx={{ mr: 2 }}
+          >
+            Cancel
+          </Button>
+          <Button variant="contained" color="success" startIcon={<PlayIcon />} onClick={onUpload}>
+            Upload Transactions
+          </Button>
+        </Box>
       </Stack>
 
-      <Divider my={6} />
-      <Box w="100%" h="85%">
+      <Divider sx={{ my: 6 }} />
+      <Box sx={{ width: "100%", height: "85%" }}>
         <TransactionTable
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategory[]}

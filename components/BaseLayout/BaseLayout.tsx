@@ -1,16 +1,32 @@
-import { Box } from "@chakra-ui/react"
+import Box from "@mui/material/Box"
+import Drawer from "@mui/material/Drawer"
 
-import NavbarContent from "../NavbarContent/NavbarContent"
+import NavbarHeader from "../NavbarContent/NavbarHeader"
+import NavbarLinks from "../NavbarContent/NavbarLinks"
+
+const DRAWER_WIDTH = "18rem"
 
 interface BaseLayoutProps {
   children?: React.ReactNode
 }
 export default function Layout({ children }: BaseLayoutProps) {
   return (
-    <Box w="100%" pos="relative">
-      <NavbarContent />
+    <Box sx={{ display: "flex" }}>
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: DRAWER_WIDTH,
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: { width: DRAWER_WIDTH, boxSizing: "border-box" },
+        }}
+      >
+        <NavbarHeader />
+        <Box sx={{ overflow: "auto" }}>
+          <NavbarLinks />
+        </Box>
+      </Drawer>
 
-      <Box p={5} ml="18rem" h="100vh">
+      <Box component="main" sx={{ flexGrow: 1, p: 2, height: "100vh" }}>
         {children}
       </Box>
     </Box>

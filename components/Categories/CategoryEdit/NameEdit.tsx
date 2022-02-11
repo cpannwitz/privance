@@ -1,6 +1,10 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
 import { CategoryEditFormValues } from "./CategoryEdit"
+
+import TextField from "@mui/material/TextField"
+import FormControl from "@mui/material/FormControl"
+import FormLabel from "@mui/material/FormLabel"
+import FormHelperText from "@mui/material/FormHelperText"
 
 interface NameEditProps {}
 
@@ -13,12 +17,11 @@ const NameEdit = ({}: NameEditProps) => {
       rules={{
         required: true,
       }}
-      render={({ field, fieldState }) => (
-        <FormControl isInvalid={!!fieldState.error}>
-          <FormLabel fontSize="sm" color="gray.500">
-            Name
-          </FormLabel>
-          <Input {...field} />
+      render={({ field, fieldState: { error } }) => (
+        <FormControl error={!!error}>
+          <FormLabel>Name</FormLabel>
+          <TextField {...field} />
+          <FormHelperText>{error?.message}</FormHelperText>
         </FormControl>
       )}
     />

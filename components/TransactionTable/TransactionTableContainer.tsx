@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { Box } from "@chakra-ui/react"
+import Box from "@mui/material/Box"
 
 import useGetFilteredSortedTransactions from "../hooks/useGetFilteredSortedTransactions"
 
@@ -55,7 +55,7 @@ const TransactionTableContainer = ({}: TransactionTableContainerProps) => {
     return <DataIsEmpty linkUrl={routerLinks.UPLOAD} />
   }
   return (
-    <Box h="100%">
+    <Box sx={{ height: "100%" }}>
       <Box>
         <Filterbar filterState={filterState} onChange={onFilterStateSet} />
       </Box>
