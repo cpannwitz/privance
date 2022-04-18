@@ -28,6 +28,8 @@ function assignNewTransactionCategory(
       const newCategory = categoriesToApply[0]
       const newTransaction = Object.assign({}, { ...transaction, category: newCategory })
       transformedTransactions.push(newTransaction)
+    } else {
+      transformedTransactions.push(transaction)
     }
   })
   return transformedTransactions
