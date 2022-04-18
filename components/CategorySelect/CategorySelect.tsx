@@ -1,22 +1,19 @@
-import {
-  Button,
-  Icon,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  useDisclosure,
-  IconButton,
-  useColorMode,
-} from "@chakra-ui/react"
+import { useState } from "react"
+import { Category } from ".prisma/client"
+
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
+import Chip from "@mui/material/Chip"
+import SvgIcon from "@mui/material/SvgIcon"
+import ClickAwayListener from "@mui/material/ClickAwayListener"
+
+import { useTheme } from "@mui/material/styles"
+
 import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from "react-select"
 
-import { Category } from ".prisma/client"
-import { icons } from "../../shared/iconUtils"
-import PlaceholderIcon from "remixicon-react/QuestionLineIcon"
-import AddIcon from "remixicon-react/AddCircleLineIcon"
+import { icons, placeholderIcon } from "../../shared/iconUtils"
 import useGetCategories from "../hooks/useGetCategories"
 import CategoryAddStandalone from "../Categories/CategoryAddStandalone"
-import { useState } from "react"
 
 interface CategorySelectProps {
   value?: Category | null
@@ -25,16 +22,15 @@ interface CategorySelectProps {
 
 const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
   const { data: categories, isError, isLoading } = useGetCategories()
-  const { onOpen, onClose, isOpen } = useDisclosure()
-  const { colorMode } = useColorMode()
-  const isDark = colorMode === "dark"
 
-  const buttonColor = value && value.color ? value.color : undefined
-  const buttonIcon = value ? (
-    <Icon as={value.icon ? icons[value.icon] : PlaceholderIcon} color="white" boxSize={6} />
-  ) : (
-    <Icon as={AddIcon} boxSize={6} />
-  )
+  const {
+    palette: { mode },
+  } = useTheme()
+  const isDark = mode === "dark"
+
+  const [isSelectOpen, setIsSelectOpen] = useState(false)
+  const toggleIsSelectOpen = () => setIsSelectOpen(state => !state)
+  const setSelectOpenFalse = () => setIsSelectOpen(false)
 
   const [isAddingCategory, setIsAddingCategory] = useState(false)
   const toggleSetIsAddingCategory = () => setIsAddingCategory(!isAddingCategory)
@@ -57,19 +53,20 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
         <CategoryAddStandalone onClose={onCloseAddCategory} onAddCategory={onAddCategory} />
       ) : null}
 
-      <Popover isOpen={isOpen} onClose={onClose} isLazy placement="bottom-start">
-        <PopoverTrigger>
-          <IconButton
-            aria-label="edit category"
-            bg={buttonColor}
-            icon={buttonIcon}
-            variant="ghost"
-            isRound
-            color={isDark ? "gray.600" : "gray.300"}
-            onClick={onOpen}
-          />
-        </PopoverTrigger>
-        <PopoverContent maxW="12rem">
+      {/* // TODO: Extract into own comp */}
+      <Chip
+        label={value?.name ?? "Choose Category"}
+        icon={value?.icon ? icons[value.icon] : placeholderIcon}
+        onClick={toggleIsSelectOpen}
+        sx={{
+          backgroundColor: value?.color || undefined,
+          color: "white",
+          "& .MuiChip-icon": { color: "white" },
+        }}
+      />
+
+      {isSelectOpen && (
+        <ClickAwayListener onClickAway={setSelectOpenFalse}>
           <Select<Category>
             isSearchable
             autoFocus
@@ -86,9 +83,16 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
             onChange={onChange}
             isClearable={true}
             closeMenuOnSelect={true}
-            menuIsOpen={isOpen}
+            menuIsOpen={isSelectOpen}
             placeholder="Search..."
+            menuPortalTarget={document.body}
             styles={{
+              menuPortal: base => ({ ...base, zIndex: 9999 }),
+              container: base => ({ ...base, position: "absolute" }),
+              control: base => ({
+                ...base,
+                width: "14rem",
+              }),
               option: base => ({
                 ...base,
                 display: "flex",
@@ -118,8 +122,8 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
               MenuList: props => <SelectMenuList onClick={toggleSetIsAddingCategory} {...props} />,
             }}
           />
-        </PopoverContent>
-      </Popover>
+        </ClickAwayListener>
+      )}
     </>
   )
 }
@@ -133,15 +137,11 @@ const SelectOption = ({
 }: OptionProps<Category, false, GroupBase<Category>>) => {
   return (
     <components.Option {...props} data={data}>
-      <Icon
-        as={data.icon ? icons[data.icon] : PlaceholderIcon}
-        w={7}
-        h={7}
-        color={data.color || undefined}
-        mr={2}
-        isTruncated
-      />
-      {children}
+      <SvgIcon htmlColor={data.color || undefined}>
+        {data.icon ? icons[data.icon] : placeholderIcon}
+        {children}
+      </SvgIcon>
+      <Typography sx={{ ml: 1 }}>{data.name}</Typography>
     </components.Option>
   )
 }
@@ -152,7 +152,7 @@ const SelectMenuList = (
   return (
     <components.MenuList {...props}>
       {props.children}
-      <Button isFullWidth colorScheme="blue" size="sm" onClick={props.onClick}>
+      <Button fullWidth color="primary" size="small" onClick={props.onClick}>
         Add new category
       </Button>
     </components.MenuList>

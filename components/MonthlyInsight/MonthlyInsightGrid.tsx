@@ -1,26 +1,19 @@
 import { useState } from "react"
 import { MonthlyAggregations } from "../../types/types"
-import {
-  Icon,
-  Heading,
-  Box,
-  Stack,
-  Button,
-  SimpleGrid,
-  Stat,
-  StatArrow,
-  StatGroup,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-} from "@chakra-ui/react"
 
 import getSymbolFromCurrency from "currency-map-symbol"
 import BalanceChart from "../Charts/BalanceChart"
 import CategoriesCharts from "../Charts/CategoriesChart"
-import TransactionTable from "../TransactionTable/TransactionTable"
+import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
+import Stat from "../Stat/Stat"
 
-import TableIcon from "remixicon-react/TableLineIcon"
+import Box from "@mui/material/Box"
+import Grid from "@mui/material/Grid"
+import Typography from "@mui/material/Typography"
+import Stack from "@mui/material/Stack"
+import Button from "@mui/material/Button"
+
+import TableIcon from "@mui/icons-material/TableChartOutlined"
 
 interface MonthlyInsightGridProps {
   monthlyAggregations: MonthlyAggregations
@@ -28,16 +21,16 @@ interface MonthlyInsightGridProps {
 
 const MonthlyInsightGrid = ({ monthlyAggregations }: MonthlyInsightGridProps) => {
   return (
-    <Stack direction="column" p={5}>
+    <Stack direction="column" sx={{ p: 5 }}>
       {Object.keys(monthlyAggregations.years)
         .reverse()
         .map(year => {
           return (
             <Box key={year}>
-              <Heading size="2xl" mb={5}>
+              <Typography fontSize={30} sx={{ mb: 5 }}>
                 {year}
-              </Heading>
-              <SimpleGrid columns={2} spacing={10}>
+              </Typography>
+              <Grid container columns={2} spacing={10}>
                 {Object.keys(monthlyAggregations.years[year].months)
                   .reverse()
                   .map(month => {
@@ -50,7 +43,7 @@ const MonthlyInsightGrid = ({ monthlyAggregations }: MonthlyInsightGridProps) =>
                       />
                     )
                   })}
-              </SimpleGrid>
+              </Grid>
             </Box>
           )
         })}
@@ -75,77 +68,68 @@ const MonthGridItem = ({
 }: MonthGridItemProps) => {
   const [showTable, setShowTable] = useState(false)
   return (
-    <Box>
-      <Heading size="lg" mb={5}>
+    <Grid item xs={1}>
+      <Typography fontSize={24} sx={{ mb: 5 }}>
         {getMonthName(month)}
-      </Heading>
-      <StatGroup>
-        <Stat>
-          <StatLabel>Total Gain/Loss</StatLabel>
-          <StatNumber
-            color={Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? "red.500" : "green.500"}
-          >
-            {Number(totalMonthMinus + totalMonthPlus).toFixed(2)} {getSymbolFromCurrency(currency)}
-          </StatNumber>
-          <StatHelpText>
-            <StatArrow
-              type={Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? "decrease" : "increase"}
-            />
-          </StatHelpText>
-        </Stat>
+      </Typography>
 
-        <Stat>
-          <StatLabel>Spend</StatLabel>
-          <StatNumber color="red.500">
-            {Number(totalMonthMinus).toFixed(2)}
-            {getSymbolFromCurrency(currency)}
-          </StatNumber>
-          <StatHelpText>
-            <StatArrow type="decrease" />
-            {Number(totalMonthMinusPercentage).toFixed(2)}%
-          </StatHelpText>
-        </Stat>
+      <Stack direction="row" spacing={3}>
+        <Stat
+          heading="Total Gain/Loss"
+          label={`${Number(totalMonthMinus + totalMonthPlus).toFixed(2)} ${getSymbolFromCurrency(
+            currency
+          )}`}
+          sublabel=""
+          color={
+            Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? "error.main" : "success.main"
+          }
+        />
 
-        <Stat>
-          <StatLabel>Income</StatLabel>
-          <StatNumber color="green.500">
-            {Number(totalMonthPlus).toFixed(2)}
-            {getSymbolFromCurrency(currency)}
-          </StatNumber>
-          <StatHelpText>
-            <StatArrow type="increase" />
-            {Number(totalMonthPlusPercentage).toFixed(2)}%
-          </StatHelpText>
-        </Stat>
-      </StatGroup>
-      {transactions.length > 0 && (
-        <Box w="100%" h="200px">
-          <BalanceChart data={transactions} variant="small" />
+        <Stat
+          heading="Spend"
+          label={`${Number(totalMonthMinus).toFixed(2)} ${getSymbolFromCurrency(currency)}`}
+          sublabel={`${Number(totalMonthMinusPercentage).toFixed(2)}%`}
+          color="error.main"
+        />
+
+        <Stat
+          heading="Income"
+          label={`${Number(totalMonthPlus).toFixed(2)} ${getSymbolFromCurrency(currency)}`}
+          sublabel={`${Number(totalMonthPlusPercentage).toFixed(2)}%`}
+          color="success.main"
+        />
+      </Stack>
+
+      {showTable ? (
+        <Box sx={{ width: "100%", height: "450px" }}>
+          <TransactionDatagrid transactions={transactions} />
         </Box>
-      )}
-      {categories.length > 0 && (
-        <Box w="100%" h="200px">
-          <CategoriesCharts categories={categories} />
-        </Box>
+      ) : (
+        <>
+          {transactions.length > 0 && (
+            <Box sx={{ width: "100%", height: "225px" }}>
+              <BalanceChart data={transactions} variant="small" />
+            </Box>
+          )}
+          {categories.length > 0 && (
+            <Box sx={{ width: "100%", height: "225px" }}>
+              <CategoriesCharts categories={categories} />
+            </Box>
+          )}
+        </>
       )}
 
       <Button
-        size="sm"
-        isFullWidth
-        variant="ghost"
-        colorScheme="gray"
-        color="gray.500"
-        leftIcon={<Icon as={TableIcon} />}
+        size="small"
+        fullWidth
+        variant="text"
+        color="secondary"
+        startIcon={<TableIcon />}
         onClick={() => setShowTable(v => !v)}
       >
-        Show Transactions
+        {showTable ? "Hide" : "Show"} Transactions
       </Button>
-      {showTable && (
-        <Box w="100%" h="400px" mt={3}>
-          <TransactionTable transactions={transactions} />
-        </Box>
-      )}
-    </Box>
+    </Grid>
   )
 }
 

@@ -23,13 +23,12 @@ export default async function updateAutomationRule(
       return res.status(400).json({ error: "Missing argument" })
     }
 
-    // TODO: this is silly
     const { id, ...data } = bodydata
 
     try {
       const insertedData = await prisma.automationRule.update({
         where: {
-          id: bodydata.id,
+          id: id,
         },
         data: data,
         include: {

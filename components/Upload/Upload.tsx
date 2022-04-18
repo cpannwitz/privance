@@ -1,7 +1,7 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 import { useRouter } from "next/router"
-import { useToast } from "@chakra-ui/react"
+import { useSnackbar } from "notistack"
 
 import UploadPreview from "./UploadPreview"
 import UploadCSV from "../UploadCSV/UploadCSV"
@@ -12,12 +12,11 @@ interface UploadProps {
 }
 
 const Upload = ({ automationRules }: UploadProps) => {
-  const toast = useToast()
   const router = useRouter()
+  const { enqueueSnackbar } = useSnackbar()
 
-  const [uploadedTransactions, setUploadedTransactions] = useState<
-    TransactionBeforeUpload[] | undefined
-  >(undefined)
+  const [uploadedTransactions, setUploadedTransactions] =
+    useState<TransactionBeforeUpload[] | undefined>(undefined)
 
   function onUpdateTransaction(transaction: TransactionBeforeUpload) {
     if (uploadedTransactions) {
@@ -45,9 +44,8 @@ const Upload = ({ automationRules }: UploadProps) => {
       axios
         .post("/api/transactions/addTransactions", uploadedTransactions)
         .then(() => {
-          toast({
-            title: `Added your transactions!`,
-            status: "success",
+          enqueueSnackbar("Added your transactions", {
+            variant: "success",
           })
           router.push({
             pathname: `/overview`,
@@ -55,9 +53,8 @@ const Upload = ({ automationRules }: UploadProps) => {
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't add your transactions: ${error.response.data.error}`,
-              status: "error",
+            enqueueSnackbar(`Couldn't add your transactions: ${error.response.data.error}`, {
+              variant: "error",
             })
             onCancelUploadTransactions()
           }

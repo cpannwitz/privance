@@ -1,28 +1,23 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 import { Category, Transaction, Prisma } from ".prisma/client"
-import {
-  useToast,
-  SimpleGrid,
-  Stack,
-  IconButton,
-  Heading,
-  Text,
-  Avatar,
-  Icon,
-  Spacer,
-  Box,
-  Button,
-} from "@chakra-ui/react"
 
-import PlaceholderIcon from "remixicon-react/MoneyEuroCircleLineIcon"
-import EditIcon from "remixicon-react/PencilLineIcon"
-import AddIcon from "remixicon-react/AddLineIcon"
-import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
+import Box from "@mui/material/Box"
+import Avatar from "@mui/material/Avatar"
+import Grid from "@mui/material/Grid"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import Typography from "@mui/material/Typography"
+import SvgIcon from "@mui/material/SvgIcon"
+import { useSnackbar } from "notistack"
+
+import EditIcon from "@mui/icons-material/EditOutlined"
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined"
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined"
 
 import CategoryEdit from "./CategoryEdit/CategoryEdit"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
-import { icons } from "../../shared/iconUtils"
+import { icons, placeholderIcon } from "../../shared/iconUtils"
 import { CategoriesStatistics, CategoryWithTransactions } from "../../types/types"
 import useGetCategoriesTransactions from "../hooks/useGetCategoriesTransactions"
 
@@ -38,7 +33,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
   const { mutate: mutateCategories } = useGetCategoriesTransactions()
 
   const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
-  const toast = useToast()
+  const { enqueueSnackbar } = useSnackbar()
   const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined)
 
   function onAddCategory() {
@@ -58,16 +53,14 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
       axios
         .post("/api/categories/upsertCategory", category)
         .then(() => {
-          toast({
-            title: `Added or updated your category!`,
-            status: "success",
+          enqueueSnackbar(`Added or updated your category!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't add/update your category: ${error.response.data.error}`,
-              status: "error",
+            enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
+              variant: "error",
             })
           }
         })
@@ -83,16 +76,14 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
       axios
         .delete("/api/categories/deleteCategory", { params: { id: category.id } })
         .then(() => {
-          toast({
-            title: `Deleted your Category!`,
-            status: "success",
+          enqueueSnackbar(`Deleted your Category!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't delete your category: ${error.response.data.error}`,
-              status: "error",
+            enqueueSnackbar(`Couldn't delete your category: ${error.response.data.error}`, {
+              variant: "error",
             })
           }
         })
@@ -107,28 +98,36 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
       {editedCategory && (
         <CategoryEdit onSave={onSaveAddEdit} onCancel={onCloseAddEdit} formValue={editedCategory} />
       )}
-      <Box w="100%" mb={5}>
+      <Box sx={{ width: "100%", mb: 5 }}>
         <Button
-          isFullWidth
-          size="lg"
-          colorScheme="blue"
-          leftIcon={<Icon as={AddIcon} color="white" w={7} h={7} />}
+          fullWidth
+          size="large"
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
           onClick={onAddCategory}
         >
           Add Category
         </Button>
       </Box>
-      <Box p={5}>
-        <Text as="em">
+      <Box sx={{ p: 3 }}>
+        <Typography>
           You currently have <b>{uncategorizedTransactionsCount}</b> (of {allTransactionsCount})
           uncategorized transactions.
-        </Text>
+        </Typography>
       </Box>
 
       {categories.length <= 0 ? (
         <DataIsEmpty />
       ) : (
-        <SimpleGrid spacing={5} minChildWidth="26rem">
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="flex-start"
+          spacing={3}
+          sx={{ pb: 5 }}
+        >
           {categories.map(category => (
             <CategoryListItem
               key={category.name}
@@ -137,7 +136,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
               category={category}
             />
           ))}
-        </SimpleGrid>
+        </Grid>
       )}
     </>
   )
@@ -160,44 +159,47 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
     onDelete(category)
   }
   return (
-    <Stack
-      direction="row"
-      p={3}
-      shadow="md"
-      borderWidth="1px"
-      align="center"
-      spacing={3}
-      borderRadius="lg"
-    >
-      <Avatar
-        boxSize={10}
-        bg={color || "gray.100"}
-        icon={<Icon as={icon ? icons[icon] : PlaceholderIcon} boxSize={6} color="white" />}
-      />
-      <Stack direction="column">
-        <Heading fontSize="md">{name}</Heading>
-        <Text color="gray.500" fontSize="sm">
-          {getTransactionsBalance(category.transactions)} €
-        </Text>
-        <Text color="gray.500" fontSize="sm">
-          {category._count.transactions} transactions
-        </Text>
-      </Stack>
-      <Spacer />
-      <IconButton
-        variant="ghost"
-        isRound
-        aria-label="edit category"
-        icon={<Icon as={DeleteIcon} color="gray.300" boxSize={5} />}
-        onClick={onDeleteCategory}
-      />
-      <IconButton
-        variant="ghost"
-        isRound
-        aria-label="edit category"
-        icon={<Icon as={EditIcon} color="gray.300" boxSize={5} />}
-        onClick={onEditCategory}
-      />
-    </Stack>
+    <Grid item xs>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          p: 3,
+          boxShadow: 1,
+          borderRadius: 5,
+          minWidth: "26rem",
+        }}
+      >
+        <Avatar sx={{ bgcolor: color || "grey.100", mr: 2 }}>
+          <SvgIcon htmlColor="white">{icon ? icons[icon] : placeholderIcon}</SvgIcon>
+        </Avatar>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography fontSize={20}>{name}</Typography>
+          <Typography color="GrayText" fontSize={16}>
+            {getTransactionsBalance(category.transactions)} €
+          </Typography>
+          <Typography color="GrayText" fontSize={14}>
+            {category._count.transactions} transactions
+          </Typography>
+        </Box>
+
+        <Box sx={{ ml: "auto" }}>
+          <IconButton
+            aria-label="delete category"
+            onClick={onDeleteCategory}
+            sx={{ color: "grey.400" }}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="edit category"
+            onClick={onEditCategory}
+            sx={{ color: "grey.400" }}
+          >
+            <EditIcon />
+          </IconButton>
+        </Box>
+      </Box>
+    </Grid>
   )
 }

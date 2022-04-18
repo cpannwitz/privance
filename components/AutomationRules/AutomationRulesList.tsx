@@ -1,43 +1,32 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
-import {
-  useToast,
-  HStack,
-  VStack,
-  IconButton,
-  Icon,
-  Box,
-  Button,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  StatGroup,
-  Tag,
-  TagLeftIcon,
-  TagLabel,
-  Spacer,
-} from "@chakra-ui/react"
-
-import UploadIcon from "remixicon-react/Upload2LineIcon"
-import PositiveIcon from "remixicon-react/CheckLineIcon"
-import NegativeIcon from "remixicon-react/CloseLineIcon"
 
 import { Prisma } from ".prisma/client"
 
-import PlayIcon from "remixicon-react/PlayLineIcon"
-import EditIcon from "remixicon-react/PencilLineIcon"
-import AddIcon from "remixicon-react/AddLineIcon"
-import DeleteIcon from "remixicon-react/DeleteBin6LineIcon"
+import { useSnackbar } from "notistack"
+import Box from "@mui/material/Box"
+import Button from "@mui/material/Button"
+import IconButton from "@mui/material/IconButton"
+import Chip from "@mui/material/Chip"
+import Badge from "@mui/material/Badge"
+
+import UploadIcon from "@mui/icons-material/FileUploadOutlined"
+import NegativeIcon from "@mui/icons-material/CancelOutlined"
+import PositiveIcon from "@mui/icons-material/CheckCircleOutlineOutlined"
+import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
+import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined"
+import EditIcon from "@mui/icons-material/EditOutlined"
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined"
+
+import Stat from "../Stat/Stat"
 
 import AutomationRulesEdit from "./AutomationRulesEdit/AutomationRulesEdit"
 import { AutomationRuleWithCategory } from "../../types/types"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import { getValueType } from "./AutomationRulesEdit/FormUtils"
-import { icons } from "../../shared/iconUtils"
+import { icons, placeholderIcon } from "../../shared/iconUtils"
 
 import { useRouter } from "next/router"
-import GeneralBadge from "../GeneralBadge/GeneralBadge"
 import useGetAutomationRules from "../hooks/useGetAutomationRules"
 
 interface AutomationListProps {
@@ -46,7 +35,7 @@ interface AutomationListProps {
 
 const AutomationList = ({ data }: AutomationListProps) => {
   const { mutate: mutateAutomationRules } = useGetAutomationRules()
-  const toast = useToast()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [editedAutomationRule, setEditedAutomationRule] =
     useState<AutomationRuleWithCategory | null>(null)
@@ -73,17 +62,18 @@ const AutomationList = ({ data }: AutomationListProps) => {
       axios
         .post("/api/automationrules/addAutomationRule", automationRuleCreateInput)
         .then(() => {
-          toast({
-            title: `Added or updated your automation rule!`,
-            status: "success",
+          enqueueSnackbar(`Added or updated your automation rule!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              status: "error",
-            })
+            enqueueSnackbar(
+              `Couldn't add/update your automation rule: ${error.response.data.error}`,
+              {
+                variant: "error",
+              }
+            )
           }
         })
         .finally(() => {
@@ -99,17 +89,18 @@ const AutomationList = ({ data }: AutomationListProps) => {
       axios
         .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
         .then(() => {
-          toast({
-            title: `Added or updated your automation rule!`,
-            status: "success",
+          enqueueSnackbar(`Added or updated your automation rule!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              status: "error",
-            })
+            enqueueSnackbar(
+              `Couldn't add/update your automation rule: ${error.response.data.error}`,
+              {
+                variant: "error",
+              }
+            )
           }
         })
         .finally(() => {
@@ -125,16 +116,14 @@ const AutomationList = ({ data }: AutomationListProps) => {
       axios
         .delete("/api/automationrules/deleteAutomationRule", { params: { id: automationRule.id } })
         .then(() => {
-          toast({
-            title: `Deleted your Automation Rule!`,
-            status: "success",
+          enqueueSnackbar(`Deleted your Automation Rule!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't delete your automation rule: ${error.response.data.error}`,
-              status: "error",
+            enqueueSnackbar(`Couldn't delete your automation rule: ${error.response.data.error}`, {
+              variant: "error",
             })
           }
         })
@@ -159,16 +148,14 @@ const AutomationList = ({ data }: AutomationListProps) => {
       axios
         .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
         .then(() => {
-          toast({
-            title: `Updated your automation rule!`,
-            status: "success",
+          enqueueSnackbar(`Updated your automation rule!`, {
+            variant: "success",
           })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            toast({
-              title: `Couldn't update your automation rule: ${error.response.data.error}`,
-              status: "error",
+            enqueueSnackbar(`Couldn't update your automation rule: ${error.response.data.error}`, {
+              variant: "error",
             })
           }
         })
@@ -198,12 +185,13 @@ const AutomationList = ({ data }: AutomationListProps) => {
           formValue={editedAutomationRule}
         />
       )}
-      <Box w="100%" mb={5}>
+      <Box sx={{ width: "100%", mb: 4 }}>
         <Button
-          isFullWidth
-          size="lg"
-          colorScheme="blue"
-          leftIcon={<Icon as={AddIcon} boxSize={7} />}
+          fullWidth
+          size="large"
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
           onClick={onAddAutomationRule}
         >
           Add Automation Rule
@@ -212,7 +200,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
       {data.length < 1 ? (
         <DataIsEmpty />
       ) : (
-        <VStack spacing={4}>
+        <Box sx={{ display: "flex", flexDirection: "column", "& > *": { mb: 3 } }}>
           {data.map(automationRule => (
             <AutomationRuleListItem
               key={automationRule.id}
@@ -223,7 +211,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
               automationRule={automationRule}
             />
           ))}
-        </VStack>
+        </Box>
       )}
     </>
   )
@@ -261,95 +249,107 @@ const AutomationRuleListItem = ({
   }
 
   return (
-    <HStack w="100%" p={3} shadow="md" borderWidth="1px" align="center" borderRadius="lg">
-      <StatGroup minW="75%">
-        <Stat>
-          <StatLabel>If the</StatLabel>
-          <StatNumber>{automationRule.field}</StatNumber>
-          <StatHelpText>of a transaction</StatHelpText>
-        </Stat>
+    <Box
+      sx={{
+        width: "100%",
+        p: 2,
+        boxShadow: 2,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        borderRadius: 2,
+        "& > *": { mr: 2 },
+      }}
+    >
+      <Stat heading="If the" label={automationRule.field} sublabel="of a transaction" />
 
-        {StatBlocks[getValueType(automationRule.field)](automationRule)}
+      {StatBlocks[getValueType(automationRule.field)](automationRule)}
 
-        <Stat>
-          <StatLabel>then</StatLabel>
-          <Tag size="lg" variant="solid" bgColor={automationRule.category.color || undefined}>
-            <TagLeftIcon boxSize={5} as={icons[automationRule.category.icon || "earth"]} />
-            <TagLabel>{automationRule.category.name}</TagLabel>
-          </Tag>
-          <StatHelpText>will be assigned.</StatHelpText>
-        </Stat>
-      </StatGroup>
-      <Spacer />
-
-      <IconButton
-        variant="ghost"
-        isRound
-        aria-label="toggle run on upload"
-        icon={
-          <>
-            <Icon as={UploadIcon} color="gray.300" boxSize={5} />
-            <GeneralBadge bg={automationRule.activeOnUpload ? "green.500" : "red.500"}>
-              <Icon
-                as={automationRule.activeOnUpload ? PositiveIcon : NegativeIcon}
-                boxSize="0.7em"
-                color="white"
-              />
-            </GeneralBadge>
-          </>
+      <Stat
+        heading="then"
+        label={
+          <Chip
+            label={automationRule.category.name}
+            icon={
+              automationRule.category.icon ? icons[automationRule.category.icon] : placeholderIcon
+            }
+            sx={{
+              backgroundColor: automationRule.category.color || undefined,
+              color: "white",
+              "& .MuiChip-icon": { color: "white" },
+            }}
+          />
         }
+        sublabel="will be assigned."
+      />
+
+      <IconButton
+        aria-label="toggle run on upload"
         onClick={onToggleAutomationRuleRunOnUpload}
-      />
+        sx={{ color: "grey.400" }}
+      >
+        <Badge
+          badgeContent={
+            automationRule.activeOnUpload ? (
+              <PositiveIcon color="success" sx={{ width: "16px", height: "16px" }} />
+            ) : (
+              <NegativeIcon color="error" sx={{ width: "16px", height: "16px" }} />
+            )
+          }
+        >
+          <UploadIcon />
+        </Badge>
+      </IconButton>
       <IconButton
-        variant="ghost"
-        isRound
         aria-label="delete automation rule"
-        icon={<Icon as={DeleteIcon} color="gray.300" boxSize={5} />}
         onClick={onDeleteAutomationRule}
-      />
+        sx={{ color: "grey.400" }}
+      >
+        <DeleteIcon />
+      </IconButton>
       <IconButton
-        variant="ghost"
-        isRound
         aria-label="edit automation rule"
-        icon={<Icon as={EditIcon} color="gray.300" boxSize={5} />}
         onClick={onEditAutomationRule}
-      />
+        sx={{ color: "grey.400" }}
+      >
+        <EditIcon />
+      </IconButton>
       <IconButton
-        variant="ghost"
-        isRound
         aria-label="run automation rule"
-        icon={<Icon as={PlayIcon} color="gray.300" boxSize={5} />}
         onClick={onRunAutomationRule}
-      />
-    </HStack>
+        sx={{ color: "grey.400" }}
+      >
+        <PlayIcon />
+      </IconButton>
+    </Box>
   )
 }
 
 const StringValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
-    <Stat>
-      <StatLabel>{automationRule.operation}</StatLabel>
-      <StatNumber>{automationRule.stringValue}</StatNumber>
-      <StatHelpText>as a value</StatHelpText>
-    </Stat>
+    <Stat
+      heading={automationRule.operation}
+      label={automationRule.stringValue ?? ""}
+      sublabel="as a value"
+    />
   )
 }
 const NumberValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
-    <Stat>
-      <StatLabel>has {automationRule.operation}</StatLabel>
-      <StatNumber>{automationRule.numberValue}</StatNumber>
-      <StatHelpText>as a value</StatHelpText>
-    </Stat>
+    <Stat
+      heading={automationRule.operation}
+      label={automationRule.numberValue ?? ""}
+      sublabel="as a value"
+    />
   )
 }
 const DateValueBlock = (automationRule: AutomationRuleWithCategory) => {
   return (
-    <Stat>
-      <StatLabel>is {automationRule.operation}</StatLabel>
-      <StatNumber>{new Date(automationRule.dateValue || "").toLocaleDateString()}</StatNumber>
-      <StatHelpText>as a value</StatHelpText>
-    </Stat>
+    <Stat
+      heading={automationRule.operation}
+      label={new Date(automationRule.dateValue || "").toLocaleDateString()}
+      sublabel="as a value"
+    />
   )
 }
 

@@ -1,53 +1,62 @@
-import {
-  Input,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  Icon,
-  IconButton,
-} from "@chakra-ui/react"
-import SearchIcon from "remixicon-react/SearchLineIcon"
-import ClearIcon from "remixicon-react/CloseCircleLineIcon"
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { useAsyncDebounce } from "react-table"
 
+import TextField from "@mui/material/TextField"
+import IconButton from "@mui/material/IconButton"
+import InputAdornment from "@mui/material/InputAdornment"
+import SearchIcon from "@mui/icons-material/SearchOutlined"
+import ClearIcon from "@mui/icons-material/ClearOutlined"
+
 interface SearchbarProps {
-  filterValue: string
-  setFilterValue: (value: string) => void
+  filterValue?: string
+  setFilterValue?: (value: string) => void
 }
 
-const Searchbar = ({ filterValue, setFilterValue }: SearchbarProps) => {
-  const [searchValue, setSearchValue] = useState(filterValue || "")
+const Searchbar = ({ filterValue = "", setFilterValue = () => {} }: SearchbarProps) => {
+  const [searchValue, setSearchValue] = useState(filterValue)
 
-  const onSearchValueChange = useAsyncDebounce(value => {
+  const onSearchValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value)
+    propagateSearchValue(e.target.value)
+  }
+
+  const propagateSearchValue = useAsyncDebounce(value => {
     setFilterValue(value || undefined)
-  }, 200)
+  }, 300)
+
+  const clearSearchValue = () => {
+    setSearchValue("")
+    propagateSearchValue("")
+  }
+
   return (
-    <InputGroup>
-      <InputLeftElement pointerEvents="none">
-        <Icon as={SearchIcon} />
-      </InputLeftElement>
-      <Input
-        placeholder="Search for transactions"
-        value={searchValue}
-        onChange={e => {
-          setSearchValue(e.target.value)
-          onSearchValueChange(e.target.value)
-        }}
-      />
-      <InputRightElement
-        onClick={() => {
-          setSearchValue("")
-          onSearchValueChange("")
-        }}
-      >
-        <IconButton
-          aria-label="clear search"
-          icon={<Icon as={ClearIcon} boxSize={4} />}
-          variant="ghost"
-        />
-      </InputRightElement>
-    </InputGroup>
+    <TextField
+      fullWidth
+      placeholder="Search for transactions"
+      size="small"
+      value={searchValue}
+      onChange={onSearchValueChange}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon />
+          </InputAdornment>
+        ),
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle password visibility"
+              size="small"
+              edge="end"
+              onClick={clearSearchValue}
+            >
+              <ClearIcon fontSize="small" />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+      variant="outlined"
+    />
   )
 }
 

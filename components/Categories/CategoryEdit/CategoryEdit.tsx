@@ -1,14 +1,3 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  Button,
-  VStack,
-} from "@chakra-ui/react"
 import { Category, Prisma } from ".prisma/client"
 import { SubmitHandler } from "react-hook-form"
 
@@ -16,7 +5,11 @@ import ColorPicker from "./ColorPicker"
 import IconPicker from "./IconPicker"
 import NameEdit from "./NameEdit"
 
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+
 import FormWrapper from "../../FormWrapper/FormWrapper"
+import OpenModal from "../../OpenModal/OpenModal"
 
 export interface CategoryEditFormValues {
   name: string
@@ -48,40 +41,32 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
     icon: formValue?.icon ?? "",
   }
 
-  const title = formValue ? "Customize category" : "Add category"
-
   return (
-    <Modal
-      size="xl"
-      isCentered
-      onClose={onCancel}
-      onEsc={onCancel}
-      isOpen={true}
-      motionPreset="slideInBottom"
+    <OpenModal
+      onCancel={onCancel}
+      footerChildren={
+        <>
+          <Button variant="text" sx={{ marginRight: "1rem" }} onClick={onCancel}>
+            Cancel
+          </Button>
+          <Button variant="contained" type="submit" form="CategoryEditForm">
+            Save
+          </Button>
+        </>
+      }
     >
-      <ModalOverlay />
-      <ModalContent>
-        <FormWrapper<CategoryEditFormValues> onSubmit={onFormSubmit} defaultValues={defaultValues}>
-          <ModalHeader>{title}</ModalHeader>
-          <ModalCloseButton onClick={onCancel} />
-          <ModalBody>
-            <VStack spacing={5}>
-              <NameEdit />
-              <ColorPicker />
-              <IconPicker />
-            </VStack>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" size="sm" mr={3} onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button size="sm" colorScheme="blue" type="submit">
-              Save
-            </Button>
-          </ModalFooter>
-        </FormWrapper>
-      </ModalContent>
-    </Modal>
+      <FormWrapper<CategoryEditFormValues>
+        formId="CategoryEditForm"
+        onSubmit={onFormSubmit}
+        defaultValues={defaultValues}
+      >
+        <Stack spacing={5}>
+          <NameEdit />
+          <ColorPicker />
+          <IconPicker />
+        </Stack>
+      </FormWrapper>
+    </OpenModal>
   )
 }
 

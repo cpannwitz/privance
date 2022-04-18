@@ -1,8 +1,13 @@
-import { FormControl, FormLabel, BoxProps, Icon, IconButton, SimpleGrid } from "@chakra-ui/react"
 import { Controller, useFormContext } from "react-hook-form"
 import { CategoryEditFormValues } from "./CategoryEdit"
 
 import { icons } from "../../../shared/iconUtils"
+
+import Grid from "@mui/material/Grid"
+import IconButton from "@mui/material/IconButton"
+import SvgIcon from "@mui/material/SvgIcon"
+import FormControl from "@mui/material/FormControl"
+import FormLabel from "@mui/material/FormLabel"
 
 interface IconPickerProps {}
 
@@ -14,19 +19,14 @@ const IconPicker = ({}: IconPickerProps) => {
       control={control}
       render={({ field }) => (
         <FormControl>
-          <FormLabel fontSize="sm" color="gray.500">
-            Icon
-          </FormLabel>
-          <SimpleGrid spacing={5} minChildWidth="2rem">
+          <FormLabel>Icon</FormLabel>
+          <Grid container spacing={5} sx={{ width: "100%" }}>
             {Object.keys(icons).map(icon => (
-              <IconBox
-                key={icon}
-                icon={icon}
-                onIconClick={field.onChange}
-                active={field.value === icon}
-              />
+              <Grid item xs sx={{ minWidth: "2rem" }} key={icon}>
+                <IconBox icon={icon} onIconClick={field.onChange} active={field.value === icon} />
+              </Grid>
             ))}
-          </SimpleGrid>
+          </Grid>
         </FormControl>
       )}
     />
@@ -35,7 +35,7 @@ const IconPicker = ({}: IconPickerProps) => {
 
 export default IconPicker
 
-interface IconBoxProps extends BoxProps {
+interface IconBoxProps {
   icon: string
   onIconClick: (icon: string) => void
   active: boolean
@@ -46,13 +46,13 @@ const IconBox = ({ icon, onIconClick, active = false }: IconBoxProps) => {
   }
   return (
     <IconButton
-      w={12}
-      h={12}
       aria-label="choose icon"
-      isRound
-      colorScheme={active ? "purple" : "gray"}
-      icon={<Icon as={icons[icon]} w={7} h={7} color={active ? "white" : "gray.400"} />}
+      sx={{
+        backgroundColor: active ? "violet" : "grey.300",
+      }}
       onClick={onClick}
-    />
+    >
+      <SvgIcon htmlColor={active ? "white" : "grey.500"}>{icons[icon]}</SvgIcon>
+    </IconButton>
   )
 }

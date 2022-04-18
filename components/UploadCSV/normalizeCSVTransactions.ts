@@ -17,6 +17,14 @@ function transformNumber(value?: string) {
   return number
 }
 
+function createIdentifier(transaction: Partial<TransactionBeforeUpload>) {
+  return (
+    (new Date(transaction.issuedate!)?.getTime() || 0) +
+    (transaction.balance! || 0) +
+    (transaction.amount! || 0)
+  )
+}
+
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
   const values: TransactionBeforeUpload[] = transactions
     .map(
@@ -30,7 +38,11 @@ const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) =
         amount: transformNumber(amount),
         amountCurrency: amountCurrency,
         category: undefined,
-        identifier: undefined,
+        identifier: createIdentifier({
+          issuedate,
+          balance: transformNumber(balance),
+          amount: transformNumber(amount),
+        }),
       })
     )
     // TODO: remove when properties not optional anymore

@@ -1,20 +1,26 @@
-import { Center, VStack, Text, Button } from "@chakra-ui/react"
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 
+import Button from "@mui/material/Button"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
+import Center from "../shared/Center"
+
 const DataIsEmpty = ({ linkUrl }: { linkUrl?: string }) => {
   const router = useRouter()
-  const linkToUpload = useCallback(() => router.push(linkUrl || ""), [router])
+  const linkToUpload = useCallback(() => router.push(linkUrl || ""), [router, linkUrl])
   return (
-    <Center h="12rem">
-      <VStack>
-        <Text color="gray.600">You currently have no data. Please add some first.</Text>
+    <Center sx={{ height: "12rem" }}>
+      <Stack direction="column">
+        <Typography sx={{ mb: 2 }} color="GrayText">
+          You currently have no data. Please add some first.
+        </Typography>
         {linkUrl ? (
-          <Button variant="outline" colorScheme="violet" size="sm" onClick={linkToUpload}>
+          <Button variant="outlined" color="warning" size="small" onClick={linkToUpload}>
             Add some data
           </Button>
         ) : null}
-      </VStack>
+      </Stack>
     </Center>
   )
 }

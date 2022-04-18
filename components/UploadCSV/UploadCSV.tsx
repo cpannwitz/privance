@@ -1,6 +1,10 @@
-import { Center, HStack, Icon, Text, useToast } from "@chakra-ui/react"
+import Box from "@mui/material/Box"
+import Stack from "@mui/material/Stack"
+import Typography from "@mui/material/Typography"
 
-import FileChartLineIcon from "remixicon-react/FileChartLineIcon"
+import { useSnackbar } from "notistack"
+
+import ChartIcon from "@mui/icons-material/AddchartOutlined"
 
 import parseCSVToTransactions from "./parseCSVToJSON"
 import normalizeCSVTransactions from "./normalizeCSVTransactions"
@@ -20,13 +24,12 @@ const UploadCSV = ({
     return
   },
 }: UploadCSVProps) => {
-  const toast = useToast()
+  const { enqueueSnackbar } = useSnackbar()
 
   async function onDrop(files: File[]) {
     if (!files || files.length > 1) {
-      toast({
-        title: "Please upload only one file.",
-        status: "error",
+      enqueueSnackbar("Please upload only one file.", {
+        variant: "error",
       })
       return
     }
@@ -34,9 +37,8 @@ const UploadCSV = ({
     const file = files[0]
 
     if (file.type !== "text/csv") {
-      toast({
-        title: "Wrong file format",
-        status: "error",
+      enqueueSnackbar("Wrong file format", {
+        variant: "error",
       })
       return
     }
@@ -44,17 +46,15 @@ const UploadCSV = ({
     const parsedCSVTransactions = await parseCSVToTransactions(file)
 
     if (!parsedCSVTransactions.data) {
-      toast({
-        title: "No data found OR not able to process ",
-        status: "error",
+      enqueueSnackbar("No data found OR not able to process ", {
+        variant: "error",
       })
       return
     }
 
     if (parsedCSVTransactions.error) {
-      toast({
-        title: parsedCSVTransactions.error.message,
-        status: "error",
+      enqueueSnackbar(parsedCSVTransactions.error.message, {
+        variant: "error",
       })
       console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedCSVTransactions.error)
       return
@@ -76,19 +76,19 @@ const UploadCSV = ({
   return (
     <Dropzone onDrop={onDrop} multiple={false}>
       {() => (
-        <Center height="90vh">
-          <HStack spacing={6}>
-            <Icon as={FileChartLineIcon} boxSize={10} />
-            <div>
-              <Text mb={1} fontSize="xl">
-                Drag .csv file here to upload data
-              </Text>
-              <Text size="sm" color="gray.500">
+        <Box
+          sx={{ display: "flex", height: "90vh", justifyContent: "center", alignItems: "center" }}
+        >
+          <Box display="flex" alignItems="center">
+            <ChartIcon fontSize="large" />
+            <Stack direction="column" ml={2}>
+              <Typography variant="h5">Drag .csv file here to upload data</Typography>
+              <Typography color="GrayText" variant="body1">
                 Only use ING Diba export csv files!
-              </Text>
-            </div>
-          </HStack>
-        </Center>
+              </Typography>
+            </Stack>
+          </Box>
+        </Box>
       )}
     </Dropzone>
   )

@@ -1,47 +1,30 @@
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  ModalProps,
-} from "@chakra-ui/react"
+import Dialog, { DialogProps } from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+
 import { PropsWithChildren, ReactNode } from "react"
 
 interface OpenModalProps {
   onCancel: () => void
   modalTitle?: string
-  footerChildren: ReactNode
-  modalProps?: ModalProps
+  footerChildren?: ReactNode
+  modalProps?: DialogProps
 }
 
 const OpenModal = ({
   modalTitle = "",
   onCancel = () => {},
-  footerChildren,
+  footerChildren = null,
   modalProps,
   children,
 }: PropsWithChildren<OpenModalProps>) => {
   return (
-    <Modal
-      size="xl"
-      isCentered
-      onClose={onCancel}
-      onEsc={onCancel}
-      isOpen={true}
-      motionPreset="slideInBottom"
-      {...modalProps}
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{modalTitle}</ModalHeader>
-        <ModalCloseButton onClick={onCancel} />
-        <ModalBody>{children}</ModalBody>
-        <ModalFooter>{footerChildren}</ModalFooter>
-      </ModalContent>
-    </Modal>
+    <Dialog fullWidth open={true} onClose={onCancel} {...modalProps}>
+      <DialogTitle>{modalTitle}</DialogTitle>
+      <DialogContent>{children}</DialogContent>
+      <DialogActions>{footerChildren}</DialogActions>
+    </Dialog>
   )
 }
 

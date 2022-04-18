@@ -1,40 +1,37 @@
 import { useCallback } from "react"
 import { useRouter } from "next/router"
 
-import { useColorMode, Icon, IconButton, Spacer, HStack, Text } from "@chakra-ui/react"
+import Stack from "@mui/material/Stack"
+import Box from "@mui/material/Box"
+import Typography from "@mui/material/Typography"
+import Link from "@mui/material/Link"
 
-import BarChartIcon from "remixicon-react/BarChartGroupedLineIcon"
-import SunIcon from "remixicon-react/SunLineIcon"
-import MoonIcon from "remixicon-react/MoonClearLineIcon"
+import BarChartIcon from "@mui/icons-material/BarChart"
 
 const NavbarHeader = () => {
-  const { colorMode, toggleColorMode } = useColorMode()
-  const dark = colorMode === "dark"
-
   const router = useRouter()
   const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   return (
-    <HStack w="100%">
-      <HStack onClick={linkToOverview}>
-        <Icon as={BarChartIcon} w={8} h={8} color="royalblue" />
-        <Text
-          fontSize="2xl"
-          fontWeight="semibold"
-          bgGradient="linear(to-tr, royalblue, red)"
-          bgClip="text"
-        >
-          Privance
-        </Text>
-      </HStack>
-      <Spacer />
-      <IconButton
-        variant="ghost"
-        colorScheme={dark ? "orange" : "blue"}
-        onClick={toggleColorMode}
-        aria-label="toggle darkmode"
-        icon={dark ? <Icon as={SunIcon} /> : <Icon as={MoonIcon} />}
-      />
-    </HStack>
+    <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Link component="button" onClick={linkToOverview} underline="none">
+        <Stack direction="row" alignItems="center" padding="0.5rem">
+          <BarChartIcon color="info" sx={{ fontSize: "3rem" }} />
+          <Typography
+            variant="h4"
+            component="h1"
+            fontWeight="bold"
+            sx={{
+              background: "linear-gradient(to top right, royalblue, red)",
+              backgroundClip: "text",
+              WebkitBackgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            Privance
+          </Typography>
+        </Stack>
+      </Link>
+    </Box>
   )
 }
 
