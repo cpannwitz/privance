@@ -3,12 +3,11 @@ import { Category } from ".prisma/client"
 
 import Button from "@mui/material/Button"
 import Typography from "@mui/material/Typography"
-import IconButton from "@mui/material/IconButton"
+import Chip from "@mui/material/Chip"
 import SvgIcon from "@mui/material/SvgIcon"
 import ClickAwayListener from "@mui/material/ClickAwayListener"
 
 import { useTheme } from "@mui/material/styles"
-import AddIcon from "@mui/icons-material/AddCircleOutlineOutlined"
 
 import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from "react-select"
 
@@ -33,13 +32,6 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
   const toggleIsSelectOpen = () => setIsSelectOpen(state => !state)
   const setSelectOpenFalse = () => setIsSelectOpen(false)
 
-  const buttonColor = value && value.color ? value.color : undefined
-  const buttonIcon = value ? (
-    <SvgIcon htmlColor="white">{value.icon ? icons[value.icon] : placeholderIcon}</SvgIcon>
-  ) : (
-    <SvgIcon component={AddIcon} />
-  )
-
   const [isAddingCategory, setIsAddingCategory] = useState(false)
   const toggleSetIsAddingCategory = () => setIsAddingCategory(!isAddingCategory)
 
@@ -61,15 +53,17 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
         <CategoryAddStandalone onClose={onCloseAddCategory} onAddCategory={onAddCategory} />
       ) : null}
 
-      <IconButton
-        aria-label="edit category"
-        sx={{
-          backgroundColor: buttonColor,
-        }}
+      {/* // TODO: Extract into own comp */}
+      <Chip
+        label={value?.name ?? "Choose Category"}
+        icon={value?.icon ? icons[value.icon] : placeholderIcon}
         onClick={toggleIsSelectOpen}
-      >
-        {buttonIcon}
-      </IconButton>
+        sx={{
+          backgroundColor: value?.color || undefined,
+          color: "white",
+          "& .MuiChip-icon": { color: "white" },
+        }}
+      />
 
       {isSelectOpen && (
         <ClickAwayListener onClickAway={setSelectOpenFalse}>
@@ -91,7 +85,10 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
             closeMenuOnSelect={true}
             menuIsOpen={isSelectOpen}
             placeholder="Search..."
+            menuPortalTarget={document.body}
             styles={{
+              menuPortal: base => ({ ...base, zIndex: 9999 }),
+              container: base => ({ ...base, position: "absolute" }),
               control: base => ({
                 ...base,
                 width: "14rem",
@@ -101,7 +98,6 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
                 display: "flex",
                 alignItems: "center",
                 color: "inherit",
-                // minWidth: "40rem",
               }),
               menu: base => ({
                 ...base,

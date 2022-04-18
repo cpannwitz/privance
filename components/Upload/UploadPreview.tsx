@@ -1,4 +1,4 @@
-import TransactionTable from "../TransactionTable/TransactionTable"
+import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
 
 import Box from "@mui/material/Box"
 import Button from "@mui/material/Button"
@@ -49,11 +49,11 @@ const UploadPreview = ({
 
       <Divider sx={{ my: 6 }} />
       <Box sx={{ width: "100%", height: "85%" }}>
-        <TransactionTable
+        <TransactionDatagrid
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategory[]}
-          variant="preview"
-          updateTransaction={onUpdateTransaction}
+          // variant="preview"
+          onUpdateTransaction={onUpdateTransaction}
         />
       </Box>
     </>

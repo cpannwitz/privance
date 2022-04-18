@@ -12,5 +12,5 @@ export default {
 } as ComponentMeta<typeof AutomationRulesEdit>
 
 export const Primary: ComponentStory<typeof AutomationRulesEdit> = () => (
-  <AutomationRulesEdit onSave={() => {}} onCancel={() => {}} />
+  <AutomationRulesEdit onSave={() => console.log("")} onCancel={() => console.log("")} />
 )

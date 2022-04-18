@@ -15,8 +15,6 @@ export default async function getAutomationRulesById(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "GET") {
-    // TODO: wtf, better query extracting -> querystring
-    // ! https://www.npmjs.com/package/query-string
     const rules = req.query["rules[]"]
 
     const automationRuleIds: number[] = []

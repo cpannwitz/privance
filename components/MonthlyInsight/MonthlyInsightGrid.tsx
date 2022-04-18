@@ -4,7 +4,7 @@ import { MonthlyAggregations } from "../../types/types"
 import getSymbolFromCurrency from "currency-map-symbol"
 import BalanceChart from "../Charts/BalanceChart"
 import CategoriesCharts from "../Charts/CategoriesChart"
-import TransactionTable from "../TransactionTable/TransactionTable"
+import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
 import Stat from "../Stat/Stat"
 
 import Box from "@mui/material/Box"
@@ -99,15 +99,24 @@ const MonthGridItem = ({
           color="success.main"
         />
       </Stack>
-      {transactions.length > 0 && (
-        <Box sx={{ width: "100%", height: "200px" }}>
-          <BalanceChart data={transactions} variant="small" />
+
+      {showTable ? (
+        <Box sx={{ width: "100%", height: "450px" }}>
+          <TransactionDatagrid transactions={transactions} />
         </Box>
-      )}
-      {categories.length > 0 && (
-        <Box sx={{ width: "100%", height: "200px" }}>
-          <CategoriesCharts categories={categories} />
-        </Box>
+      ) : (
+        <>
+          {transactions.length > 0 && (
+            <Box sx={{ width: "100%", height: "225px" }}>
+              <BalanceChart data={transactions} variant="small" />
+            </Box>
+          )}
+          {categories.length > 0 && (
+            <Box sx={{ width: "100%", height: "225px" }}>
+              <CategoriesCharts categories={categories} />
+            </Box>
+          )}
+        </>
       )}
 
       <Button
@@ -118,13 +127,8 @@ const MonthGridItem = ({
         startIcon={<TableIcon />}
         onClick={() => setShowTable(v => !v)}
       >
-        Show Transactions
+        {showTable ? "Hide" : "Show"} Transactions
       </Button>
-      {showTable && (
-        <Box sx={{ width: "100%", height: "200px", mt: 3 }}>
-          <TransactionTable transactions={transactions} />
-        </Box>
-      )}
     </Grid>
   )
 }

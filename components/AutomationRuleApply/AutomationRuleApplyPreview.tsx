@@ -3,7 +3,7 @@ import axios, { AxiosError } from "axios"
 import { useRouter } from "next/router"
 
 import { AutomationRuleWithCategory, TransactionWithCategory } from "../../types/types"
-import TransactionTable from "../TransactionTable/TransactionTable"
+import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
 import assignTransactionCategory from "./assignTransactionCategory"
 
 import { icons, placeholderIcon } from "../../shared/iconUtils"
@@ -135,7 +135,7 @@ const AutomationRuleApplyPreview = ({
 
       <Divider sx={{ my: 5 }} />
       <Box sx={{ width: "100%", height: "50%" }}>
-        <TransactionTable
+        <TransactionDatagrid
           transactions={showTransformedOnly ? stateTransformedTransactions : stateAllTransactions}
           transformedTransactions={stateTransformedTransactions.map(t => t.id)}
         />

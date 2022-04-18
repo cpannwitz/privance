@@ -1,13 +1,13 @@
 import type { InferGetStaticPropsType } from "next"
 
-import TransactionTableContainer from "../components/TransactionTable/TransactionTableContainer"
+import TransactionDatagridContainer from "../components/TransactionDatagrid/TransactionDatagridContainer"
 
 export const getStaticProps = async () => {
   return { props: {} }
 }
 
 const OverviewPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <TransactionTableContainer />
+  return <TransactionDatagridContainer />
 }
 
 export default OverviewPage
