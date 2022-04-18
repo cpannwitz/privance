@@ -12,10 +12,9 @@ import AllTimeInsightIcon from "@mui/icons-material/DateRangeOutlined"
 import MonthlyInsightIcon from "@mui/icons-material/TodayOutlined"
 import UploadIcon from "@mui/icons-material/CloudUpload"
 import CategoriesIcon from "@mui/icons-material/CategoryOutlined"
-import PlaygroundIcon from "@mui/icons-material/SportsBaseballOutlined"
 import AutomationRuleIcon from "@mui/icons-material/MotionPhotosAutoOutlined"
 
-import { routerLinks } from "../../shared/config"
+import routerLinks from "../../shared/routerLinks"
 
 const NavbarLinks = () => {
   const router = useRouter()
@@ -28,7 +27,6 @@ const NavbarLinks = () => {
     () => router.push(routerLinks.AUTOMATIONRULES),
     [router]
   )
-  const linkToPlayground = useCallback(() => router.push(routerLinks.PLAYGROUND), [router])
 
   const navbarLinks = useMemo(
     () => [
@@ -68,12 +66,6 @@ const NavbarLinks = () => {
         label: `Automation Rules`,
         isActive: router.pathname === routerLinks.AUTOMATIONRULES,
       },
-      {
-        icon: <PlaygroundIcon />,
-        link: linkToPlayground,
-        label: `[DEV] Playground`,
-        isActive: router.pathname === routerLinks.PLAYGROUND,
-      },
     ],
     [
       router.pathname,
@@ -83,7 +75,6 @@ const NavbarLinks = () => {
       linkToUpload,
       linkToCategories,
       linkToAutomationRules,
-      linkToPlayground,
     ]
   )
 

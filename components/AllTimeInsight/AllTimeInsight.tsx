@@ -4,7 +4,7 @@ import AllTimeInsightContent from "./AllTimeInsightContent"
 import DataIsLoading from "../DataStates/DataIsLoading"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import DataIsError from "../DataStates/DataIsError"
-import { routerLinks } from "../../shared/config"
+import routerLinks from "../../shared/routerLinks"
 
 interface AllTimeInsightProps {}
 

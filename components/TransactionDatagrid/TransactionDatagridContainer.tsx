@@ -10,7 +10,7 @@ import DataIsError from "../DataStates/DataIsError"
 import DataIsLoading from "../DataStates/DataIsLoading"
 import TransactionDatagrid from "./TransactionDatagrid"
 
-import { routerLinks } from "../../shared/config"
+import routerLinks from "../../shared/routerLinks"
 import { TransactionWithCategory } from "../../types/types"
 
 interface TransactionDatagridContainerProps {}

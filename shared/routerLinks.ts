@@ -5,6 +5,7 @@ export const routerLinks = {
   CATEGORIES: `/categories`,
   MONTHLYINSIGHT: `/monthlyinsight`,
   OVERVIEW: `/overview`,
-  PLAYGROUND: `/playground`,
   UPLOAD: `/upload`,
 }
+
+export default routerLinks

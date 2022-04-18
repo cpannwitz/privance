@@ -4,7 +4,7 @@ import MonthlyInsightGrid from "./MonthlyInsightGrid"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import DataIsError from "../DataStates/DataIsError"
 import DataIsLoading from "../DataStates/DataIsLoading"
-import { routerLinks } from "../../shared/config"
+import routerLinks from "../../shared/routerLinks"
 
 interface MonthlyInsightProps {}
 
