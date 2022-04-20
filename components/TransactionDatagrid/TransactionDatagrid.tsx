@@ -86,6 +86,7 @@ const TransactionDatagrid = ({
           filterOperators: [
             {
               value: "is",
+              label: "is",
               getApplyFilterFn: (filterItem: GridFilterItem) => {
                 if (!filterItem.value) return
 
@@ -99,6 +100,33 @@ const TransactionDatagrid = ({
               },
               InputComponent: GridFilterInputSingleSelect,
               InputComponentProps: { type: "singleSelect" },
+            },
+            {
+              value: "isnot",
+              label: "is not",
+              getApplyFilterFn: (filterItem: GridFilterItem) => {
+                if (!filterItem.value) return
+
+                return ({ value }: GridCellParams): boolean => {
+                  if (!value) return false
+                  if (typeof value === "object") {
+                    return filterItem.value !== value.name
+                  }
+                  return filterItem.value !== value
+                }
+              },
+              InputComponent: GridFilterInputSingleSelect,
+              InputComponentProps: { type: "singleSelect" },
+            },
+            {
+              label: "is empty",
+              value: "is empty",
+              getApplyFilterFn: () => {
+                return ({ value }: GridCellParams): boolean => {
+                  if (!value) return true
+                  return false
+                }
+              },
             },
           ],
           renderHeader: p => <b>{p.colDef.headerName}</b>,
