@@ -1,9 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next"
-import { PrismaClient } from ".prisma/client"
+import { prisma } from "../../../shared/database"
 import { CategoryWithTransactions } from "../../../types/types"
-
-const prisma = new PrismaClient()
 
 type ResponseData = {
   error?: any

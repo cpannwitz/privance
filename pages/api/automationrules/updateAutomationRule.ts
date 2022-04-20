@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, Prisma } from ".prisma/client"
 import { AutomationRuleWithCategory } from "../../../types/types"
 
-const prisma = new PrismaClient()
-
 type ResponseData = {
   error?: any
   data?: AutomationRuleWithCategory

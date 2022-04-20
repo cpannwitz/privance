@@ -2,8 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { PrismaClient, AutomationRule } from ".prisma/client"
 
-const prisma = new PrismaClient()
-
 type ResponseData = {
   error?: any
   data?: AutomationRule
