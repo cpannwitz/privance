@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { MonthlyAggregations } from "../../types/types"
+import { MonthlyAggregations, TransactionWithCategory } from "../../types/types"
 
 import getSymbolFromCurrency from "currency-map-symbol"
 import BalanceChart from "../Charts/BalanceChart"
@@ -17,9 +17,13 @@ import TableIcon from "@mui/icons-material/TableChartOutlined"
 
 interface MonthlyInsightGridProps {
   monthlyAggregations: MonthlyAggregations
+  onUpdateTransaction: (year: string, month: string, transaction: TransactionWithCategory) => void
 }
 
-const MonthlyInsightGrid = ({ monthlyAggregations }: MonthlyInsightGridProps) => {
+const MonthlyInsightGrid = ({
+  monthlyAggregations,
+  onUpdateTransaction,
+}: MonthlyInsightGridProps) => {
   return (
     <Stack direction="column" sx={{ p: 5 }}>
       {Object.keys(monthlyAggregations.years)
@@ -39,6 +43,9 @@ const MonthlyInsightGrid = ({ monthlyAggregations }: MonthlyInsightGridProps) =>
                       <MonthGridItem
                         key={month + year}
                         currency={monthlyAggregations.currency}
+                        onUpdateTransaction={transaction =>
+                          onUpdateTransaction(year, month, transaction)
+                        }
                         {...monthStats}
                       />
                     )
@@ -55,6 +62,7 @@ export default MonthlyInsightGrid
 
 type MonthGridItemProps = MonthlyAggregations["years"][string]["months"][string] & {
   currency: string
+  onUpdateTransaction: (transaction: TransactionWithCategory) => void
 }
 const MonthGridItem = ({
   currency,
@@ -65,6 +73,7 @@ const MonthGridItem = ({
   totalMonthPlusPercentage,
   transactions,
   categories,
+  onUpdateTransaction,
 }: MonthGridItemProps) => {
   const [showTable, setShowTable] = useState(false)
   return (
@@ -102,7 +111,11 @@ const MonthGridItem = ({
 
       {showTable ? (
         <Box sx={{ width: "100%", height: "450px" }}>
-          <TransactionDatagrid transactions={transactions} />
+          <TransactionDatagrid
+            transactions={transactions}
+            categories={categories}
+            onUpdateTransaction={onUpdateTransaction}
+          />
         </Box>
       ) : (
         <>

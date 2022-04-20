@@ -6,12 +6,14 @@ import { useSnackbar } from "notistack"
 import UploadPreview from "./UploadPreview"
 import UploadCSV from "../UploadCSV/UploadCSV"
 import { AutomationRuleWithCategory, TransactionBeforeUpload } from "../../types/types"
+import { Category } from "@prisma/client"
 
 interface UploadProps {
   automationRules: AutomationRuleWithCategory[]
+  categories?: Category[]
 }
 
-const Upload = ({ automationRules }: UploadProps) => {
+const Upload = ({ automationRules, categories = [] }: UploadProps) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 
@@ -66,6 +68,7 @@ const Upload = ({ automationRules }: UploadProps) => {
     return (
       <UploadPreview
         transactions={uploadedTransactions}
+        categories={categories}
         onCancel={onCancelUploadTransactions}
         onUpload={onUploadTransactions}
         onUpdateTransaction={onUpdateTransaction}

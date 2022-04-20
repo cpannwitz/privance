@@ -10,9 +10,11 @@ import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
 import CancelIcon from "@mui/icons-material/CancelOutlined"
 
 import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
+import { Category } from "@prisma/client"
 
 interface UploadPreviewProps {
   transactions: TransactionBeforeUpload[]
+  categories?: Category[]
   onCancel: () => void
   onUpload: () => void
   onUpdateTransaction?: (transaction: TransactionBeforeUpload) => void
@@ -20,6 +22,7 @@ interface UploadPreviewProps {
 
 const UploadPreview = ({
   transactions,
+  categories = [],
   onCancel,
   onUpload,
   onUpdateTransaction = () => {
@@ -52,7 +55,7 @@ const UploadPreview = ({
         <TransactionDatagrid
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategory[]}
-          // variant="preview"
+          categories={categories}
           onUpdateTransaction={onUpdateTransaction}
         />
       </Box>

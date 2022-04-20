@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios"
 import { useSnackbar } from "notistack"
 
 import useGetTransactions from "../hooks/useGetTransactions"
+import useGetCategories from "../hooks/useGetCategories"
 
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import DataIsError from "../DataStates/DataIsError"
@@ -24,14 +25,22 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
     mutate: mutateTransactions,
   } = useGetTransactions()
 
+  const {
+    data: categories,
+    isError: isErrorCategories,
+    isLoading: isLoadingCategories,
+    mutate: mutateCategories,
+  } = useGetCategories()
+
   const retry = useCallback(() => {
     mutateTransactions()
-  }, [mutateTransactions])
+    mutateCategories()
+  }, [mutateTransactions, mutateCategories])
 
-  if (isLoadingTransactions) {
+  if (isLoadingTransactions || isLoadingCategories) {
     return <DataIsLoading />
   }
-  if (!transactions || isErrorTransactions) {
+  if (!transactions || isErrorTransactions || !categories || isErrorCategories) {
     return <DataIsError retry={retry} />
   }
   if (transactions.length === 0) {
@@ -73,7 +82,11 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
 
   return (
     <Box sx={{ height: "100%" }}>
-      <TransactionDatagrid transactions={transactions} onUpdateTransaction={onUpdateTransaction} />
+      <TransactionDatagrid
+        transactions={transactions}
+        categories={categories}
+        onUpdateTransaction={onUpdateTransaction}
+      />
     </Box>
   )
 }

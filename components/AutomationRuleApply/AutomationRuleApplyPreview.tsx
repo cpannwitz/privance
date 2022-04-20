@@ -21,15 +21,18 @@ import { useSnackbar } from "notistack"
 
 import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
 import CancelIcon from "@mui/icons-material/CancelOutlined"
+import { Category } from "@prisma/client"
 
 interface AutomationRuleApplyPreviewProps {
   automationRules: AutomationRuleWithCategory[]
   transactions: TransactionWithCategory[]
+  categories?: Category[]
 }
 
 const AutomationRuleApplyPreview = ({
   automationRules,
   transactions,
+  categories = [],
 }: AutomationRuleApplyPreviewProps) => {
   const [showTransformedOnly, setShowTransformedOnly] = useState(true)
   const toggleShowTransformedOnly = () => setShowTransformedOnly(state => !state)
@@ -137,6 +140,7 @@ const AutomationRuleApplyPreview = ({
       <Box sx={{ width: "100%", height: "50%" }}>
         <TransactionDatagrid
           transactions={showTransformedOnly ? stateTransformedTransactions : stateAllTransactions}
+          categories={categories}
           transformedTransactions={stateTransformedTransactions.map(t => t.id)}
         />
       </Box>

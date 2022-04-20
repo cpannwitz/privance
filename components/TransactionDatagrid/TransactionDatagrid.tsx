@@ -1,5 +1,11 @@
 import { useMemo } from "react"
-import { DataGrid, GridToolbar } from "@mui/x-data-grid"
+import {
+  DataGrid,
+  GridCellParams,
+  GridFilterInputSingleSelect,
+  GridFilterItem,
+  GridToolbar,
+} from "@mui/x-data-grid"
 import type { GridColDef } from "@mui/x-data-grid"
 
 import Box from "@mui/material/Box"
@@ -13,9 +19,11 @@ import {
   BalanceRenderer,
   CategoryEditRenderer,
 } from "./ColumnRenderer"
+import { Category } from "@prisma/client"
 
 interface TransactionDatagridProps {
   transactions: TransactionWithCategory[]
+  categories?: Category[]
   transformedTransactions?: number[]
   onUpdateTransaction?: (transcation: TransactionWithCategory) => void
 }
@@ -24,6 +32,7 @@ const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
 
 const TransactionDatagrid = ({
   transactions,
+  categories = [],
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
   onUpdateTransaction,
 }: TransactionDatagridProps) => {
@@ -71,8 +80,27 @@ const TransactionDatagrid = ({
           headerName: "Category",
           description: "Category",
           field: "category",
-          filterable: false,
           flex: 0.1,
+          type: "singleSelect",
+          valueOptions: categories ? categories.map(c => c.name) : [],
+          filterOperators: [
+            {
+              value: "is",
+              getApplyFilterFn: (filterItem: GridFilterItem) => {
+                if (!filterItem.value) return
+
+                return ({ value }: GridCellParams): boolean => {
+                  if (!value) return false
+                  if (typeof value === "object") {
+                    return filterItem.value === value.name
+                  }
+                  return filterItem.value === value
+                }
+              },
+              InputComponent: GridFilterInputSingleSelect,
+              InputComponentProps: { type: "singleSelect" },
+            },
+          ],
           renderHeader: p => <b>{p.colDef.headerName}</b>,
           renderCell: p => (
             <CategoryEditRenderer {...p} onUpdateTransaction={onUpdateTransaction} />
@@ -97,7 +125,7 @@ const TransactionDatagrid = ({
           renderCell: AmountRenderer,
         },
       ] as GridColDef[],
-    [onUpdateTransaction]
+    [onUpdateTransaction, categories]
   )
 
   return (
