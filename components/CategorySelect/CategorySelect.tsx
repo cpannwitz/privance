@@ -59,7 +59,7 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
         icon={value?.icon ? icons[value.icon] : placeholderIcon}
         onClick={toggleIsSelectOpen}
         sx={{
-          backgroundColor: value?.color || undefined,
+          backgroundColor: value?.color || "#bbbbbb",
           color: "white",
           "& .MuiChip-icon": { color: "white" },
         }}

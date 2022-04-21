@@ -1,10 +1,14 @@
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import {
   DataGrid,
   GridCellParams,
   GridFilterInputSingleSelect,
   GridFilterItem,
-  GridToolbar,
+  GridSelectionModel,
+  GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarDensitySelector,
 } from "@mui/x-data-grid"
 import type { GridColDef } from "@mui/x-data-grid"
 
@@ -20,6 +24,7 @@ import {
   CategoryEditRenderer,
 } from "./ColumnRenderer"
 import { Category } from "@prisma/client"
+import CategorySelect from "../CategorySelect/CategorySelect"
 
 interface TransactionDatagridProps {
   transactions: TransactionWithCategory[]
@@ -36,6 +41,23 @@ const TransactionDatagrid = ({
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
   onUpdateTransaction,
 }: TransactionDatagridProps) => {
+  const [multiTransactionSelection, setMultiTransactionSelection] = useState<GridSelectionModel>([])
+
+  function onMultiCategoryChange(category: Category | null) {
+    if (onUpdateTransaction && multiTransactionSelection.length > 0) {
+      multiTransactionSelection.forEach(selectedTransaction => {
+        const baseTransaction = transactions.find(
+          transaction => transaction.id === selectedTransaction
+        )
+        if (baseTransaction) {
+          onUpdateTransaction({ ...baseTransaction, category })
+        }
+      })
+    }
+
+    setMultiTransactionSelection([])
+  }
+
   const columns = useMemo(
     () =>
       [
@@ -157,37 +179,48 @@ const TransactionDatagrid = ({
   )
 
   return (
-    <>
-      <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
-        <Box
-          sx={{
-            flexGrow: 1,
-            "& .datagrid-row-highlighted": {
-              bgcolor: theme =>
-                theme.palette.mode === "dark"
-                  ? theme.palette.success.dark
-                  : theme.palette.success.light,
-            },
+    <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          "& .datagrid-row-highlighted": {
+            bgcolor: theme =>
+              theme.palette.mode === "dark"
+                ? theme.palette.success.dark
+                : theme.palette.success.light,
+          },
+        }}
+      >
+        <DataGrid
+          onSelectionModelChange={setMultiTransactionSelection}
+          selectionModel={multiTransactionSelection}
+          rows={transactions}
+          columns={columns}
+          getRowId={row => row.id || row.identifier}
+          checkboxSelection
+          autoPageSize
+          pagination
+          disableSelectionOnClick
+          components={{
+            Toolbar: () => (
+              <GridToolbarContainer>
+                <GridToolbarColumnsButton />
+                <GridToolbarFilterButton />
+                <GridToolbarDensitySelector />
+                {multiTransactionSelection.length > 0 && (
+                  <Box sx={{ margin: "0 22% 0 auto" }}>
+                    <CategorySelect onChange={onMultiCategoryChange} />
+                  </Box>
+                )}
+              </GridToolbarContainer>
+            ),
           }}
-        >
-          <DataGrid
-            rows={transactions}
-            columns={columns}
-            getRowId={row => row.id || row.identifier}
-            checkboxSelection
-            autoPageSize
-            pagination
-            disableSelectionOnClick
-            components={{
-              Toolbar: GridToolbar,
-            }}
-            getRowClassName={params =>
-              transformedTransactions.includes(params.row.id) ? "datagrid-row-highlighted" : ""
-            }
-          />
-        </Box>
+          getRowClassName={params =>
+            transformedTransactions.includes(params.row.id) ? "datagrid-row-highlighted" : ""
+          }
+        />
       </Box>
-    </>
+    </Box>
   )
 }
 
