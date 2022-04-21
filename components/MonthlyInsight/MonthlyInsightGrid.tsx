@@ -34,7 +34,7 @@ const MonthlyInsightGrid = ({
               <Typography fontSize={30} sx={{ mb: 5 }}>
                 {year}
               </Typography>
-              <Grid container columns={2} spacing={10}>
+              <Grid container columns={1} spacing={10}>
                 {Object.keys(monthlyAggregations.years[year].months)
                   .reverse()
                   .map(month => {
