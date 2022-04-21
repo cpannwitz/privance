@@ -128,14 +128,19 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
           spacing={3}
           sx={{ pb: 5 }}
         >
-          {categories.map(category => (
-            <CategoryListItem
-              key={category.name}
-              onEdit={onEditCategory}
-              onDelete={onDeleteCategory}
-              category={category}
-            />
-          ))}
+          {categories
+            .sort(
+              (cA, cB) =>
+                getTransactionsBalance(cB.transactions) - getTransactionsBalance(cA.transactions)
+            )
+            .map(category => (
+              <CategoryListItem
+                key={category.name}
+                onEdit={onEditCategory}
+                onDelete={onDeleteCategory}
+                category={category}
+              />
+            ))}
         </Grid>
       )}
     </>
