@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import React, { useMemo, useState, useEffect, startTransition } from "react"
 import {
   DataGrid,
   GridCellParams,
@@ -25,6 +25,7 @@ import {
 } from "./ColumnRenderer"
 import { Category } from "@prisma/client"
 import CategorySelect from "../CategorySelect/CategorySelect"
+import Quicksearch from "./Quicksearch"
 
 interface TransactionDatagridProps {
   transactions: TransactionWithCategory[]
@@ -35,12 +36,36 @@ interface TransactionDatagridProps {
 
 const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
 
+function escapeRegExp(value: string): string {
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+}
+
 const TransactionDatagrid = ({
   transactions,
   categories = [],
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
   onUpdateTransaction,
 }: TransactionDatagridProps) => {
+  const [rows, setRows] = useState<TransactionWithCategory[]>(transactions)
+  useEffect(() => {
+    setRows(transactions)
+  }, [transactions])
+
+  const [searchText, setSearchText] = useState("")
+  function requestSearch(searchValue: string) {
+    setSearchText(searchValue)
+    startTransition(() => {
+      const searchRegex = new RegExp(escapeRegExp(searchValue), "i")
+      const filteredRows = transactions.filter((row: any) => {
+        return Object.keys(row).some((field: any) => {
+          if (!row[field]) return true
+          return searchRegex.test(row[field].toString())
+        })
+      })
+      setRows(filteredRows)
+    })
+  }
+
   const [multiTransactionSelection, setMultiTransactionSelection] = useState<GridSelectionModel>([])
 
   function onMultiCategoryChange(category: Category | null) {
@@ -194,7 +219,7 @@ const TransactionDatagrid = ({
         <DataGrid
           onSelectionModelChange={setMultiTransactionSelection}
           selectionModel={multiTransactionSelection}
-          rows={transactions}
+          rows={rows}
           columns={columns}
           getRowId={row => row.id || row.identifier}
           checkboxSelection
@@ -202,18 +227,15 @@ const TransactionDatagrid = ({
           pagination
           disableSelectionOnClick
           components={{
-            Toolbar: () => (
-              <GridToolbarContainer>
-                <GridToolbarColumnsButton />
-                <GridToolbarFilterButton />
-                <GridToolbarDensitySelector />
-                {multiTransactionSelection.length > 0 && (
-                  <Box sx={{ margin: "0 22% 0 auto" }}>
-                    <CategorySelect onChange={onMultiCategoryChange} />
-                  </Box>
-                )}
-              </GridToolbarContainer>
-            ),
+            Toolbar,
+          }}
+          componentsProps={{
+            toolbar: {
+              multiSelectionEnabled: multiTransactionSelection.length > 0,
+              onMultiCategoryChange: onMultiCategoryChange,
+              onRequestSearch: requestSearch,
+              searchText: searchText,
+            },
           }}
           getRowClassName={params =>
             transformedTransactions.includes(params.row.id) ? "datagrid-row-highlighted" : ""
@@ -221,6 +243,38 @@ const TransactionDatagrid = ({
         />
       </Box>
     </Box>
+  )
+}
+interface ToolbarProps {
+  multiSelectionEnabled: boolean
+  onMultiCategoryChange: (category: Category | null) => void
+  searchText: string
+  onRequestSearch: (value: string) => void
+}
+const Toolbar = ({
+  multiSelectionEnabled,
+  onMultiCategoryChange,
+  searchText,
+  onRequestSearch,
+}: ToolbarProps) => {
+  function onClearSearch() {
+    onRequestSearch("")
+  }
+  function onQuicksearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+    onRequestSearch(e.target.value)
+  }
+  return (
+    <GridToolbarContainer>
+      <GridToolbarColumnsButton />
+      <GridToolbarFilterButton />
+      <GridToolbarDensitySelector />
+      <Quicksearch clearSearch={onClearSearch} onChange={onQuicksearchChange} value={searchText} />
+      {multiSelectionEnabled && (
+        <Box sx={{ margin: "0 22% 0 auto" }}>
+          <CategorySelect onChange={onMultiCategoryChange} />
+        </Box>
+      )}
+    </GridToolbarContainer>
   )
 }
 
