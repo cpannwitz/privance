@@ -66,6 +66,10 @@ export type AutomationRuleWithCategory = AutomationRule & {
   category: Category
 }
 
+export type CategoryWithAutomationRules = Category & {
+  automationRules: AutomationRuleWithCategory[]
+}
+
 export interface ParsedCSVTransactions {
   issuedate?: string
   __?: string

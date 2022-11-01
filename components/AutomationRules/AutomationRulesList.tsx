@@ -1,7 +1,7 @@
 import { useState } from "react"
 import axios, { AxiosError } from "axios"
 
-import { Prisma } from ".prisma/client"
+import { Prisma, Category, AutomationRule } from ".prisma/client"
 
 import { useSnackbar } from "notistack"
 import Box from "@mui/material/Box"
@@ -9,6 +9,12 @@ import Button from "@mui/material/Button"
 import IconButton from "@mui/material/IconButton"
 import Chip from "@mui/material/Chip"
 import Badge from "@mui/material/Badge"
+import Avatar from "@mui/material/Avatar"
+import List from "@mui/material/List"
+import ListItem from "@mui/material/ListItem"
+import ListItemAvatar from "@mui/material/ListItemAvatar"
+import ListItemText from "@mui/material/ListItemText"
+import ListItemSecondaryAction from "@mui/material/ListItemSecondaryAction"
 
 import UploadIcon from "@mui/icons-material/FileUploadOutlined"
 import NegativeIcon from "@mui/icons-material/CancelOutlined"
@@ -21,20 +27,21 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined"
 import Stat from "../Stat/Stat"
 
 import AutomationRulesEdit from "./AutomationRulesEdit/AutomationRulesEdit"
-import { AutomationRuleWithCategory } from "../../types/types"
+import { AutomationRuleWithCategory, CategoryWithAutomationRules } from "../../types/types"
 import DataIsEmpty from "../DataStates/DataIsEmpty"
 import { getValueType } from "./AutomationRulesEdit/FormUtils"
 import { icons, placeholderIcon } from "../../shared/iconUtils"
 
 import { useRouter } from "next/router"
-import useGetAutomationRules from "../hooks/useGetAutomationRules"
 
-interface AutomationListProps {
-  data: AutomationRuleWithCategory[]
+import useGetAutomationRulesByCategory from "../hooks/useGetAutomationRulesByCategory"
+
+interface AutomationRulesListProps {
+  data: CategoryWithAutomationRules[]
 }
 
-const AutomationList = ({ data }: AutomationListProps) => {
-  const { mutate: mutateAutomationRules } = useGetAutomationRules()
+const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
+  const { mutate: mutateAutomationRules } = useGetAutomationRulesByCategory()
   const { enqueueSnackbar } = useSnackbar()
 
   const [editedAutomationRule, setEditedAutomationRule] =
@@ -84,7 +91,7 @@ const AutomationList = ({ data }: AutomationListProps) => {
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
-        category: { connect: { id: automationRule.category.id } },
+        category: { connect: { id: automationRule.categoryId } },
       }
       axios
         .post("/api/automationrules/updateAutomationRule", automationRuleUpdateInput)
@@ -201,40 +208,76 @@ const AutomationList = ({ data }: AutomationListProps) => {
         <DataIsEmpty />
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", "& > *": { mb: 3 } }}>
-          {data.map(automationRule => (
-            <AutomationRuleListItem
-              key={automationRule.id}
-              onRun={onRunAutomationRule}
-              onEdit={onEditAutomationRule}
-              onDelete={onDeleteAutomationRule}
-              onToggleOnUploadRun={onToggleAutomationRuleOnUploadRun}
-              automationRule={automationRule}
-            />
-          ))}
+          {data.map((automationRuleCategory) => {
+            const { automationRules, ...category } = automationRuleCategory
+            return (
+              <AutomationRulesCategory key={automationRuleCategory.id} category={category}>
+                <List dense={true} sx={{ width: "100%" }}>
+                  {automationRules.map((automationRule) => (
+                    <AutomationRuleListItem
+                      key={automationRule.id}
+                      onRun={onRunAutomationRule}
+                      onEdit={onEditAutomationRule}
+                      onDelete={onDeleteAutomationRule}
+                      onToggleOnUploadRun={onToggleAutomationRuleOnUploadRun}
+                      automationRule={automationRule}
+                    />
+                  ))}
+                </List>
+              </AutomationRulesCategory>
+            )
+          })}
         </Box>
       )}
     </>
   )
 }
 
-export default AutomationList
+export default AutomationRulesList
+interface AutomationRulesCategoryProps {
+  children?: React.ReactNode
+  category: Category
+}
+const AutomationRulesCategory = ({ children, category }: AutomationRulesCategoryProps) => {
+  return (
+    <Box
+      sx={{
+        width: "100%",
+        p: 2,
+        boxShadow: 2,
+        borderRadius: 2,
+        "& > *": { mr: 2 },
+      }}
+    >
+      <Chip
+        label={category.name}
+        icon={category.icon ? icons[category.icon] : placeholderIcon}
+        sx={{
+          backgroundColor: category.color || undefined,
+          color: "white",
+          "& .MuiChip-icon": { color: "white" },
+        }}
+      />
 
-interface AutomationRuleListItemProps {
+      {children}
+    </Box>
+  )
+}
+
+interface AutomationRuleProps {
   onRun: (automationRule: AutomationRuleWithCategory) => void
   onEdit: (automationRule: AutomationRuleWithCategory) => void
   onDelete: (automationRule: AutomationRuleWithCategory) => void
   onToggleOnUploadRun: (automationRule: AutomationRuleWithCategory) => void
   automationRule: AutomationRuleWithCategory
 }
-
-// TODO: i18n, plus better labels, better text structure (for string, number, date...)
 const AutomationRuleListItem = ({
   onRun,
   onEdit,
   onDelete,
   onToggleOnUploadRun,
   automationRule,
-}: AutomationRuleListItemProps) => {
+}: AutomationRuleProps) => {
   function onEditAutomationRule() {
     onEdit(automationRule)
   }
@@ -247,114 +290,52 @@ const AutomationRuleListItem = ({
   function onToggleAutomationRuleRunOnUpload() {
     onToggleOnUploadRun(automationRule)
   }
-
   return (
-    <Box
-      sx={{
-        width: "100%",
-        p: 2,
-        boxShadow: 2,
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        borderRadius: 2,
-        "& > *": { mr: 2 },
-      }}
-    >
-      <Stat heading="If the" label={automationRule.field} sublabel="of a transaction" />
-
-      {StatBlocks[getValueType(automationRule.field)](automationRule)}
-
-      <Stat
-        heading="then"
-        label={
-          <Chip
-            label={automationRule.category.name}
-            icon={
-              automationRule.category.icon ? icons[automationRule.category.icon] : placeholderIcon
-            }
-            sx={{
-              backgroundColor: automationRule.category.color || undefined,
-              color: "white",
-              "& .MuiChip-icon": { color: "white" },
-            }}
-          />
-        }
-        sublabel="will be assigned."
+    <ListItem>
+      <ListItemText
+        primary={automationRule.stringValue}
+        secondary={`Applied to "${automationRule.field.toString()}"`}
       />
-
-      <IconButton
-        aria-label="toggle run on upload"
-        onClick={onToggleAutomationRuleRunOnUpload}
-        sx={{ color: "grey.400" }}
-      >
-        <Badge
-          badgeContent={
-            automationRule.activeOnUpload ? (
-              <PositiveIcon color="success" sx={{ width: "16px", height: "16px" }} />
-            ) : (
-              <NegativeIcon color="error" sx={{ width: "16px", height: "16px" }} />
-            )
-          }
+      <ListItemSecondaryAction>
+        <IconButton
+          aria-label="toggle run on upload"
+          onClick={onToggleAutomationRuleRunOnUpload}
+          sx={{ color: "grey.400" }}
         >
-          <UploadIcon />
-        </Badge>
-      </IconButton>
-      <IconButton
-        aria-label="delete automation rule"
-        onClick={onDeleteAutomationRule}
-        sx={{ color: "grey.400" }}
-      >
-        <DeleteIcon />
-      </IconButton>
-      <IconButton
-        aria-label="edit automation rule"
-        onClick={onEditAutomationRule}
-        sx={{ color: "grey.400" }}
-      >
-        <EditIcon />
-      </IconButton>
-      <IconButton
-        aria-label="run automation rule"
-        onClick={onRunAutomationRule}
-        sx={{ color: "grey.400" }}
-      >
-        <PlayIcon />
-      </IconButton>
-    </Box>
+          <Badge
+            badgeContent={
+              automationRule.activeOnUpload ? (
+                <PositiveIcon color="success" sx={{ width: "16px", height: "16px" }} />
+              ) : (
+                <NegativeIcon color="error" sx={{ width: "16px", height: "16px" }} />
+              )
+            }
+          >
+            <UploadIcon />
+          </Badge>
+        </IconButton>
+        <IconButton
+          aria-label="delete automation rule"
+          onClick={onDeleteAutomationRule}
+          sx={{ color: "grey.400" }}
+        >
+          <DeleteIcon />
+        </IconButton>
+        <IconButton
+          aria-label="edit automation rule"
+          onClick={onEditAutomationRule}
+          sx={{ color: "grey.400" }}
+        >
+          <EditIcon />
+        </IconButton>
+        <IconButton
+          aria-label="run automation rule"
+          onClick={onRunAutomationRule}
+          sx={{ color: "grey.400" }}
+        >
+          <PlayIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
   )
-}
-
-const StringValueBlock = (automationRule: AutomationRuleWithCategory) => {
-  return (
-    <Stat
-      heading={automationRule.operation}
-      label={automationRule.stringValue ?? ""}
-      sublabel="as a value"
-    />
-  )
-}
-const NumberValueBlock = (automationRule: AutomationRuleWithCategory) => {
-  return (
-    <Stat
-      heading={automationRule.operation}
-      label={automationRule.numberValue ?? ""}
-      sublabel="as a value"
-    />
-  )
-}
-const DateValueBlock = (automationRule: AutomationRuleWithCategory) => {
-  return (
-    <Stat
-      heading={automationRule.operation}
-      label={new Date(automationRule.dateValue || "").toLocaleDateString()}
-      sublabel="as a value"
-    />
-  )
-}
-
-const StatBlocks = {
-  stringValue: StringValueBlock,
-  numberValue: NumberValueBlock,
-  dateValue: DateValueBlock,
 }
