@@ -41,15 +41,11 @@ model Category {
 }
 
 model AutomationRule {
-  id             Int       @id @default(autoincrement())
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now()) @updatedAt
-  field          String
-  operation      String
-  stringValue    String?
-  numberValue    Float?
-  dateValue      DateTime?
-  activeOnUpload Boolean   @default(true)
-  category       Category  @relation("AutomationRuleCategory", references: [id], fields: [categoryId])
+  id             Int      @id @default(autoincrement())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+  value          String
+  activeOnUpload Boolean  @default(true)
+  category       Category @relation("AutomationRuleCategory", references: [id], fields: [categoryId])
   categoryId     Int
 }
