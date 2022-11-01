@@ -1,13 +1,13 @@
 {
   "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "plugins": ["@typescript-eslint"],
-  "extends": [
-    "next/core-web-vitals",
-    "next",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:storybook/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "next", "plugin:@typescript-eslint/recommended"],
   "rules": {
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-empty-interface": 0,
     "@typescript-eslint/no-empty-function": 1,
     "@typescript-eslint/no-non-null-assertion": 0
