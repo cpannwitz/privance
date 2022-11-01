@@ -4,8 +4,7 @@ declare global {
   // allow global `var` declarations
 
   // eslint-disable-next-line no-var
-
-  const prisma: PrismaClient | undefined
+  var prisma: PrismaClient | undefined
 }
 
 export const prisma =
