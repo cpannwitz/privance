@@ -5,7 +5,7 @@ import type { AutomationRuleWithCategory } from '../../../types/types';
 import { prisma } from '../../../shared/database';
 
 type ResponseData = {
-  error?: any;
+  error?: string;
   data?: AutomationRuleWithCategory;
 };
 
@@ -13,29 +13,27 @@ export default async function addAutomationRule(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method === 'POST') {
-    const bodydata = req.body as Prisma.AutomationRuleCreateInput;
-
-    if (!bodydata.value || !bodydata.category) {
-      return res
-        .status(400)
-        .json({ error: 'Missing value or category argument' });
-    }
-
-    try {
-      const insertedData = await prisma.automationRule.create({
-        data: bodydata,
-        include: {
-          category: true
-        }
-      });
-
-      return res.json({ data: insertedData });
-    } catch (err) {
-      console.error(`ERROR | err`, err);
-      return res.status(500).json({ error: err });
-    }
-  } else {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'wrong http method' });
+  }
+
+  const bodydata = req.body as Prisma.AutomationRuleCreateInput;
+
+  if (!bodydata.value || !bodydata.category) {
+    return res.status(400).json({ error: 'missing argument' });
+  }
+
+  try {
+    const data = await prisma.automationRule.create({
+      data: bodydata,
+      include: {
+        category: true
+      }
+    });
+
+    return res.json({ data });
+  } catch (err) {
+    console.error(`ERROR | addAutomationRule: `, err);
+    res.status(500).json({ error: 'Internal error | Could not add automation rule' });
   }
 }

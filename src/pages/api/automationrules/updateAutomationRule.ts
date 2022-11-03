@@ -5,7 +5,7 @@ import type { AutomationRuleWithCategory } from '../../../types/types';
 import { prisma } from '../../../shared/database';
 
 type ResponseData = {
-  error?: any;
+  error?: string;
   data?: AutomationRuleWithCategory;
 };
 
@@ -13,33 +13,32 @@ export default async function updateAutomationRule(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method === 'POST') {
-    const bodydata = req.body as Prisma.AutomationRuleUpdateInput &
-      Prisma.AutomationRuleWhereUniqueInput;
-
-    if (!bodydata.id || !bodydata.category) {
-      return res.status(400).json({ error: 'Missing id or category argument' });
-    }
-
-    const { id, ...data } = bodydata;
-
-    try {
-      const insertedData = await prisma.automationRule.update({
-        where: {
-          id: id
-        },
-        data: data,
-        include: {
-          category: true
-        }
-      });
-
-      return res.json({ data: insertedData });
-    } catch (err) {
-      console.error(`ERROR | err`, err);
-      return res.status(500).json({ error: err });
-    }
-  } else {
+  if (req.method !== 'GET') {
     return res.status(405).json({ error: 'wrong http method' });
+  }
+  const automationRuleToUpdate = req.body as Prisma.AutomationRuleUpdateInput &
+    Prisma.AutomationRuleWhereUniqueInput;
+
+  if (!automationRuleToUpdate.id || !automationRuleToUpdate.category) {
+    return res.status(400).json({ error: 'missing' });
+  }
+
+  const { id, ...rest } = automationRuleToUpdate;
+
+  try {
+    const data = await prisma.automationRule.update({
+      where: {
+        id: id
+      },
+      data: rest,
+      include: {
+        category: true
+      }
+    });
+
+    return res.json({ data });
+  } catch (err) {
+    console.error(`ERROR | updateAutomationRule: `, err);
+    res.status(500).json({ error: 'Internal error | Could not update automation rule' });
   }
 }
