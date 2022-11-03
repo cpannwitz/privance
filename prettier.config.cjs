@@ -3,11 +3,11 @@ module.exports = {
   printWidth: 100,
   tabWidth: 2,
   useTabs: false,
-  semi: true,
+  semi: false,
   singleQuote: true,
   trailingComma: 'none',
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'avoid',
   rangeStart: 0
-};
+}

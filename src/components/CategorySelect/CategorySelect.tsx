@@ -1,55 +1,49 @@
-import { useState } from 'react';
-import { Category } from '.prisma/client';
+import { useState } from 'react'
+import { Category } from '.prisma/client'
 
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Chip from '@mui/material/Chip';
-import SvgIcon from '@mui/material/SvgIcon';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
+import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Chip from '@mui/material/Chip'
+import SvgIcon from '@mui/material/SvgIcon'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
 
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles'
 
-import Select, {
-  ActionMeta,
-  components,
-  GroupBase,
-  MenuListProps,
-  OptionProps
-} from 'react-select';
+import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from 'react-select'
 
-import { icons, placeholderIcon } from '../../shared/iconUtils';
-import useGetCategories from '../hooks/useGetCategories';
-import CategoryAddStandalone from '../Categories/CategoryAddStandalone';
+import { icons, placeholderIcon } from '../../shared/iconUtils'
+import useGetCategories from '../hooks/useGetCategories'
+import CategoryAddStandalone from '../Categories/CategoryAddStandalone'
 
 interface CategorySelectProps {
-  value?: Category | null;
-  onChange: (option: Category | null, actionMeta?: ActionMeta<Category>) => void;
+  value?: Category | null
+  onChange: (option: Category | null, actionMeta?: ActionMeta<Category>) => void
 }
 
 const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
-  const { data: categories, isError, isLoading } = useGetCategories();
+  const { data: categories, isError, isLoading } = useGetCategories()
 
   const {
     palette: { mode }
-  } = useTheme();
-  const isDark = mode === 'dark';
+  } = useTheme()
+  const isDark = mode === 'dark'
 
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const toggleIsSelectOpen = () => setIsSelectOpen(state => !state);
-  const setSelectOpenFalse = () => setIsSelectOpen(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false)
+  const toggleIsSelectOpen = () => setIsSelectOpen(state => !state)
+  const setSelectOpenFalse = () => setIsSelectOpen(false)
 
-  const [isAddingCategory, setIsAddingCategory] = useState(false);
-  const toggleSetIsAddingCategory = () => setIsAddingCategory(!isAddingCategory);
+  const [isAddingCategory, setIsAddingCategory] = useState(false)
+  const toggleSetIsAddingCategory = () => setIsAddingCategory(!isAddingCategory)
 
   function onCloseAddCategory() {
-    setIsAddingCategory(false);
+    setIsAddingCategory(false)
   }
   function onAddCategory(category: Category | null) {
     if (category) {
-      onChange(category);
-      setIsAddingCategory(false);
+      onChange(category)
+      setIsAddingCategory(false)
     } else {
-      onCloseAddCategory();
+      onCloseAddCategory()
     }
   }
 
@@ -131,10 +125,10 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
         </ClickAwayListener>
       )}
     </>
-  );
-};
+  )
+}
 
-export default CategorySelect;
+export default CategorySelect
 
 const SelectOption = ({
   children,
@@ -149,8 +143,8 @@ const SelectOption = ({
       </SvgIcon>
       <Typography sx={{ ml: 1 }}>{data.name}</Typography>
     </components.Option>
-  );
-};
+  )
+}
 
 const SelectMenuList = (
   props: MenuListProps<Category, false, GroupBase<Category>> & { onClick: () => void }
@@ -162,8 +156,8 @@ const SelectMenuList = (
         Add new category
       </Button>
     </components.MenuList>
-  );
-};
+  )
+}
 
 const darkColors = {
   primary: 'hsla(225, 73%, 57%, 0.6)',
@@ -181,7 +175,7 @@ const darkColors = {
   neutral10: 'hsl(0, 0%, 30%)',
   neutral5: 'hsl(0, 0%, 20%)',
   neutral0: 'hsl(0, 0%, 10%)'
-};
+}
 
 const lightColors = {
   primary: 'hsla(225, 73%, 57%, 0.4)',
@@ -199,4 +193,4 @@ const lightColors = {
   neutral70: 'hsl(0, 0%, 30%)',
   neutral80: 'hsl(0, 0%, 20%)',
   neutral90: 'hsl(0, 0%, 10%)'
-};
+}

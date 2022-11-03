@@ -1,14 +1,14 @@
-import { useSnackbar } from 'notistack';
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
-import { SWRConfig } from 'swr';
+import { useSnackbar } from 'notistack'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
+import { SWRConfig } from 'swr'
 
 interface SWRProviderProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 
 // TODO: queryparams in fetcher
 const SWRProvider = ({ children }: SWRProviderProps) => {
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
   return (
     <SWRConfig
       value={{
@@ -25,7 +25,7 @@ const SWRProvider = ({ children }: SWRProviderProps) => {
     >
       {children}
     </SWRConfig>
-  );
-};
+  )
+}
 
-export default SWRProvider;
+export default SWRProvider

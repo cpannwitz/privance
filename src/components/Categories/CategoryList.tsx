@@ -1,51 +1,51 @@
-import { useState } from 'react';
-import axios, { type AxiosError } from 'axios';
-import type { Category, Transaction, Prisma } from '.prisma/client';
+import { useState } from 'react'
+import axios, { type AxiosError } from 'axios'
+import type { Category, Transaction, Prisma } from '.prisma/client'
 
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import SvgIcon from '@mui/material/SvgIcon';
-import { useSnackbar } from 'notistack';
+import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
+import Grid from '@mui/material/Grid'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+import SvgIcon from '@mui/material/SvgIcon'
+import { useSnackbar } from 'notistack'
 
-import EditIcon from '@mui/icons-material/EditOutlined';
-import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditIcon from '@mui/icons-material/EditOutlined'
+import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
+import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
-import CategoryEdit from './CategoryEdit/CategoryEdit';
-import DataIsEmpty from '../DataStates/DataIsEmpty';
-import { icons, placeholderIcon } from '../../shared/iconUtils';
-import type { CategoriesStatistics, CategoryWithTransactions } from '../../types/types';
-import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions';
+import CategoryEdit from './CategoryEdit/CategoryEdit'
+import DataIsEmpty from '../DataStates/DataIsEmpty'
+import { icons, placeholderIcon } from '../../shared/iconUtils'
+import type { CategoriesStatistics, CategoryWithTransactions } from '../../types/types'
+import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions'
 
 const getTransactionsBalance = (transactions: Transaction[]) =>
-  Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0));
+  Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0))
 
 interface CategoryListProps {
-  categories: CategoryWithTransactions[];
-  categoriesStatistics: CategoriesStatistics;
+  categories: CategoryWithTransactions[]
+  categoriesStatistics: CategoriesStatistics
 }
 
 const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) => {
-  const { mutate: mutateCategories } = useGetCategoriesTransactions();
+  const { mutate: mutateCategories } = useGetCategoriesTransactions()
 
-  const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics;
-  const { enqueueSnackbar } = useSnackbar();
-  const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined);
+  const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
+  const { enqueueSnackbar } = useSnackbar()
+  const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined)
 
   function onAddCategory() {
-    setEditedCategory({} as Category);
+    setEditedCategory({} as Category)
   }
 
   function onEditCategory(category: Category) {
-    setEditedCategory(category);
+    setEditedCategory(category)
   }
 
   function onCloseAddEdit() {
-    setEditedCategory(undefined);
+    setEditedCategory(undefined)
   }
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
@@ -55,19 +55,19 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
         .then(() => {
           enqueueSnackbar(`Added or updated your category!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
               variant: 'error'
-            });
+            })
           }
         })
         .finally(() => {
-          mutateCategories();
-          setEditedCategory(undefined);
-        });
+          mutateCategories()
+          setEditedCategory(undefined)
+        })
     }
   }
 
@@ -80,18 +80,18 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
         .then(() => {
           enqueueSnackbar(`Deleted your Category!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't delete your category: ${error.response.data.error}`, {
               variant: 'error'
-            });
+            })
           }
         })
         .finally(() => {
-          mutateCategories();
-        });
+          mutateCategories()
+        })
     }
   }
 
@@ -146,24 +146,24 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
         </Grid>
       )}
     </>
-  );
-};
+  )
+}
 
-export default CategoryList;
+export default CategoryList
 
 interface CategoryListItemProps {
-  category: CategoryWithTransactions;
-  onEdit: (category: CategoryWithTransactions) => void;
-  onDelete: (category: CategoryWithTransactions) => void;
+  category: CategoryWithTransactions
+  onEdit: (category: CategoryWithTransactions) => void
+  onDelete: (category: CategoryWithTransactions) => void
 }
 
 export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListItemProps) => {
-  const { name, color, icon } = category;
+  const { name, color, icon } = category
   function onEditCategory() {
-    onEdit(category);
+    onEdit(category)
   }
   function onDeleteCategory() {
-    onDelete(category);
+    onDelete(category)
   }
   return (
     <Grid item xs>
@@ -208,5 +208,5 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
         </Box>
       </Box>
     </Grid>
-  );
-};
+  )
+}

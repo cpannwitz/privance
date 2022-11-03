@@ -1,7 +1,7 @@
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Center from '../shared/Center';
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Center from '../shared/Center'
 
 const DataIsError = ({ retry }: { retry: () => void }) => (
   <Center sx={{ height: '12rem' }}>
@@ -14,5 +14,5 @@ const DataIsError = ({ retry }: { retry: () => void }) => (
       </Button>
     </Stack>
   </Center>
-);
-export default DataIsError;
+)
+export default DataIsError

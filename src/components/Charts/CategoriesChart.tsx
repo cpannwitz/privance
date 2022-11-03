@@ -1,10 +1,10 @@
-import { useMemo } from 'react';
-import { ResponsiveBar } from '@nivo/bar';
-import { CategoryWithTransactions } from '../../types/types';
+import { useMemo } from 'react'
+import { ResponsiveBar } from '@nivo/bar'
+import { CategoryWithTransactions } from '../../types/types'
 
 function barChartTransformer(
   data: (CategoryWithTransactions & {
-    transactionBalance: number;
+    transactionBalance: number
   })[]
 ) {
   return data
@@ -15,25 +15,25 @@ function barChartTransformer(
       color: category.color || '#336699'
     }))
     .sort((a, b) => b.transactionBalance - a.transactionBalance)
-    .slice(0, 8);
+    .slice(0, 8)
   // TODO maybe do this dynamic?
 }
 
 type BarCategory = {
-  name: string;
-  transactionBalance: number;
-  count: number;
-  color: string;
-};
+  name: string
+  transactionBalance: number
+  count: number
+  color: string
+}
 
 interface CategoriesChartsProps {
   categories: (CategoryWithTransactions & {
-    transactionBalance: number;
-  })[];
+    transactionBalance: number
+  })[]
 }
 
 const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
-  const transformedData = useMemo(() => barChartTransformer(categories), [categories]);
+  const transformedData = useMemo(() => barChartTransformer(categories), [categories])
 
   return (
     <ResponsiveBar<BarCategory>
@@ -83,7 +83,7 @@ const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
         }
       }}
     />
-  );
-};
+  )
+}
 
-export default CategoriesCharts;
+export default CategoriesCharts

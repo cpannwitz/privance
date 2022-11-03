@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, startTransition } from 'react';
+import React, { useMemo, useState, useEffect, startTransition } from 'react'
 import {
   DataGrid,
   GridCellParams,
@@ -9,35 +9,35 @@ import {
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
   GridToolbarDensitySelector
-} from '@mui/x-data-grid';
-import type { GridColDef } from '@mui/x-data-grid';
+} from '@mui/x-data-grid'
+import type { GridColDef } from '@mui/x-data-grid'
 
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
 
-import { TransactionWithCategory } from '../../types/types';
+import { TransactionWithCategory } from '../../types/types'
 
-import dayjs from 'dayjs';
+import dayjs from 'dayjs'
 import {
   TextRenderer,
   AmountRenderer,
   BalanceRenderer,
   CategoryEditRenderer
-} from './ColumnRenderer';
-import { Category } from '@prisma/client';
-import CategorySelect from '../CategorySelect/CategorySelect';
-import Quicksearch from './Quicksearch';
+} from './ColumnRenderer'
+import { Category } from '@prisma/client'
+import CategorySelect from '../CategorySelect/CategorySelect'
+import Quicksearch from './Quicksearch'
 
 interface TransactionDatagridProps {
-  transactions: TransactionWithCategory[];
-  categories?: Category[];
-  transformedTransactions?: number[];
-  onUpdateTransaction?: (transcation: TransactionWithCategory) => void;
+  transactions: TransactionWithCategory[]
+  categories?: Category[]
+  transformedTransactions?: number[]
+  onUpdateTransaction?: (transcation: TransactionWithCategory) => void
 }
 
-const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = [];
+const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
 
 function escapeRegExp(value: string): string {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 const TransactionDatagrid = ({
@@ -46,43 +46,41 @@ const TransactionDatagrid = ({
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
   onUpdateTransaction
 }: TransactionDatagridProps) => {
-  const [rows, setRows] = useState<TransactionWithCategory[]>(transactions);
+  const [rows, setRows] = useState<TransactionWithCategory[]>(transactions)
   useEffect(() => {
-    setRows(transactions);
-  }, [transactions]);
+    setRows(transactions)
+  }, [transactions])
 
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState('')
   function requestSearch(searchValue: string) {
-    setSearchText(searchValue);
+    setSearchText(searchValue)
     startTransition(() => {
-      const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
+      const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
       const filteredRows = transactions.filter((row: any) => {
         return Object.keys(row).some((field: any) => {
-          if (!row[field]) return true;
-          return searchRegex.test(row[field].toString());
-        });
-      });
-      setRows(filteredRows);
-    });
+          if (!row[field]) return true
+          return searchRegex.test(row[field].toString())
+        })
+      })
+      setRows(filteredRows)
+    })
   }
 
-  const [multiTransactionSelection, setMultiTransactionSelection] = useState<GridSelectionModel>(
-    []
-  );
+  const [multiTransactionSelection, setMultiTransactionSelection] = useState<GridSelectionModel>([])
 
   function onMultiCategoryChange(category: Category | null) {
     if (onUpdateTransaction && multiTransactionSelection.length > 0) {
       multiTransactionSelection.forEach(selectedTransaction => {
         const baseTransaction = transactions.find(
           transaction => transaction.id === selectedTransaction
-        );
+        )
         if (baseTransaction) {
-          onUpdateTransaction({ ...baseTransaction, category });
+          onUpdateTransaction({ ...baseTransaction, category })
         }
-      });
+      })
     }
 
-    setMultiTransactionSelection([]);
+    setMultiTransactionSelection([])
   }
 
   const columns = useMemo(
@@ -137,15 +135,15 @@ const TransactionDatagrid = ({
               value: 'is',
               label: 'is',
               getApplyFilterFn: (filterItem: GridFilterItem) => {
-                if (!filterItem.value) return;
+                if (!filterItem.value) return
 
                 return ({ value }: GridCellParams): boolean => {
-                  if (!value) return false;
+                  if (!value) return false
                   if (typeof value === 'object') {
-                    return filterItem.value === value.name;
+                    return filterItem.value === value.name
                   }
-                  return filterItem.value === value;
-                };
+                  return filterItem.value === value
+                }
               },
               InputComponent: GridFilterInputSingleSelect,
               InputComponentProps: { type: 'singleSelect' }
@@ -154,15 +152,15 @@ const TransactionDatagrid = ({
               value: 'isnot',
               label: 'is not',
               getApplyFilterFn: (filterItem: GridFilterItem) => {
-                if (!filterItem.value) return;
+                if (!filterItem.value) return
 
                 return ({ value }: GridCellParams): boolean => {
-                  if (!value) return false;
+                  if (!value) return false
                   if (typeof value === 'object') {
-                    return filterItem.value !== value.name;
+                    return filterItem.value !== value.name
                   }
-                  return filterItem.value !== value;
-                };
+                  return filterItem.value !== value
+                }
               },
               InputComponent: GridFilterInputSingleSelect,
               InputComponentProps: { type: 'singleSelect' }
@@ -172,9 +170,9 @@ const TransactionDatagrid = ({
               value: 'is empty',
               getApplyFilterFn: () => {
                 return ({ value }: GridCellParams): boolean => {
-                  if (!value) return true;
-                  return false;
-                };
+                  if (!value) return true
+                  return false
+                }
               }
             }
           ],
@@ -201,7 +199,7 @@ const TransactionDatagrid = ({
         }
       ] as GridColDef[],
     [onUpdateTransaction, categories]
-  );
+  )
 
   return (
     <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
@@ -243,13 +241,13 @@ const TransactionDatagrid = ({
         />
       </Box>
     </Box>
-  );
-};
+  )
+}
 interface ToolbarProps {
-  multiSelectionEnabled: boolean;
-  onMultiCategoryChange: (category: Category | null) => void;
-  searchText: string;
-  onRequestSearch: (value: string) => void;
+  multiSelectionEnabled: boolean
+  onMultiCategoryChange: (category: Category | null) => void
+  searchText: string
+  onRequestSearch: (value: string) => void
 }
 const Toolbar = ({
   multiSelectionEnabled,
@@ -258,10 +256,10 @@ const Toolbar = ({
   onRequestSearch
 }: ToolbarProps) => {
   function onClearSearch() {
-    onRequestSearch('');
+    onRequestSearch('')
   }
   function onQuicksearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    onRequestSearch(e.target.value);
+    onRequestSearch(e.target.value)
   }
   return (
     <GridToolbarContainer>
@@ -275,7 +273,7 @@ const Toolbar = ({
         </Box>
       )}
     </GridToolbarContainer>
-  );
-};
+  )
+}
 
-export default TransactionDatagrid;
+export default TransactionDatagrid

@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { useCallback } from 'react'
+import { useRouter } from 'next/router'
 
-import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Center from '../shared/Center';
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import Center from '../shared/Center'
 
 const DataIsEmpty = ({ linkUrl }: { linkUrl?: string }) => {
-  const router = useRouter();
-  const linkToUpload = useCallback(() => router.push(linkUrl || ''), [router, linkUrl]);
+  const router = useRouter()
+  const linkToUpload = useCallback(() => router.push(linkUrl || ''), [router, linkUrl])
   return (
     <Center sx={{ height: '12rem' }}>
       <Stack direction="column">
@@ -22,7 +22,7 @@ const DataIsEmpty = ({ linkUrl }: { linkUrl?: string }) => {
         ) : null}
       </Stack>
     </Center>
-  );
-};
+  )
+}
 
-export default DataIsEmpty;
+export default DataIsEmpty

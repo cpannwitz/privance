@@ -1,23 +1,23 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
-import Box from '@mui/material/Box';
+import Box from '@mui/material/Box'
 
-import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from '@nivo/line';
+import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from '@nivo/line'
 
-import getSymbolFromCurrency from 'currency-map-symbol';
-import { Transaction } from '.prisma/client';
+import getSymbolFromCurrency from 'currency-map-symbol'
+import { Transaction } from '.prisma/client'
 
 function lineChartTransformer(data: Transaction[]): Datum[] {
   return data.map(t => ({
     x: new Date(t.issuedate || ''),
     y: t.balance,
     currency: t.balanceCurrency
-  }));
+  }))
 }
 
 function getMinMaxBalance(data: Transaction[]): { min: number; max: number } {
   if (data.length <= 0) {
-    return { min: 0, max: 0 };
+    return { min: 0, max: 0 }
   }
   return data.reduce(
     (sum, t) => ({
@@ -25,18 +25,18 @@ function getMinMaxBalance(data: Transaction[]): { min: number; max: number } {
       max: Math.max(sum.max, t.balance || 0)
     }),
     { min: data[0].balance || 0, max: data[0].balance || 0 }
-  );
+  )
 }
 
 interface BalanceChartProps {
-  data: Transaction[];
-  variant?: 'default' | 'small';
+  data: Transaction[]
+  variant?: 'default' | 'small'
 }
 
 const BalanceChart = ({ data, variant = 'default' }: BalanceChartProps) => {
-  const isVariantDefault = variant === 'default';
-  const transformedData = useMemo(() => lineChartTransformer(data), [data]);
-  const minMaxBalance = useMemo(() => getMinMaxBalance(data), [data]);
+  const isVariantDefault = variant === 'default'
+  const transformedData = useMemo(() => lineChartTransformer(data), [data])
+  const minMaxBalance = useMemo(() => getMinMaxBalance(data), [data])
   const lineData = useMemo(
     () => [
       {
@@ -45,7 +45,7 @@ const BalanceChart = ({ data, variant = 'default' }: BalanceChartProps) => {
       }
     ],
     [transformedData]
-  );
+  )
   return (
     <ResponsiveLine
       data={lineData}
@@ -129,17 +129,17 @@ const BalanceChart = ({ data, variant = 'default' }: BalanceChartProps) => {
         }
       }}
     />
-  );
-};
+  )
+}
 
-export default BalanceChart;
+export default BalanceChart
 
 interface PointTooltipProps extends TooltipType {
   point: Point & {
     data: {
-      currency?: string | null;
-    };
-  };
+      currency?: string | null
+    }
+  }
 }
 const PointTooltip = ({ point }: PointTooltipProps) => {
   return (
@@ -158,5 +158,5 @@ const PointTooltip = ({ point }: PointTooltipProps) => {
         {point.data.y} {getSymbolFromCurrency(point.data.currency)}
       </span>
     </Box>
-  );
-};
+  )
+}

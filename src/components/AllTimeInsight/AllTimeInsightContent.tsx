@@ -1,15 +1,15 @@
-import { AllTimeAggregations } from '../../types/types';
+import { AllTimeAggregations } from '../../types/types'
 
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
-import getSymbolFromCurrency from 'currency-map-symbol';
-import BalanceChart from '../Charts/BalanceChart';
-import CategoriesCharts from '../Charts/CategoriesChart';
-import Stat from '../Stat/Stat';
+import getSymbolFromCurrency from 'currency-map-symbol'
+import BalanceChart from '../Charts/BalanceChart'
+import CategoriesCharts from '../Charts/CategoriesChart'
+import Stat from '../Stat/Stat'
 
 interface AllTimeInsightContentProps {
-  allTimeAggregations: AllTimeAggregations;
+  allTimeAggregations: AllTimeAggregations
 }
 
 const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentProps) => {
@@ -78,7 +78,7 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
         <CategoriesCharts categories={allTimeAggregations.categories} />
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default AllTimeInsightContent;
+export default AllTimeInsightContent

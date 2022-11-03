@@ -1,10 +1,10 @@
-import useSWR from 'swr';
-import type { CategoryWithAutomationRules } from '../../types/types';
+import useSWR from 'swr'
+import type { CategoryWithAutomationRules } from '../../types/types'
 
 export default function useGetAutomationRulesByCategory() {
   const { data, error, isValidating, mutate } = useSWR<{
-    data: CategoryWithAutomationRules[];
-  }>(`/api/automationrules/getAutomationRulesByCategory`);
+    data: CategoryWithAutomationRules[]
+  }>(`/api/automationrules/getAutomationRulesByCategory`)
 
   return {
     data: data?.data,
@@ -12,5 +12,5 @@ export default function useGetAutomationRulesByCategory() {
     isError: error,
     isValidating,
     mutate
-  };
+  }
 }

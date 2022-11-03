@@ -1,10 +1,10 @@
-import useSWR from 'swr';
-import { AllTimeAggregations } from '../../types/types';
+import useSWR from 'swr'
+import { AllTimeAggregations } from '../../types/types'
 
 export default function useGetAllTimeAggregations() {
   const { data, error, isValidating, mutate } = useSWR<{ data: AllTimeAggregations }>(
     `/api/aggregations/getAllTimeAggregations`
-  );
+  )
 
   return {
     data: data?.data,
@@ -12,5 +12,5 @@ export default function useGetAllTimeAggregations() {
     isError: error,
     isValidating,
     mutate
-  };
+  }
 }

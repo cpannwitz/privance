@@ -1,12 +1,12 @@
-import Box from '@mui/material/Box';
-import TrendUpIcon from '@mui/icons-material/TrendingUpOutlined';
-import { ReactNode } from 'react';
+import Box from '@mui/material/Box'
+import TrendUpIcon from '@mui/icons-material/TrendingUpOutlined'
+import { ReactNode } from 'react'
 
 interface StatProps {
-  color?: string;
-  heading: string;
-  label: ReactNode;
-  sublabel: string;
+  color?: string
+  heading: string
+  label: ReactNode
+  sublabel: string
 }
 
 const Stat = ({ color = 'text.primary', heading = '', label = '', sublabel = '' }: StatProps) => {
@@ -41,7 +41,7 @@ const Stat = ({ color = 'text.primary', heading = '', label = '', sublabel = '' 
       />
       <Box sx={{ color: 'text.secondary', display: 'inline', fontSize: 14 }}>{sublabel}</Box>
     </Box>
-  );
-};
+  )
+}
 
-export default Stat;
+export default Stat

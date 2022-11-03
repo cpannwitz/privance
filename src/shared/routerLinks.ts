@@ -6,6 +6,6 @@ export const routerLinks = {
   MONTHLYINSIGHT: `/monthlyinsight`,
   OVERVIEW: `/overview`,
   UPLOAD: `/upload`
-};
+}
 
-export default routerLinks;
+export default routerLinks

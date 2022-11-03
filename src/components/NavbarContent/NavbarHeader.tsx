@@ -1,16 +1,16 @@
-import { useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { useCallback } from 'react'
+import { useRouter } from 'next/router'
 
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
+import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
 
-import BarChartIcon from '@mui/icons-material/BarChart';
+import BarChartIcon from '@mui/icons-material/BarChart'
 
 const NavbarHeader = () => {
-  const router = useRouter();
-  const linkToOverview = useCallback(() => router.push(`/overview`), [router]);
+  const router = useRouter()
+  const linkToOverview = useCallback(() => router.push(`/overview`), [router])
   return (
     <Box display="flex" justifyContent="space-between" alignItems="center">
       <Link component="button" onClick={linkToOverview} underline="none">
@@ -32,7 +32,7 @@ const NavbarHeader = () => {
         </Stack>
       </Link>
     </Box>
-  );
-};
+  )
+}
 
-export default NavbarHeader;
+export default NavbarHeader

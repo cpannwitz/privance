@@ -1,35 +1,35 @@
-import { useDropzone } from 'react-dropzone';
-import Box from '@mui/material/Box';
+import { useDropzone } from 'react-dropzone'
+import Box from '@mui/material/Box'
 
 // https://react-dropzone.js.org/
 // https://github.com/react-dropzone/react-dropzone/issues/276
 // https://github.com/mantinedev/mantine/blob/master/src/mantine-dropzone/src/Dropzone/Dropzone.styles.ts
 // https://mantine.dev/others/dropzone/
 export interface DropzoneStatus {
-  accepted: boolean;
-  rejected: boolean;
+  accepted: boolean
+  rejected: boolean
 }
 interface DropzoneProps {
   /** Render children based on dragging state */
-  children(status: DropzoneStatus): React.ReactNode;
+  children(status: DropzoneStatus): React.ReactNode
 
   /** Disable files capturing */
-  disabled?: boolean;
+  disabled?: boolean
 
   /** Called when files are dropped into dropzone */
-  onDrop(files: File[]): void;
+  onDrop(files: File[]): void
 
   /** Display loading overlay over dropzone */
-  loading?: boolean;
+  loading?: boolean
 
   /** File types to accept  */
-  accept?: string[];
+  accept?: string[]
 
   /** Allow selection of multiple files */
-  multiple?: boolean;
+  multiple?: boolean
 
   /** Set maximum file size in bytes */
-  maxSize?: number;
+  maxSize?: number
 }
 
 const Dropzone = ({
@@ -47,7 +47,7 @@ const Dropzone = ({
     accept,
     multiple,
     maxSize
-  });
+  })
 
   return (
     <Box
@@ -117,7 +117,7 @@ const Dropzone = ({
       <input {...getInputProps()} />
       {children({ accepted: isDragAccept, rejected: isDragReject })}
     </Box>
-  );
-};
+  )
+}
 
-export default Dropzone;
+export default Dropzone

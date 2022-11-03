@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles'
 
-import type {} from '@mui/x-data-grid/themeAugmentation';
+import type {} from '@mui/x-data-grid/themeAugmentation'
 
 declare module '@mui/material/styles' {
   interface Theme {
@@ -65,6 +65,6 @@ const theme = ({ prefersDarkMode = false }) =>
         }
       }
     }
-  });
+  })
 
-export default theme;
+export default theme

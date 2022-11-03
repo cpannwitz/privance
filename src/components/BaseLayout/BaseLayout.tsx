@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
+import Box from '@mui/material/Box'
+import Drawer from '@mui/material/Drawer'
 
-import NavbarHeader from '../NavbarContent/NavbarHeader';
-import NavbarLinks from '../NavbarContent/NavbarLinks';
+import NavbarHeader from '../NavbarContent/NavbarHeader'
+import NavbarLinks from '../NavbarContent/NavbarLinks'
 
-const DRAWER_WIDTH = '18rem';
+const DRAWER_WIDTH = '18rem'
 
 interface BaseLayoutProps {
-  children?: React.ReactNode;
+  children?: React.ReactNode
 }
 export default function Layout({ children }: BaseLayoutProps) {
   return (
@@ -30,5 +30,5 @@ export default function Layout({ children }: BaseLayoutProps) {
         {children}
       </Box>
     </Box>
-  );
+  )
 }

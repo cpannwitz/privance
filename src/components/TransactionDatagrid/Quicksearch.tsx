@@ -1,13 +1,13 @@
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import TextField from '@mui/material/TextField';
-import ClearIcon from '@mui/icons-material/Clear';
-import SearchIcon from '@mui/icons-material/Search';
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import ClearIcon from '@mui/icons-material/Clear'
+import SearchIcon from '@mui/icons-material/Search'
 
 interface QuicksearchProps {
-  clearSearch: () => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
+  clearSearch: () => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  value: string
 }
 
 const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
@@ -54,7 +54,7 @@ const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
         }}
       />
     </Box>
-  );
-};
+  )
+}
 
-export default Quicksearch;
+export default Quicksearch

@@ -1,57 +1,57 @@
-import { useState } from 'react';
-import axios, { type AxiosError } from 'axios';
+import { useState } from 'react'
+import axios, { type AxiosError } from 'axios'
 
-import type { Prisma, Category } from '.prisma/client';
+import type { Prisma, Category } from '.prisma/client'
 
-import { useSnackbar } from 'notistack';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import Chip from '@mui/material/Chip';
-import Badge from '@mui/material/Badge';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import { useSnackbar } from 'notistack'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
+import Chip from '@mui/material/Chip'
+import Badge from '@mui/material/Badge'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemText from '@mui/material/ListItemText'
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 
-import UploadIcon from '@mui/icons-material/FileUploadOutlined';
-import NegativeIcon from '@mui/icons-material/CancelOutlined';
-import PositiveIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
-import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
-import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import EditIcon from '@mui/icons-material/EditOutlined';
-import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import UploadIcon from '@mui/icons-material/FileUploadOutlined'
+import NegativeIcon from '@mui/icons-material/CancelOutlined'
+import PositiveIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
+import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
+import EditIcon from '@mui/icons-material/EditOutlined'
+import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
-import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit';
-import type { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types';
-import DataIsEmpty from '../DataStates/DataIsEmpty';
-import { icons, placeholderIcon } from '../../shared/iconUtils';
+import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
+import type { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
+import DataIsEmpty from '../DataStates/DataIsEmpty'
+import { icons, placeholderIcon } from '../../shared/iconUtils'
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 
-import useGetAutomationRulesByCategory from '../hooks/useGetAutomationRulesByCategory';
+import useGetAutomationRulesByCategory from '../hooks/useGetAutomationRulesByCategory'
 
 interface AutomationRulesListProps {
-  data: CategoryWithAutomationRules[];
+  data: CategoryWithAutomationRules[]
 }
 
 const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
-  const { mutate: mutateAutomationRules } = useGetAutomationRulesByCategory();
-  const { enqueueSnackbar } = useSnackbar();
+  const { mutate: mutateAutomationRules } = useGetAutomationRulesByCategory()
+  const { enqueueSnackbar } = useSnackbar()
 
   const [editedAutomationRule, setEditedAutomationRule] =
-    useState<AutomationRuleWithCategory | null>(null);
+    useState<AutomationRuleWithCategory | null>(null)
 
   function onAddAutomationRule() {
-    setEditedAutomationRule({} as AutomationRuleWithCategory);
+    setEditedAutomationRule({} as AutomationRuleWithCategory)
   }
 
   function onEditAutomationRule(automationRule: AutomationRuleWithCategory) {
-    setEditedAutomationRule(automationRule);
+    setEditedAutomationRule(automationRule)
   }
 
   function onCloseAddEdit() {
-    setEditedAutomationRule(null);
+    setEditedAutomationRule(null)
   }
 
   // TODO: badly needs better structure / external api requests
@@ -60,13 +60,13 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       const automationRuleCreateInput: Prisma.AutomationRuleCreateInput = {
         ...automationRule,
         category: { connect: { id: automationRule.category.id } }
-      };
+      }
       axios
         .post('/api/automationrules/addAutomationRule', automationRuleCreateInput)
         .then(() => {
           enqueueSnackbar(`Added or updated your automation rule!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
@@ -75,25 +75,25 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
               {
                 variant: 'error'
               }
-            );
+            )
           }
         })
         .finally(() => {
-          mutateAutomationRules();
-          setEditedAutomationRule(null);
-        });
+          mutateAutomationRules()
+          setEditedAutomationRule(null)
+        })
     } else {
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
         category: { connect: { id: automationRule.categoryId } }
-      };
+      }
       axios
         .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
         .then(() => {
           enqueueSnackbar(`Added or updated your automation rule!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
@@ -102,13 +102,13 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
               {
                 variant: 'error'
               }
-            );
+            )
           }
         })
         .finally(() => {
-          mutateAutomationRules();
-          setEditedAutomationRule(null);
-        });
+          mutateAutomationRules()
+          setEditedAutomationRule(null)
+        })
     }
   }
 
@@ -122,25 +122,25 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
         .then(() => {
           enqueueSnackbar(`Deleted your Automation Rule!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't delete your automation rule: ${error.response.data.error}`, {
               variant: 'error'
-            });
+            })
           }
         })
         .finally(() => {
-          mutateAutomationRules();
-        });
+          mutateAutomationRules()
+        })
     }
   }
 
   function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategory) {
     if (automationRule?.id) {
       // TODO: better removal of unused property
-      const { categoryId, ...automationRuleSafe } = automationRule;
+      const { categoryId, ...automationRuleSafe } = automationRule
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRuleSafe,
@@ -148,36 +148,36 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
           connect: { id: automationRule.category.id }
         },
         activeOnUpload: !automationRule.activeOnUpload
-      };
+      }
       axios
         .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
         .then(() => {
           enqueueSnackbar(`Updated your automation rule!`, {
             variant: 'success'
-          });
+          })
         })
         .catch((error: AxiosError) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't update your automation rule: ${error.response.data.error}`, {
               variant: 'error'
-            });
+            })
           }
         })
         .finally(() => {
-          mutateAutomationRules();
-          setEditedAutomationRule(null);
-        });
+          mutateAutomationRules()
+          setEditedAutomationRule(null)
+        })
     }
   }
 
-  const router = useRouter();
+  const router = useRouter()
   function onRunAutomationRule(automationRule: AutomationRuleWithCategory) {
     router.push({
       pathname: `/automationruleapply`,
       query: {
         rule: automationRule.id
       }
-    });
+    })
   }
 
   return (
@@ -206,7 +206,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', '& > *': { mb: 3 } }}>
           {data.map(automationRuleCategory => {
-            const { automationRules, ...category } = automationRuleCategory;
+            const { automationRules, ...category } = automationRuleCategory
             return (
               <AutomationRulesCategory key={automationRuleCategory.id} category={category}>
                 <List dense={true} sx={{ width: '100%' }}>
@@ -222,18 +222,18 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
                   ))}
                 </List>
               </AutomationRulesCategory>
-            );
+            )
           })}
         </Box>
       )}
     </>
-  );
-};
+  )
+}
 
-export default AutomationRulesList;
+export default AutomationRulesList
 interface AutomationRulesCategoryProps {
-  children?: React.ReactNode;
-  category: Category;
+  children?: React.ReactNode
+  category: Category
 }
 const AutomationRulesCategory = ({ children, category }: AutomationRulesCategoryProps) => {
   return (
@@ -258,15 +258,15 @@ const AutomationRulesCategory = ({ children, category }: AutomationRulesCategory
 
       {children}
     </Box>
-  );
-};
+  )
+}
 
 interface AutomationRuleProps {
-  onRun: (automationRule: AutomationRuleWithCategory) => void;
-  onEdit: (automationRule: AutomationRuleWithCategory) => void;
-  onDelete: (automationRule: AutomationRuleWithCategory) => void;
-  onToggleOnUploadRun: (automationRule: AutomationRuleWithCategory) => void;
-  automationRule: AutomationRuleWithCategory;
+  onRun: (automationRule: AutomationRuleWithCategory) => void
+  onEdit: (automationRule: AutomationRuleWithCategory) => void
+  onDelete: (automationRule: AutomationRuleWithCategory) => void
+  onToggleOnUploadRun: (automationRule: AutomationRuleWithCategory) => void
+  automationRule: AutomationRuleWithCategory
 }
 const AutomationRuleListItem = ({
   onRun,
@@ -276,16 +276,16 @@ const AutomationRuleListItem = ({
   automationRule
 }: AutomationRuleProps) => {
   function onEditAutomationRule() {
-    onEdit(automationRule);
+    onEdit(automationRule)
   }
   function onDeleteAutomationRule() {
-    onDelete(automationRule);
+    onDelete(automationRule)
   }
   function onRunAutomationRule() {
-    onRun(automationRule);
+    onRun(automationRule)
   }
   function onToggleAutomationRuleRunOnUpload() {
-    onToggleOnUploadRun(automationRule);
+    onToggleOnUploadRun(automationRule)
   }
   return (
     <ListItem>
@@ -331,5 +331,5 @@ const AutomationRuleListItem = ({
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
-  );
-};
+  )
+}

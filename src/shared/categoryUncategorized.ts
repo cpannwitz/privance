@@ -1,4 +1,4 @@
-import { Category } from '@prisma/client';
+import { Category } from '@prisma/client'
 
 const categoryUncategorized: Category = {
   color: '#cccccc',
@@ -7,6 +7,6 @@ const categoryUncategorized: Category = {
   id: -1,
   createdAt: new Date(),
   updatedAt: new Date()
-};
+}
 
-export default categoryUncategorized;
+export default categoryUncategorized

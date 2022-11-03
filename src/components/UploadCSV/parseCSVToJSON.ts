@@ -1,5 +1,5 @@
-import { parse } from 'csv-parse';
-import { ParsedCSVTransactions } from '../../types/types';
+import { parse } from 'csv-parse'
+import { ParsedCSVTransactions } from '../../types/types'
 
 // https://csv.js.org/parse
 
@@ -7,7 +7,7 @@ export default async function parseCSVToTransactions(
   file: File
 ): Promise<{ data?: ParsedCSVTransactions[]; error?: Error }> {
   try {
-    const buffer = await file.text();
+    const buffer = await file.text()
 
     const parser = parse(buffer, {
       delimiter: ';',
@@ -25,14 +25,14 @@ export default async function parseCSVToTransactions(
         'amount',
         'amountCurrency'
       ]
-    });
-    const records = [];
+    })
+    const records = []
 
     for await (const record of parser) {
-      records.push(record);
+      records.push(record)
     }
-    return { data: records };
+    return { data: records }
   } catch (error) {
-    return { error: error as Error };
+    return { error: error as Error }
   }
 }

@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
-import useGetAutomationRuleById from '../hooks/useGetAutomationRuleById';
-import useGetAutomationRuleTransactions from '../hooks/useGetAutomationRuleTransactions';
-import AutomationRuleApplyPreview from './AutomationRuleApplyPreview';
+import { useCallback } from 'react'
+import useGetAutomationRuleById from '../hooks/useGetAutomationRuleById'
+import useGetAutomationRuleTransactions from '../hooks/useGetAutomationRuleTransactions'
+import AutomationRuleApplyPreview from './AutomationRuleApplyPreview'
 
-import DataIsLoading from '../DataStates/DataIsLoading';
-import DataIsError from '../DataStates/DataIsError';
-import useGetCategories from '../hooks/useGetCategories';
+import DataIsLoading from '../DataStates/DataIsLoading'
+import DataIsError from '../DataStates/DataIsError'
+import useGetCategories from '../hooks/useGetCategories'
 
 interface AutomationRuleApplyProps {
-  rule: number;
+  rule: number
 }
 
 const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
@@ -17,30 +17,30 @@ const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
     mutate: mutateCategories
-  } = useGetCategories();
+  } = useGetCategories()
 
   const {
     data: automationRule,
     isError: isErrorAutomationRule,
     isLoading: isLoadingAutomationRule,
     mutate: mutateAutomationRule
-  } = useGetAutomationRuleById(rule);
+  } = useGetAutomationRuleById(rule)
 
   const {
     data: transactions,
     isError: isErrorTransactions,
     isLoading: isLoadingTransactions,
     mutate: mutateTransactions
-  } = useGetAutomationRuleTransactions(rule);
+  } = useGetAutomationRuleTransactions(rule)
 
   const retry = useCallback(() => {
-    mutateTransactions();
-    mutateAutomationRule();
-    mutateCategories();
-  }, [mutateTransactions, mutateAutomationRule, mutateCategories]);
+    mutateTransactions()
+    mutateAutomationRule()
+    mutateCategories()
+  }, [mutateTransactions, mutateAutomationRule, mutateCategories])
 
   if (isLoadingAutomationRule || isLoadingTransactions || isLoadingCategories) {
-    return <DataIsLoading />;
+    return <DataIsLoading />
   }
   if (
     !automationRule ||
@@ -50,7 +50,7 @@ const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
     !categories ||
     isErrorCategories
   ) {
-    return <DataIsError retry={retry} />;
+    return <DataIsError retry={retry} />
   }
 
   return (
@@ -59,7 +59,7 @@ const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
       categories={categories}
       automationRule={automationRule}
     />
-  );
-};
+  )
+}
 
-export default AutomationRuleApply;
+export default AutomationRuleApply

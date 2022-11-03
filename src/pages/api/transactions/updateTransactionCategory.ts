@@ -1,28 +1,28 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { Prisma } from '.prisma/client';
-import type { NextApiRequest, NextApiResponse } from 'next';
-import type { TransactionWithCategory } from '../../../types/types';
-import { prisma } from '../../../shared/database';
+import type { Prisma } from '.prisma/client'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { TransactionWithCategory } from '../../../types/types'
+import { prisma } from '../../../shared/database'
 
 type ResponseData = {
-  error?: string;
-  data?: TransactionWithCategory;
-};
+  error?: string
+  data?: TransactionWithCategory
+}
 
 export default async function updateTransactionCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'wrong http method' });
+    return res.status(405).json({ error: 'wrong http method' })
   }
 
   const transactionToUpdate = req.body as Prisma.TransactionWhereUniqueInput & {
-    category?: number;
-  };
+    category?: number
+  }
 
   if (!transactionToUpdate.id) {
-    return res.status(400).json({ error: 'missing argument' });
+    return res.status(400).json({ error: 'missing argument' })
   }
   try {
     const data = await prisma.transaction.update({
@@ -38,11 +38,11 @@ export default async function updateTransactionCategory(
       include: {
         category: true
       }
-    });
+    })
 
-    res.json({ data });
+    res.json({ data })
   } catch (err) {
-    console.error(`ERROR | updateTransactionCategory: `, err);
-    res.status(500).json({ error: 'Internal error | Could not update transaction category' });
+    console.error(`ERROR | updateTransactionCategory: `, err)
+    res.status(500).json({ error: 'Internal error | Could not update transaction category' })
   }
 }
