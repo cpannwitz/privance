@@ -1,49 +1,48 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { Prisma } from ".prisma/client"
-import type { NextApiRequest, NextApiResponse } from "next"
-import { TransactionWithCategory } from "../../../types/types"
-import { prisma } from "../../../shared/database"
+import type { Prisma } from '.prisma/client';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { TransactionWithCategory } from '../../../types/types';
+import { prisma } from '../../../shared/database';
 
 type ResponseData = {
-  error?: any
-  data?: TransactionWithCategory
-}
+  error?: string;
+  data?: TransactionWithCategory;
+};
 
 export default async function updateTransactionCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method === "POST") {
-    const bodydata = req.body as Prisma.TransactionWhereUniqueInput & {
-      category?: number
-    }
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'wrong http method' });
+  }
 
-    if (bodydata.id) {
-      try {
-        const insertedData = await prisma.transaction.update({
-          where: {
-            id: bodydata.id,
-          },
-          data: {
-            category: {
-              connect: bodydata.category ? { id: bodydata.category } : undefined,
-              disconnect: !bodydata.category ? true : undefined,
-            },
-          },
-          include: {
-            category: true,
-          },
-        })
+  const transactionToUpdate = req.body as Prisma.TransactionWhereUniqueInput & {
+    category?: number;
+  };
 
-        res.json({ data: insertedData })
-      } catch (err) {
-        console.error(`ERROR | err`, err)
-        res.status(500).json({ error: err })
+  if (!transactionToUpdate.id) {
+    return res.status(400).json({ error: 'missing argument' });
+  }
+  try {
+    const data = await prisma.transaction.update({
+      where: {
+        id: transactionToUpdate.id
+      },
+      data: {
+        category: {
+          connect: transactionToUpdate.category ? { id: transactionToUpdate.category } : undefined,
+          disconnect: !transactionToUpdate.category ? true : undefined
+        }
+      },
+      include: {
+        category: true
       }
-    } else {
-      res.status(400).json({ error: "missing transaction id" })
-    }
-  } else {
-    res.status(405).json({ error: "wrong http method" })
+    });
+
+    res.json({ data });
+  } catch (err) {
+    console.error(`ERROR | updateTransactionCategory: `, err);
+    res.status(500).json({ error: 'Internal error | Could not update transaction category' });
   }
 }
