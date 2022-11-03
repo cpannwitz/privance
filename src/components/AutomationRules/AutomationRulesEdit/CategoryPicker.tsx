@@ -1,17 +1,17 @@
-import { Controller, useFormContext } from "react-hook-form"
-import { AutomationRuleWithCategory } from "../../../types/types"
+import { Controller, useFormContext } from 'react-hook-form';
+import type { AutomationRuleWithCategory } from '../../../types/types';
 
-import FormControl from "@mui/material/FormControl"
-import FormLabel from "@mui/material/FormLabel"
-import FormHelperText from "@mui/material/FormHelperText"
-import Box from "@mui/material/Box"
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Box from '@mui/material/Box';
 
-import CategorySelect from "../../CategorySelect/CategorySelect"
+import CategorySelect from '../../CategorySelect/CategorySelect';
 
 interface CategoryPickerProps {}
 
 const CategoryPicker = ({}: CategoryPickerProps) => {
-  const { control } = useFormContext<AutomationRuleWithCategory>()
+  const { control } = useFormContext<AutomationRuleWithCategory>();
 
   return (
     <Controller
@@ -27,7 +27,7 @@ const CategoryPicker = ({}: CategoryPickerProps) => {
         </FormControl>
       )}
     />
-  )
-}
+  );
+};
 
-export default CategoryPicker
+export default CategoryPicker;

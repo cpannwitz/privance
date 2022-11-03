@@ -1,65 +1,65 @@
-import { useCallback } from "react"
-import useGetTransactions from "../hooks/useGetTransactions"
-import useGetAutomationRulesById from "../hooks/useGetAutomationRulesById"
+import { useCallback } from 'react';
+import useGetAutomationRuleById from '../hooks/useGetAutomationRuleById';
+import useGetAutomationRuleTransactions from '../hooks/useGetAutomationRuleTransactions';
+import AutomationRuleApplyPreview from './AutomationRuleApplyPreview';
 
-import AutomationRuleApplyPreview from "./AutomationRuleApplyPreview"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import DataIsError from "../DataStates/DataIsError"
-import useGetCategories from "../hooks/useGetCategories"
+import DataIsLoading from '../DataStates/DataIsLoading';
+import DataIsError from '../DataStates/DataIsError';
+import useGetCategories from '../hooks/useGetCategories';
 
 interface AutomationRuleApplyProps {
-  rules: number[]
+  rule: number;
 }
 
-const AutomationRuleApply = ({ rules }: AutomationRuleApplyProps) => {
-  const {
-    data: transactions,
-    isError: isErrorTransactions,
-    isLoading: isLoadingTransactions,
-    mutate: mutateTransactions,
-  } = useGetTransactions()
-
+const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
   const {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories,
-  } = useGetCategories()
+    mutate: mutateCategories
+  } = useGetCategories();
 
   const {
-    data: automationRules,
-    isError: isErrorAutomationRules,
-    isLoading: isLoadingAutomationRules,
-    mutate: mutateAutomationRules,
-  } = useGetAutomationRulesById(rules)
+    data: automationRule,
+    isError: isErrorAutomationRule,
+    isLoading: isLoadingAutomationRule,
+    mutate: mutateAutomationRule
+  } = useGetAutomationRuleById(rule);
+
+  const {
+    data: transactions,
+    isError: isErrorTransactions,
+    isLoading: isLoadingTransactions,
+    mutate: mutateTransactions
+  } = useGetAutomationRuleTransactions(rule);
 
   const retry = useCallback(() => {
-    mutateTransactions()
-    mutateAutomationRules()
-    mutateCategories()
-  }, [mutateTransactions, mutateAutomationRules, mutateCategories])
+    mutateTransactions();
+    mutateAutomationRule();
+    mutateCategories();
+  }, [mutateTransactions, mutateAutomationRule, mutateCategories]);
 
-  if (isLoadingAutomationRules || isLoadingTransactions || isLoadingCategories) {
-    return <DataIsLoading />
+  if (isLoadingAutomationRule || isLoadingTransactions || isLoadingCategories) {
+    return <DataIsLoading />;
   }
   if (
-    !automationRules ||
-    isErrorAutomationRules ||
+    !automationRule ||
+    isErrorAutomationRule ||
     !transactions ||
     isErrorTransactions ||
     !categories ||
     isErrorCategories
   ) {
-    return <DataIsError retry={retry} />
+    return <DataIsError retry={retry} />;
   }
 
   return (
     <AutomationRuleApplyPreview
       transactions={transactions}
       categories={categories}
-      automationRules={automationRules}
+      automationRule={automationRule}
     />
-  )
-}
+  );
+};
 
-export default AutomationRuleApply
+export default AutomationRuleApply;
