@@ -1,44 +1,39 @@
-import { PropsWithChildren } from "react"
+import type { PropsWithChildren } from 'react';
 import {
-  DeepPartial,
+  type FieldValues,
+  type SubmitHandler,
+  type DefaultValues,
   FormProvider,
-  SubmitHandler,
-  UnpackNestedValue,
-  useForm,
-} from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
+  useForm
+} from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import type Yup from 'yup';
 
-export type CategoryEditFormValues = {
-  name: string
-  color: string
-  icon: string
+interface FormWrapperProps<T extends FieldValues> {
+  onSubmit: SubmitHandler<T>;
+  defaultValues: DefaultValues<T>;
+  formId?: string;
+  schema?: Yup.AnyObjectSchema;
 }
 
-interface FormWrapperProps<T> {
-  onSubmit: SubmitHandler<T>
-  defaultValues: UnpackNestedValue<DeepPartial<T>>
-  formId?: string
-  schema?: any
-}
-
-function FormWrapper<T>({
+function FormWrapper<T extends FieldValues>({
   onSubmit,
   defaultValues,
   children,
   formId,
-  schema,
+  schema
 }: PropsWithChildren<FormWrapperProps<T>>) {
   const methods = useForm<T>({
     defaultValues: defaultValues,
-    resolver: schema ? yupResolver(schema) : undefined,
-  })
+    resolver: schema ? yupResolver(schema) : undefined
+  });
   return (
     <FormProvider {...methods}>
       <form id={formId} onSubmit={methods.handleSubmit(onSubmit)}>
         {children}
       </form>
     </FormProvider>
-  )
+  );
 }
 
-export default FormWrapper
+export default FormWrapper;
