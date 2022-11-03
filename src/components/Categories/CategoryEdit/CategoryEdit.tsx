@@ -1,26 +1,26 @@
-import { Category, Prisma } from ".prisma/client"
-import { SubmitHandler } from "react-hook-form"
+import { Category, Prisma } from '.prisma/client';
+import { SubmitHandler } from 'react-hook-form';
 
-import ColorPicker from "./ColorPicker"
-import IconPicker from "./IconPicker"
-import NameEdit from "./NameEdit"
+import ColorPicker from './ColorPicker';
+import IconPicker from './IconPicker';
+import NameEdit from './NameEdit';
 
-import Button from "@mui/material/Button"
-import Stack from "@mui/material/Stack"
+import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
 
-import FormWrapper from "../../FormWrapper/FormWrapper"
-import OpenModal from "../../OpenModal/OpenModal"
+import FormWrapper from '../../FormWrapper/FormWrapper';
+import OpenModal from '../../OpenModal/OpenModal';
 
 export interface CategoryEditFormValues {
-  name: string
-  color: string
-  icon: string
+  name: string;
+  color: string;
+  icon: string;
 }
 
 interface CategoryAddEditProps {
-  onSave: (category: Prisma.CategoryUncheckedCreateInput) => void
-  onCancel: () => void
-  formValue?: Category
+  onSave: (category: Prisma.CategoryUncheckedCreateInput) => void;
+  onCancel: () => void;
+  formValue?: Category;
 }
 
 // https://github.com/casesandberg/react-color
@@ -31,22 +31,22 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
       ...formValue,
       name: data.name ?? null,
       color: data.color ?? null,
-      icon: data.icon ?? null,
-    })
-  }
+      icon: data.icon ?? null
+    });
+  };
 
   const defaultValues = {
-    name: formValue?.name ?? "",
-    color: formValue?.color ?? "",
-    icon: formValue?.icon ?? "",
-  }
+    name: formValue?.name ?? '',
+    color: formValue?.color ?? '',
+    icon: formValue?.icon ?? ''
+  };
 
   return (
     <OpenModal
       onCancel={onCancel}
       footerChildren={
         <>
-          <Button variant="text" sx={{ marginRight: "1rem" }} onClick={onCancel}>
+          <Button variant="text" sx={{ marginRight: '1rem' }} onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="contained" type="submit" form="CategoryEditForm">
@@ -67,7 +67,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
         </Stack>
       </FormWrapper>
     </OpenModal>
-  )
-}
+  );
+};
 
-export default CategoryAddEdit
+export default CategoryAddEdit;

@@ -1,23 +1,23 @@
-import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
+import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid';
 
-import Box from "@mui/material/Box"
-import Button from "@mui/material/Button"
-import Typography from "@mui/material/Typography"
-import Stack from "@mui/material/Stack"
-import Divider from "@mui/material/Divider"
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Divider from '@mui/material/Divider';
 
-import PlayIcon from "@mui/icons-material/PlayArrowOutlined"
-import CancelIcon from "@mui/icons-material/CancelOutlined"
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
+import CancelIcon from '@mui/icons-material/CancelOutlined';
 
-import { TransactionBeforeUpload, TransactionWithCategory } from "../../types/types"
-import { Category } from "@prisma/client"
+import { TransactionBeforeUpload, TransactionWithCategory } from '../../types/types';
+import { Category } from '@prisma/client';
 
 interface UploadPreviewProps {
-  transactions: TransactionBeforeUpload[]
-  categories?: Category[]
-  onCancel: () => void
-  onUpload: () => void
-  onUpdateTransaction?: (transaction: TransactionBeforeUpload) => void
+  transactions: TransactionBeforeUpload[];
+  categories?: Category[];
+  onCancel: () => void;
+  onUpload: () => void;
+  onUpdateTransaction?: (transaction: TransactionBeforeUpload) => void;
 }
 
 const UploadPreview = ({
@@ -26,8 +26,8 @@ const UploadPreview = ({
   onCancel,
   onUpload,
   onUpdateTransaction = () => {
-    return
-  },
+    return;
+  }
 }: UploadPreviewProps) => {
   return (
     <>
@@ -51,7 +51,7 @@ const UploadPreview = ({
       </Stack>
 
       <Divider sx={{ my: 6 }} />
-      <Box sx={{ width: "100%", height: "85%" }}>
+      <Box sx={{ width: '100%', height: '85%' }}>
         <TransactionDatagrid
           // TODO: better typings, fragile
           transactions={transactions as TransactionWithCategory[]}
@@ -60,7 +60,7 @@ const UploadPreview = ({
         />
       </Box>
     </>
-  )
-}
+  );
+};
 
-export default UploadPreview
+export default UploadPreview;

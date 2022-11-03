@@ -1,14 +1,14 @@
-import { Controller, useFormContext } from "react-hook-form"
-import { CategoryEditFormValues } from "./CategoryEdit"
-import { CirclePicker } from "react-color"
+import { Controller, useFormContext } from 'react-hook-form';
+import { CategoryEditFormValues } from './CategoryEdit';
+import { CirclePicker } from 'react-color';
 
-import FormControl from "@mui/material/FormControl"
-import FormLabel from "@mui/material/FormLabel"
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 interface ColorPickerProps {}
 
 const ColorPicker = ({}: ColorPickerProps) => {
-  const { control } = useFormContext<CategoryEditFormValues>()
+  const { control } = useFormContext<CategoryEditFormValues>();
   return (
     <Controller
       name="color"
@@ -24,7 +24,7 @@ const ColorPicker = ({}: ColorPickerProps) => {
         </FormControl>
       )}
     />
-  )
-}
+  );
+};
 
-export default ColorPicker
+export default ColorPicker;

@@ -1,17 +1,17 @@
-import type { InferGetStaticPropsType } from "next"
-import { useRouter } from "next/router"
-import { useEffect } from "react"
+import type { InferGetStaticPropsType } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 export const getStaticProps = async () => {
-  return { props: {} }
-}
+  return { props: {} };
+};
 
 const IndexPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const router = useRouter()
+  const router = useRouter();
   useEffect(() => {
-    router.replace("/overview")
-  }, [router])
-  return null
-}
+    router.replace('/overview');
+  }, [router]);
+  return null;
+};
 
-export default IndexPage
+export default IndexPage;

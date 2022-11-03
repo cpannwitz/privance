@@ -1,10 +1,10 @@
-import { useCallback } from "react"
+import { useCallback } from 'react';
 
-import Upload from "./Upload"
-import DataIsError from "../DataStates/DataIsError"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import useGetAutomationRulesActive from "../hooks/useGetAutomationRulesActive"
-import useGetCategories from "../hooks/useGetCategories"
+import Upload from './Upload';
+import DataIsError from '../DataStates/DataIsError';
+import DataIsLoading from '../DataStates/DataIsLoading';
+import useGetAutomationRulesActive from '../hooks/useGetAutomationRulesActive';
+import useGetCategories from '../hooks/useGetCategories';
 
 interface UploadContainerProps {}
 
@@ -13,29 +13,29 @@ const UploadContainer = ({}: UploadContainerProps) => {
     data: automationRules,
     isError: isErrorAutomationRules,
     isLoading: isLoadingAutomationRules,
-    mutate: mutateAutomationRules,
-  } = useGetAutomationRulesActive()
+    mutate: mutateAutomationRules
+  } = useGetAutomationRulesActive();
 
   const {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories,
-  } = useGetCategories()
+    mutate: mutateCategories
+  } = useGetCategories();
 
   const retry = useCallback(() => {
-    mutateAutomationRules()
-    mutateCategories()
-  }, [mutateAutomationRules, mutateCategories])
+    mutateAutomationRules();
+    mutateCategories();
+  }, [mutateAutomationRules, mutateCategories]);
 
   if (isLoadingAutomationRules || isLoadingCategories) {
-    return <DataIsLoading />
+    return <DataIsLoading />;
   }
   if (!automationRules || isErrorAutomationRules || !categories || isErrorCategories) {
-    return <DataIsError retry={retry} />
+    return <DataIsError retry={retry} />;
   }
 
-  return <Upload automationRules={automationRules} categories={categories} />
-}
+  return <Upload automationRules={automationRules} categories={categories} />;
+};
 
-export default UploadContainer
+export default UploadContainer;

@@ -1,13 +1,13 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next';
 
-import MonthlyInsight from "../components/MonthlyInsight/MonthlyInsight"
+import MonthlyInsight from '../components/MonthlyInsight/MonthlyInsight';
 
 export const getStaticProps = async () => {
-  return { props: {} }
-}
+  return { props: {} };
+};
 
 const MonthlyInsightPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <MonthlyInsight />
-}
+  return <MonthlyInsight />;
+};
 
-export default MonthlyInsightPage
+export default MonthlyInsightPage;

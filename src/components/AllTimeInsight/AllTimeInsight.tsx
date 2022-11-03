@@ -1,10 +1,10 @@
-import { useCallback } from "react"
-import useGetAllTimeAggregations from "../hooks/useGetAllTimeAggregations"
-import AllTimeInsightContent from "./AllTimeInsightContent"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import DataIsEmpty from "../DataStates/DataIsEmpty"
-import DataIsError from "../DataStates/DataIsError"
-import routerLinks from "../../shared/routerLinks"
+import { useCallback } from 'react';
+import useGetAllTimeAggregations from '../hooks/useGetAllTimeAggregations';
+import AllTimeInsightContent from './AllTimeInsightContent';
+import DataIsLoading from '../DataStates/DataIsLoading';
+import DataIsEmpty from '../DataStates/DataIsEmpty';
+import DataIsError from '../DataStates/DataIsError';
+import routerLinks from '../../shared/routerLinks';
 
 interface AllTimeInsightProps {}
 
@@ -13,24 +13,24 @@ const AllTimeInsight = ({}: AllTimeInsightProps) => {
     data: allTimeAggregations,
     isError: isErrorAllTimeAggregations,
     isLoading: isLoadingAllTimeAggregations,
-    mutate: mutateAllTimeAggregations,
-  } = useGetAllTimeAggregations()
+    mutate: mutateAllTimeAggregations
+  } = useGetAllTimeAggregations();
 
   const retry = useCallback(() => {
-    mutateAllTimeAggregations()
-  }, [mutateAllTimeAggregations])
+    mutateAllTimeAggregations();
+  }, [mutateAllTimeAggregations]);
 
   if (isLoadingAllTimeAggregations) {
-    return <DataIsLoading />
+    return <DataIsLoading />;
   }
   if (isErrorAllTimeAggregations) {
-    return <DataIsError retry={retry} />
+    return <DataIsError retry={retry} />;
   }
   if (!allTimeAggregations) {
-    return <DataIsEmpty linkUrl={routerLinks.UPLOAD} />
+    return <DataIsEmpty linkUrl={routerLinks.UPLOAD} />;
   }
 
-  return <AllTimeInsightContent allTimeAggregations={allTimeAggregations} />
-}
+  return <AllTimeInsightContent allTimeAggregations={allTimeAggregations} />;
+};
 
-export default AllTimeInsight
+export default AllTimeInsight;

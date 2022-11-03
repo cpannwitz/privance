@@ -18,10 +18,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import CategoryEdit from './CategoryEdit/CategoryEdit';
 import DataIsEmpty from '../DataStates/DataIsEmpty';
 import { icons, placeholderIcon } from '../../shared/iconUtils';
-import type {
-  CategoriesStatistics,
-  CategoryWithTransactions
-} from '../../types/types';
+import type { CategoriesStatistics, CategoryWithTransactions } from '../../types/types';
 import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions';
 
 const getTransactionsBalance = (transactions: Transaction[]) =>
@@ -32,18 +29,12 @@ interface CategoryListProps {
   categoriesStatistics: CategoriesStatistics;
 }
 
-const CategoryList = ({
-  categories,
-  categoriesStatistics
-}: CategoryListProps) => {
+const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) => {
   const { mutate: mutateCategories } = useGetCategoriesTransactions();
 
-  const { allTransactionsCount, uncategorizedTransactionsCount } =
-    categoriesStatistics;
+  const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics;
   const { enqueueSnackbar } = useSnackbar();
-  const [editedCategory, setEditedCategory] = useState<Category | undefined>(
-    undefined
-  );
+  const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined);
 
   function onAddCategory() {
     setEditedCategory({} as Category);
@@ -68,12 +59,9 @@ const CategoryList = ({
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            enqueueSnackbar(
-              `Couldn't add/update your category: ${error.response.data.error}`,
-              {
-                variant: 'error'
-              }
-            );
+            enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
+              variant: 'error'
+            });
           }
         })
         .finally(() => {
@@ -96,12 +84,9 @@ const CategoryList = ({
         })
         .catch((error: AxiosError) => {
           if (error.response) {
-            enqueueSnackbar(
-              `Couldn't delete your category: ${error.response.data.error}`,
-              {
-                variant: 'error'
-              }
-            );
+            enqueueSnackbar(`Couldn't delete your category: ${error.response.data.error}`, {
+              variant: 'error'
+            });
           }
         })
         .finally(() => {
@@ -113,11 +98,7 @@ const CategoryList = ({
   return (
     <>
       {editedCategory && (
-        <CategoryEdit
-          onSave={onSaveAddEdit}
-          onCancel={onCloseAddEdit}
-          formValue={editedCategory}
-        />
+        <CategoryEdit onSave={onSaveAddEdit} onCancel={onCloseAddEdit} formValue={editedCategory} />
       )}
       <Box sx={{ width: '100%', mb: 5 }}>
         <Button
@@ -133,8 +114,8 @@ const CategoryList = ({
       </Box>
       <Box sx={{ p: 3 }}>
         <Typography>
-          You currently have <b>{uncategorizedTransactionsCount}</b> (of{' '}
-          {allTransactionsCount}) uncategorized transactions.
+          You currently have <b>{uncategorizedTransactionsCount}</b> (of {allTransactionsCount})
+          uncategorized transactions.
         </Typography>
       </Box>
 
@@ -152,8 +133,7 @@ const CategoryList = ({
           {categories
             .sort(
               (cA, cB) =>
-                getTransactionsBalance(cB.transactions) -
-                getTransactionsBalance(cA.transactions)
+                getTransactionsBalance(cB.transactions) - getTransactionsBalance(cA.transactions)
             )
             .map(category => (
               <CategoryListItem
@@ -177,11 +157,7 @@ interface CategoryListItemProps {
   onDelete: (category: CategoryWithTransactions) => void;
 }
 
-export const CategoryListItem = ({
-  category,
-  onEdit,
-  onDelete
-}: CategoryListItemProps) => {
+export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListItemProps) => {
   const { name, color, icon } = category;
   function onEditCategory() {
     onEdit(category);
@@ -202,9 +178,7 @@ export const CategoryListItem = ({
         }}
       >
         <Avatar sx={{ bgcolor: color || 'grey.100', mr: 2 }}>
-          <SvgIcon htmlColor="white">
-            {icon ? icons[icon] : placeholderIcon}
-          </SvgIcon>
+          <SvgIcon htmlColor="white">{icon ? icons[icon] : placeholderIcon}</SvgIcon>
         </Avatar>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <Typography fontSize={20}>{name}</Typography>

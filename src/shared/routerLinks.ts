@@ -5,7 +5,7 @@ export const routerLinks = {
   CATEGORIES: `/categories`,
   MONTHLYINSIGHT: `/monthlyinsight`,
   OVERVIEW: `/overview`,
-  UPLOAD: `/upload`,
-}
+  UPLOAD: `/upload`
+};
 
-export default routerLinks
+export default routerLinks;

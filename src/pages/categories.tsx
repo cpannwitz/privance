@@ -1,13 +1,13 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next';
 
-import Categories from "../components/Categories/Categories"
+import Categories from '../components/Categories/Categories';
 
 export const getStaticProps = async () => {
-  return { props: {} }
-}
+  return { props: {} };
+};
 
 const CategoriesPage = ({}: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <Categories />
-}
+  return <Categories />;
+};
 
-export default CategoriesPage
+export default CategoriesPage;
