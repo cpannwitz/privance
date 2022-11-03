@@ -80,14 +80,3 @@ export interface ParsedCSVTransactions {
   amount?: string;
   amountCurrency?: string;
 }
-
-const AutomationRuleField = ['issuedate', 'issuer', 'type', 'purpose', 'balance', 'amount'];
-type TAutomationRuleField = typeof AutomationRuleField[number];
-
-export type ZAutomationRuleField =
-  | 'issuedate'
-  | 'issuer'
-  | 'type'
-  | 'purpose'
-  | 'balance'
-  | 'amount';
