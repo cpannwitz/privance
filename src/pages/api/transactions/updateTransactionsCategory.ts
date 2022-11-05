@@ -50,3 +50,23 @@ export default async function updateTransactionsCategory(
     res.status(500).json({ error: 'Internal error | Could not update transactions categories' })
   }
 }
+
+// TODO: example for client side api abstraction, implement for all client side axios usages
+
+// export async function updateTransactionsCategory(
+//   data: typeof apiDir.transactions.updateTransactionsCategory.type // ! WRONG -> needs input type
+// ) {
+//   const api = apiDir.transactions.updateTransactionsCategory
+
+//   return axios<ApiResponseData<typeof api.type>>({
+//     method: api.method,
+//     url: api.url,
+//     data: data
+//   }).catch((error: AxiosError<ApiResponseData<typeof api.type>>) => {
+//     if (error.response) {
+//       // enqueueSnackbar(`Couldn't update your transactions: ${error.response.data.error?.message}`, {
+//       //   variant: 'error'
+//       // })
+//     }
+//   })
+// }

@@ -4,7 +4,7 @@ import type { AllTimeAggregations } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 import sortTransactions from '../../../shared/sortTransactions'
 
-type ResponseData = {
+export type ResponseData = {
   error?: string
   data?: AllTimeAggregations | null
 }
