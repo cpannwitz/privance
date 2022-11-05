@@ -22,7 +22,7 @@ const CategoryAddStandalone = ({ onAddCategory, onClose }: CategoryAddStandalone
         })
         onAddCategory(category)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
             variant: 'error'

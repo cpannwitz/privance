@@ -52,7 +52,7 @@ const AutomationRuleApplyPreview = ({
         })
         router.push(`/overview`)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't update your transactions: ${error.response.data.error}`, {
             variant: 'error'

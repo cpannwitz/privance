@@ -1,4 +1,4 @@
-import { useDropzone } from 'react-dropzone'
+import { useDropzone, type Accept } from 'react-dropzone'
 import Box from '@mui/material/Box'
 
 // https://react-dropzone.js.org/
@@ -23,7 +23,7 @@ interface DropzoneProps {
   loading?: boolean
 
   /** File types to accept  */
-  accept?: string[]
+  accept?: Accept
 
   /** Allow selection of multiple files */
   multiple?: boolean

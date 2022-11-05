@@ -57,7 +57,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
               variant: 'error'
@@ -82,7 +82,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't delete your category: ${error.response.data.error}`, {
               variant: 'error'

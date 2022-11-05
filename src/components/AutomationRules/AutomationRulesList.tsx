@@ -68,7 +68,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(
               `Couldn't add/update your automation rule: ${error.response.data.error}`,
@@ -95,7 +95,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(
               `Couldn't add/update your automation rule: ${error.response.data.error}`,
@@ -124,7 +124,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't delete your automation rule: ${error.response.data.error}`, {
               variant: 'error'
@@ -156,7 +156,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
             variant: 'success'
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<any>) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't update your automation rule: ${error.response.data.error}`, {
               variant: 'error'

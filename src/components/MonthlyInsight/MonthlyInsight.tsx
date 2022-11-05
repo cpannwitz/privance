@@ -64,7 +64,7 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
           return { data }
         }, false)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
             variant: 'error'
