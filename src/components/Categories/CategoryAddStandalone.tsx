@@ -1,8 +1,8 @@
-import axios, { AxiosError } from "axios"
-import { Category, Prisma } from ".prisma/client"
-import { useSnackbar } from "notistack"
+import axios, { AxiosError } from 'axios'
+import { Category, Prisma } from '.prisma/client'
+import { useSnackbar } from 'notistack'
 
-import CategoryEdit from "./CategoryEdit/CategoryEdit"
+import CategoryEdit from './CategoryEdit/CategoryEdit'
 
 interface CategoryAddStandaloneProps {
   onAddCategory: (category: Category | null) => void
@@ -14,18 +14,18 @@ const CategoryAddStandalone = ({ onAddCategory, onClose }: CategoryAddStandalone
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
     axios
-      .post("/api/categories/upsertCategory", category)
+      .post('/api/categories/upsertCategory', category)
       .then(res => {
         const category = res.data.data
         enqueueSnackbar(`Added or updated your category!`, {
-          variant: "success",
+          variant: 'success'
         })
         onAddCategory(category)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
-            variant: "error",
+            variant: 'error'
           })
         }
         onAddCategory(null)

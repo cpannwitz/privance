@@ -1,15 +1,15 @@
-import { Category, Prisma } from ".prisma/client"
-import { SubmitHandler } from "react-hook-form"
+import { Category, Prisma } from '.prisma/client'
+import { SubmitHandler } from 'react-hook-form'
 
-import ColorPicker from "./ColorPicker"
-import IconPicker from "./IconPicker"
-import NameEdit from "./NameEdit"
+import ColorPicker from './ColorPicker'
+import IconPicker from './IconPicker'
+import NameEdit from './NameEdit'
 
-import Button from "@mui/material/Button"
-import Stack from "@mui/material/Stack"
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 
-import FormWrapper from "../../FormWrapper/FormWrapper"
-import OpenModal from "../../OpenModal/OpenModal"
+import FormWrapper from '../../FormWrapper/FormWrapper'
+import OpenModal from '../../OpenModal/OpenModal'
 
 export interface CategoryEditFormValues {
   name: string
@@ -31,14 +31,14 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
       ...formValue,
       name: data.name ?? null,
       color: data.color ?? null,
-      icon: data.icon ?? null,
+      icon: data.icon ?? null
     })
   }
 
   const defaultValues = {
-    name: formValue?.name ?? "",
-    color: formValue?.color ?? "",
-    icon: formValue?.icon ?? "",
+    name: formValue?.name ?? '',
+    color: formValue?.color ?? '',
+    icon: formValue?.icon ?? ''
   }
 
   return (
@@ -46,7 +46,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
       onCancel={onCancel}
       footerChildren={
         <>
-          <Button variant="text" sx={{ marginRight: "1rem" }} onClick={onCancel}>
+          <Button variant="text" sx={{ marginRight: '1rem' }} onClick={onCancel}>
             Cancel
           </Button>
           <Button variant="contained" type="submit" form="CategoryEditForm">

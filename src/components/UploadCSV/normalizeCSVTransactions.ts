@@ -1,10 +1,11 @@
-import { ParsedCSVTransactions, TransactionBeforeUpload } from "../../types/types"
+import createTransactionIdentifier from '../../shared/createTransactionIdentifier'
+import type { ParsedCSVTransactions, TransactionBeforeUpload } from '../../types/types'
 
 // expects "19.03.2020"
 // returns "2020-03-19T00:00:00+00:00"
 function transformDate(value?: string) {
   if (!value) return undefined
-  const date = value.split(".").reverse().join("-") + "T00:00:00+00:00"
+  const date = value.split('.').reverse().join('-') + 'T00:00:00+00:00'
   if (isNaN(Date.parse(date))) return undefined
   return new Date(date)
 }
@@ -12,17 +13,9 @@ function transformDate(value?: string) {
 // returns -19.23
 function transformNumber(value?: string) {
   if (!value) return undefined
-  const number = Number(value.replaceAll(".", "").replaceAll(",", "."))
+  const number = Number(value.replaceAll('.', '').replaceAll(',', '.'))
   if (isNaN(number)) return undefined
   return number
-}
-
-function createIdentifier(transaction: Partial<TransactionBeforeUpload>) {
-  return (
-    (new Date(transaction.issuedate!)?.getTime() || 0) +
-    (transaction.balance! || 0) +
-    (transaction.amount! || 0)
-  )
 }
 
 const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) => {
@@ -38,11 +31,11 @@ const normalizeCSVTransactions = async (transactions: ParsedCSVTransactions[]) =
         amount: transformNumber(amount),
         amountCurrency: amountCurrency,
         category: undefined,
-        identifier: createIdentifier({
+        identifier: createTransactionIdentifier({
           issuedate,
           balance: transformNumber(balance),
-          amount: transformNumber(amount),
-        }),
+          amount: transformNumber(amount)
+        })
       })
     )
     // TODO: remove when properties not optional anymore

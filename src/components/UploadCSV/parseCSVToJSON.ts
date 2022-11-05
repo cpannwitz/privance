@@ -1,5 +1,5 @@
-import { parse } from "csv-parse"
-import { ParsedCSVTransactions } from "../../types/types"
+import { parse } from 'csv-parse'
+import { ParsedCSVTransactions } from '../../types/types'
 
 // https://csv.js.org/parse
 
@@ -10,21 +10,21 @@ export default async function parseCSVToTransactions(
     const buffer = await file.text()
 
     const parser = parse(buffer, {
-      delimiter: ";",
+      delimiter: ';',
       skipEmptyLines: true,
       skipRecordsWithError: true,
       relax_column_count_more: true,
       columns: [
-        "issuedate",
-        "__",
-        "issuer",
-        "type",
-        "purpose",
-        "balance",
-        "balanceCurrency",
-        "amount",
-        "amountCurrency",
-      ],
+        'issuedate',
+        '__',
+        'issuer',
+        'type',
+        'purpose',
+        'balance',
+        'balanceCurrency',
+        'amount',
+        'amountCurrency'
+      ]
     })
     const records = []
 

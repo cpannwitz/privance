@@ -1,27 +1,27 @@
-import axios, { type AxiosError } from 'axios';
-import { useRouter } from 'next/router';
+import axios, { type AxiosError } from 'axios'
+import { useRouter } from 'next/router'
 
-import type { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types';
-import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid';
+import type { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types'
+import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
 
-import { icons, placeholderIcon } from '../../shared/iconUtils';
+import { icons, placeholderIcon } from '../../shared/iconUtils'
 
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Chip from '@mui/material/Chip'
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
 
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from 'notistack'
 
-import PlayIcon from '@mui/icons-material/PlayArrowOutlined';
-import CancelIcon from '@mui/icons-material/CancelOutlined';
-import type { Category } from '@prisma/client';
+import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
+import CancelIcon from '@mui/icons-material/CancelOutlined'
+import type { Category } from '@prisma/client'
 
 interface AutomationRuleApplyPreviewProps {
-  automationRule: AutomationRuleWithCategory;
-  transactions: TransactionWithCategory[];
-  categories?: Category[];
+  automationRule: AutomationRuleWithCategory
+  transactions: TransactionWithCategory[]
+  categories?: Category[]
 }
 
 const AutomationRuleApplyPreview = ({
@@ -29,17 +29,17 @@ const AutomationRuleApplyPreview = ({
   transactions,
   categories = []
 }: AutomationRuleApplyPreviewProps) => {
-  const router = useRouter();
+  const router = useRouter()
   function onCancel() {
-    router.push(`/automationrules`);
+    router.push(`/automationrules`)
   }
 
-  const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar()
   function onApplyCategory() {
     const bodyData = transactions.map(transaction => ({
       id: transaction.id,
       categoryConnect: transaction.category?.id
-    }));
+    }))
 
     axios
       .post<{ data: TransactionWithCategory[] }>(
@@ -49,16 +49,16 @@ const AutomationRuleApplyPreview = ({
       .then(() => {
         enqueueSnackbar(`Updated your transactions!`, {
           variant: 'success'
-        });
-        router.push(`/overview`);
+        })
+        router.push(`/overview`)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't update your transactions: ${error.response.data.error}`, {
             variant: 'error'
-          });
+          })
         }
-      });
+      })
   }
 
   return (
@@ -109,7 +109,7 @@ const AutomationRuleApplyPreview = ({
         <TransactionDatagrid transactions={transactions} categories={categories} />
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default AutomationRuleApplyPreview;
+export default AutomationRuleApplyPreview

@@ -1,5 +1,5 @@
-import useSWR from "swr"
-import { MonthlyAggregations } from "../../types/types"
+import useSWR from 'swr'
+import { MonthlyAggregations } from '../../types/types'
 
 export default function useGetMonthlyAggregations() {
   const { data, error, isValidating, mutate } = useSWR<{ data: MonthlyAggregations }>(
@@ -11,6 +11,6 @@ export default function useGetMonthlyAggregations() {
     isLoading: !error && !data,
     isError: error,
     isValidating,
-    mutate,
+    mutate
   }
 }

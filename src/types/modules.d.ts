@@ -1,1 +1,1 @@
-declare module "currency-map-symbol"
+declare module 'currency-map-symbol'

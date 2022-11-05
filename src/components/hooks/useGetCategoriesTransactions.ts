@@ -1,5 +1,5 @@
-import useSWR from "swr"
-import { CategoryWithTransactions } from "../../types/types"
+import useSWR from 'swr'
+import { CategoryWithTransactions } from '../../types/types'
 
 export default function useGetCategoriesTransactions() {
   const { data, error, isValidating, mutate } = useSWR<{ data: CategoryWithTransactions[] }>(
@@ -11,6 +11,6 @@ export default function useGetCategoriesTransactions() {
     isLoading: !error && !data,
     isError: error,
     isValidating,
-    mutate,
+    mutate
   }
 }

@@ -1,6 +1,6 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next'
 
-import AutomationRules from "../components/AutomationRules/AutomationRules"
+import AutomationRules from '../components/AutomationRules/AutomationRules'
 
 export const getStaticProps = async () => {
   return { props: {} }

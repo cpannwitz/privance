@@ -1,19 +1,19 @@
-import { useState } from "react"
-import { MonthlyAggregations, TransactionWithCategory } from "../../types/types"
+import { useState } from 'react'
+import { MonthlyAggregations, TransactionWithCategory } from '../../types/types'
 
-import getSymbolFromCurrency from "currency-map-symbol"
-import BalanceChart from "../Charts/BalanceChart"
-import CategoriesCharts from "../Charts/CategoriesChart"
-import TransactionDatagrid from "../TransactionDatagrid/TransactionDatagrid"
-import Stat from "../Stat/Stat"
+import getSymbolFromCurrency from 'currency-map-symbol'
+import BalanceChart from '../Charts/BalanceChart'
+import CategoriesCharts from '../Charts/CategoriesChart'
+import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
+import Stat from '../Stat/Stat'
 
-import Box from "@mui/material/Box"
-import Grid from "@mui/material/Grid"
-import Typography from "@mui/material/Typography"
-import Stack from "@mui/material/Stack"
-import Button from "@mui/material/Button"
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
 
-import TableIcon from "@mui/icons-material/TableChartOutlined"
+import TableIcon from '@mui/icons-material/TableChartOutlined'
 
 interface MonthlyInsightGridProps {
   monthlyAggregations: MonthlyAggregations
@@ -22,7 +22,7 @@ interface MonthlyInsightGridProps {
 
 const MonthlyInsightGrid = ({
   monthlyAggregations,
-  onUpdateTransaction,
+  onUpdateTransaction
 }: MonthlyInsightGridProps) => {
   return (
     <Stack direction="column" sx={{ p: 5 }}>
@@ -60,7 +60,7 @@ const MonthlyInsightGrid = ({
 
 export default MonthlyInsightGrid
 
-type MonthGridItemProps = MonthlyAggregations["years"][string]["months"][string] & {
+type MonthGridItemProps = MonthlyAggregations['years'][string]['months'][string] & {
   currency: string
   onUpdateTransaction: (transaction: TransactionWithCategory) => void
 }
@@ -73,7 +73,7 @@ const MonthGridItem = ({
   totalMonthPlusPercentage,
   transactions,
   categories,
-  onUpdateTransaction,
+  onUpdateTransaction
 }: MonthGridItemProps) => {
   const [showTable, setShowTable] = useState(false)
   return (
@@ -90,7 +90,7 @@ const MonthGridItem = ({
           )}`}
           sublabel=""
           color={
-            Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? "error.main" : "success.main"
+            Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? 'error.main' : 'success.main'
           }
         />
 
@@ -110,7 +110,7 @@ const MonthGridItem = ({
       </Stack>
 
       {showTable ? (
-        <Box sx={{ width: "100%", height: "450px" }}>
+        <Box sx={{ width: '100%', height: '450px' }}>
           <TransactionDatagrid
             transactions={transactions}
             categories={categories}
@@ -120,12 +120,12 @@ const MonthGridItem = ({
       ) : (
         <>
           {transactions.length > 0 && (
-            <Box sx={{ width: "100%", height: "225px" }}>
+            <Box sx={{ width: '100%', height: '225px' }}>
               <BalanceChart data={transactions} variant="small" />
             </Box>
           )}
           {categories.length > 0 && (
-            <Box sx={{ width: "100%", height: "225px" }}>
+            <Box sx={{ width: '100%', height: '225px' }}>
               <CategoriesCharts categories={categories} />
             </Box>
           )}
@@ -140,12 +140,12 @@ const MonthGridItem = ({
         startIcon={<TableIcon />}
         onClick={() => setShowTable(v => !v)}
       >
-        {showTable ? "Hide" : "Show"} Transactions
+        {showTable ? 'Hide' : 'Show'} Transactions
       </Button>
     </Grid>
   )
 }
 
-function getMonthName(month: number, locale = "en") {
-  return new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date().setMonth(month))
+function getMonthName(month: number, locale = 'en') {
+  return new Intl.DateTimeFormat(locale, { month: 'long' }).format(new Date().setMonth(month))
 }

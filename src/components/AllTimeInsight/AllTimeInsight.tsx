@@ -1,10 +1,10 @@
-import { useCallback } from "react"
-import useGetAllTimeAggregations from "../hooks/useGetAllTimeAggregations"
-import AllTimeInsightContent from "./AllTimeInsightContent"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import DataIsEmpty from "../DataStates/DataIsEmpty"
-import DataIsError from "../DataStates/DataIsError"
-import routerLinks from "../../shared/routerLinks"
+import { useCallback } from 'react'
+import useGetAllTimeAggregations from '../hooks/useGetAllTimeAggregations'
+import AllTimeInsightContent from './AllTimeInsightContent'
+import DataIsLoading from '../DataStates/DataIsLoading'
+import DataIsEmpty from '../DataStates/DataIsEmpty'
+import DataIsError from '../DataStates/DataIsError'
+import routerLinks from '../../shared/routerLinks'
 
 interface AllTimeInsightProps {}
 
@@ -13,7 +13,7 @@ const AllTimeInsight = ({}: AllTimeInsightProps) => {
     data: allTimeAggregations,
     isError: isErrorAllTimeAggregations,
     isLoading: isLoadingAllTimeAggregations,
-    mutate: mutateAllTimeAggregations,
+    mutate: mutateAllTimeAggregations
   } = useGetAllTimeAggregations()
 
   const retry = useCallback(() => {

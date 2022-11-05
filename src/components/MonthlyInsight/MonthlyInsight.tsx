@@ -1,13 +1,13 @@
-import { useCallback } from "react"
-import useGetMonthlyAggregations from "../hooks/useGetMonthlyAggregations"
-import MonthlyInsightGrid from "./MonthlyInsightGrid"
-import DataIsEmpty from "../DataStates/DataIsEmpty"
-import DataIsError from "../DataStates/DataIsError"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import routerLinks from "../../shared/routerLinks"
-import { TransactionWithCategory } from "../../types/types"
-import { useSnackbar } from "notistack"
-import axios, { AxiosError } from "axios"
+import { useCallback } from 'react'
+import useGetMonthlyAggregations from '../hooks/useGetMonthlyAggregations'
+import MonthlyInsightGrid from './MonthlyInsightGrid'
+import DataIsEmpty from '../DataStates/DataIsEmpty'
+import DataIsError from '../DataStates/DataIsError'
+import DataIsLoading from '../DataStates/DataIsLoading'
+import routerLinks from '../../shared/routerLinks'
+import { TransactionWithCategory } from '../../types/types'
+import { useSnackbar } from 'notistack'
+import axios, { AxiosError } from 'axios'
 
 interface MonthlyInsightProps {}
 
@@ -18,7 +18,7 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
     data: monthlyAggregations,
     isError: isErrorMonthlyTransactions,
     isLoading: isLoadingMonthlyTransactions,
-    mutate: mutateMonthlyTransactions,
+    mutate: mutateMonthlyTransactions
   } = useGetMonthlyAggregations()
 
   const retry = useCallback(() => {
@@ -37,13 +37,13 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
 
   function onUpdateTransaction(year: string, month: string, transaction: TransactionWithCategory) {
     axios
-      .post<{ data: TransactionWithCategory }>("/api/transactions/updateTransactionCategory", {
+      .post<{ data: TransactionWithCategory }>('/api/transactions/updateTransactionCategory', {
         id: transaction.id,
-        category: transaction?.category?.id ?? undefined,
+        category: transaction?.category?.id ?? undefined
       })
       .then(res => {
         enqueueSnackbar(`Updated your Transaction!`, {
-          variant: "success",
+          variant: 'success'
         })
 
         const updatedTransaction = res.data.data
@@ -64,10 +64,10 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
           return { data }
         }, false)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
-            variant: "error",
+            variant: 'error'
           })
         }
       })

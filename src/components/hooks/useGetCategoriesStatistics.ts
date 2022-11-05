@@ -1,5 +1,5 @@
-import useSWR from "swr"
-import { CategoriesStatistics } from "../../types/types"
+import useSWR from 'swr'
+import { CategoriesStatistics } from '../../types/types'
 
 export default function useGetCategoriesStatistics() {
   const { data, error, isValidating, mutate } = useSWR<{ data: CategoriesStatistics }>(
@@ -11,6 +11,6 @@ export default function useGetCategoriesStatistics() {
     isLoading: !error && !data,
     isError: error,
     isValidating,
-    mutate,
+    mutate
   }
 }

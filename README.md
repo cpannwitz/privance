@@ -1,9 +1,11 @@
 ## Get Started
+
 - `npm install` - install dependencies
 - `npx prisma generate` - generate prisma client
 - `npx prisma migrate dev` - apply all migrations to local database
 
 ## Todo's
+
 - [x] Add mechanic to upload csv files
 - [x] Add local database and base models
 - [x] Add simple data view
@@ -64,7 +66,9 @@
   - [ ] https://github.com/vercel/next.js/tree/canary/examples/with-electron-typescript
   - [ ] https://github.com/prisma/prisma/issues/9613
   - [ ] https://github.com/prisma/prisma/issues/4703
+
 ## Premium Todo's
+
 - [ ] Add combo-automation-rules (create AND/OR combined rulesets, hierachy: category -> rule1, rule2...)
 - [ ] Add Paypal transactions
 - [ ] Add ETF tracker: https://marketstack.com/
@@ -78,6 +82,7 @@
 ---
 
 ## Business?
+
 - Free: one category assignment per transaction | Prem: multiple categories
 - Free: Simple charts | Prem: expert charts (brush etc)
 

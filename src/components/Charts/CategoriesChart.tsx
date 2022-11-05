@@ -1,6 +1,6 @@
-import { useMemo } from "react"
-import { ResponsiveBar } from "@nivo/bar"
-import { CategoryWithTransactions } from "../../types/types"
+import { useMemo } from 'react'
+import { ResponsiveBar } from '@nivo/bar'
+import { CategoryWithTransactions } from '../../types/types'
 
 function barChartTransformer(
   data: (CategoryWithTransactions & {
@@ -12,7 +12,7 @@ function barChartTransformer(
       name: category.name,
       transactionBalance: category.transactionBalance,
       count: category._count.transactions,
-      color: category.color || "#336699",
+      color: category.color || '#336699'
     }))
     .sort((a, b) => b.transactionBalance - a.transactionBalance)
     .slice(0, 8)
@@ -38,12 +38,12 @@ const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
   return (
     <ResponsiveBar<BarCategory>
       data={transformedData}
-      keys={["transactionBalance"]}
+      keys={['transactionBalance']}
       indexBy={d => d.name}
       margin={{ top: 20, right: 20, bottom: 30, left: 20 }}
       padding={0.3}
-      valueScale={{ type: "linear" }}
-      indexScale={{ type: "band", round: true }}
+      valueScale={{ type: 'linear' }}
+      indexScale={{ type: 'band', round: true }}
       colors={d => d.data.color}
       axisTop={null}
       axisRight={null}
@@ -51,13 +51,13 @@ const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
       labelSkipWidth={12}
       labelSkipHeight={12}
       labelTextColor="white"
-      label={({ value }) => value?.toFixed(2) + " €"}
+      label={({ value }) => value?.toFixed(2) + ' €'}
       tooltip={({ indexValue, value, data }) => (
         <div
           style={{
             padding: 12,
-            color: "white",
-            background: "#222222",
+            color: 'white',
+            background: '#222222'
           }}
         >
           <strong>
@@ -68,19 +68,19 @@ const CategoriesCharts = ({ categories }: CategoriesChartsProps) => {
         </div>
       )}
       theme={{
-        textColor: "#888888",
+        textColor: '#888888',
         grid: {
           line: {
-            stroke: "#ccc",
-            strokeWidth: 0.5,
-          },
+            stroke: '#ccc',
+            strokeWidth: 0.5
+          }
         },
         tooltip: {
           container: {
-            color: "#ffffff",
-            background: "#383838",
-          },
-        },
+            color: '#ffffff',
+            background: '#383838'
+          }
+        }
       }}
     />
   )

@@ -1,5 +1,5 @@
-import useSWR from "swr"
-import { AllTimeAggregations } from "../../types/types"
+import useSWR from 'swr'
+import { AllTimeAggregations } from '../../types/types'
 
 export default function useGetAllTimeAggregations() {
   const { data, error, isValidating, mutate } = useSWR<{ data: AllTimeAggregations }>(
@@ -11,6 +11,6 @@ export default function useGetAllTimeAggregations() {
     isLoading: !error && !data,
     isError: error,
     isValidating,
-    mutate,
+    mutate
   }
 }

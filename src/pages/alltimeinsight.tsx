@@ -1,6 +1,6 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next'
 
-import AllTimeInsight from "../components/AllTimeInsight/AllTimeInsight"
+import AllTimeInsight from '../components/AllTimeInsight/AllTimeInsight'
 
 export const getStaticProps = async () => {
   return { props: {} }

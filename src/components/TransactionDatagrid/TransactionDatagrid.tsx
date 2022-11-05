@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect, startTransition } from "react"
+import React, { useMemo, useState, useEffect, startTransition } from 'react'
 import {
   DataGrid,
   GridCellParams,
@@ -8,24 +8,24 @@ import {
   GridToolbarContainer,
   GridToolbarColumnsButton,
   GridToolbarFilterButton,
-  GridToolbarDensitySelector,
-} from "@mui/x-data-grid"
-import type { GridColDef } from "@mui/x-data-grid"
+  GridToolbarDensitySelector
+} from '@mui/x-data-grid'
+import type { GridColDef } from '@mui/x-data-grid'
 
-import Box from "@mui/material/Box"
+import Box from '@mui/material/Box'
 
-import { TransactionWithCategory } from "../../types/types"
+import { TransactionWithCategory } from '../../types/types'
 
-import dayjs from "dayjs"
+import dayjs from 'dayjs'
 import {
   TextRenderer,
   AmountRenderer,
   BalanceRenderer,
-  CategoryEditRenderer,
-} from "./ColumnRenderer"
-import { Category } from "@prisma/client"
-import CategorySelect from "../CategorySelect/CategorySelect"
-import Quicksearch from "./Quicksearch"
+  CategoryEditRenderer
+} from './ColumnRenderer'
+import { Category } from '@prisma/client'
+import CategorySelect from '../CategorySelect/CategorySelect'
+import Quicksearch from './Quicksearch'
 
 interface TransactionDatagridProps {
   transactions: TransactionWithCategory[]
@@ -37,25 +37,25 @@ interface TransactionDatagridProps {
 const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
 
 function escapeRegExp(value: string): string {
-  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+  return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&')
 }
 
 const TransactionDatagrid = ({
   transactions,
   categories = [],
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
-  onUpdateTransaction,
+  onUpdateTransaction
 }: TransactionDatagridProps) => {
   const [rows, setRows] = useState<TransactionWithCategory[]>(transactions)
   useEffect(() => {
     setRows(transactions)
   }, [transactions])
 
-  const [searchText, setSearchText] = useState("")
+  const [searchText, setSearchText] = useState('')
   function requestSearch(searchValue: string) {
     setSearchText(searchValue)
     startTransition(() => {
-      const searchRegex = new RegExp(escapeRegExp(searchValue), "i")
+      const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
       const filteredRows = transactions.filter((row: any) => {
         return Object.keys(row).some((field: any) => {
           if (!row[field]) return true
@@ -87,133 +87,131 @@ const TransactionDatagrid = ({
     () =>
       [
         {
-          headerName: "Date",
-          description: "Date",
-          field: "issuedate",
-          type: "date",
+          headerName: 'Date',
+          description: 'Date',
+          field: 'issuedate',
+          type: 'date',
           flex: 0.1,
-          valueFormatter: p => dayjs(p.value as string).format("D. MMM YYYY"),
+          valueFormatter: p => dayjs(p.value as string).format('D. MMM YYYY'),
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: TextRenderer,
+          renderCell: TextRenderer
         },
         {
-          headerName: "Issuer",
-          description: "Issuer",
-          field: "issuer",
-          type: "string",
+          headerName: 'Issuer',
+          description: 'Issuer',
+          field: 'issuer',
+          type: 'string',
           flex: 0.15,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: TextRenderer,
+          renderCell: TextRenderer
         },
         {
-          headerName: "Type",
-          description: "Type",
-          field: "type",
-          type: "string",
+          headerName: 'Type',
+          description: 'Type',
+          field: 'type',
+          type: 'string',
           flex: 0.1,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: TextRenderer,
+          renderCell: TextRenderer
         },
         {
-          headerName: "Purpose",
-          description: "Purpose",
-          field: "purpose",
-          type: "string",
+          headerName: 'Purpose',
+          description: 'Purpose',
+          field: 'purpose',
+          type: 'string',
           flex: 0.25,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: TextRenderer,
+          renderCell: TextRenderer
         },
         {
-          headerName: "Category",
-          description: "Category",
-          field: "category",
+          headerName: 'Category',
+          description: 'Category',
+          field: 'category',
           flex: 0.1,
-          type: "singleSelect",
+          type: 'singleSelect',
           valueOptions: categories ? categories.map(c => c.name) : [],
           filterOperators: [
             {
-              value: "is",
-              label: "is",
+              value: 'is',
+              label: 'is',
               getApplyFilterFn: (filterItem: GridFilterItem) => {
                 if (!filterItem.value) return
 
                 return ({ value }: GridCellParams): boolean => {
                   if (!value) return false
-                  if (typeof value === "object") {
+                  if (typeof value === 'object') {
                     return filterItem.value === value.name
                   }
                   return filterItem.value === value
                 }
               },
               InputComponent: GridFilterInputSingleSelect,
-              InputComponentProps: { type: "singleSelect" },
+              InputComponentProps: { type: 'singleSelect' }
             },
             {
-              value: "isnot",
-              label: "is not",
+              value: 'isnot',
+              label: 'is not',
               getApplyFilterFn: (filterItem: GridFilterItem) => {
                 if (!filterItem.value) return
 
                 return ({ value }: GridCellParams): boolean => {
                   if (!value) return false
-                  if (typeof value === "object") {
+                  if (typeof value === 'object') {
                     return filterItem.value !== value.name
                   }
                   return filterItem.value !== value
                 }
               },
               InputComponent: GridFilterInputSingleSelect,
-              InputComponentProps: { type: "singleSelect" },
+              InputComponentProps: { type: 'singleSelect' }
             },
             {
-              label: "is empty",
-              value: "is empty",
+              label: 'is empty',
+              value: 'is empty',
               getApplyFilterFn: () => {
                 return ({ value }: GridCellParams): boolean => {
                   if (!value) return true
                   return false
                 }
-              },
-            },
+              }
+            }
           ],
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: p => (
-            <CategoryEditRenderer {...p} onUpdateTransaction={onUpdateTransaction} />
-          ),
+          renderCell: p => <CategoryEditRenderer {...p} onUpdateTransaction={onUpdateTransaction} />
         },
         {
-          headerName: "Balance",
-          description: "Balance",
-          field: "balance",
-          type: "number",
+          headerName: 'Balance',
+          description: 'Balance',
+          field: 'balance',
+          type: 'number',
           flex: 0.1,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: BalanceRenderer,
+          renderCell: BalanceRenderer
         },
         {
-          headerName: "Amount",
-          description: "Amount",
-          field: "amount",
-          type: "number",
+          headerName: 'Amount',
+          description: 'Amount',
+          field: 'amount',
+          type: 'number',
           flex: 0.1,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
-          renderCell: AmountRenderer,
-        },
+          renderCell: AmountRenderer
+        }
       ] as GridColDef[],
     [onUpdateTransaction, categories]
   )
 
   return (
-    <Box sx={{ display: "flex", width: "100%", height: "100%" }}>
+    <Box sx={{ display: 'flex', width: '100%', height: '100%' }}>
       <Box
         sx={{
           flexGrow: 1,
-          "& .datagrid-row-highlighted": {
+          '& .datagrid-row-highlighted': {
             bgcolor: theme =>
-              theme.palette.mode === "dark"
+              theme.palette.mode === 'dark'
                 ? theme.palette.success.dark
-                : theme.palette.success.light,
-          },
+                : theme.palette.success.light
+          }
         }}
       >
         <DataGrid
@@ -227,18 +225,18 @@ const TransactionDatagrid = ({
           pagination
           disableSelectionOnClick
           components={{
-            Toolbar,
+            Toolbar
           }}
           componentsProps={{
             toolbar: {
               multiSelectionEnabled: multiTransactionSelection.length > 0,
               onMultiCategoryChange: onMultiCategoryChange,
               onRequestSearch: requestSearch,
-              searchText: searchText,
-            },
+              searchText: searchText
+            }
           }}
           getRowClassName={params =>
-            transformedTransactions.includes(params.row.id) ? "datagrid-row-highlighted" : ""
+            transformedTransactions.includes(params.row.id) ? 'datagrid-row-highlighted' : ''
           }
         />
       </Box>
@@ -255,10 +253,10 @@ const Toolbar = ({
   multiSelectionEnabled,
   onMultiCategoryChange,
   searchText,
-  onRequestSearch,
+  onRequestSearch
 }: ToolbarProps) => {
   function onClearSearch() {
-    onRequestSearch("")
+    onRequestSearch('')
   }
   function onQuicksearchChange(e: React.ChangeEvent<HTMLInputElement>) {
     onRequestSearch(e.target.value)
@@ -270,7 +268,7 @@ const Toolbar = ({
       <GridToolbarDensitySelector />
       <Quicksearch clearSearch={onClearSearch} onChange={onQuicksearchChange} value={searchText} />
       {multiSelectionEnabled && (
-        <Box sx={{ margin: "0 22% 0 auto" }}>
+        <Box sx={{ margin: '0 22% 0 auto' }}>
           <CategorySelect onChange={onMultiCategoryChange} />
         </Box>
       )}

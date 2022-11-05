@@ -1,12 +1,12 @@
-import { AllTimeAggregations } from "../../types/types"
+import { AllTimeAggregations } from '../../types/types'
 
-import Box from "@mui/material/Box"
-import Typography from "@mui/material/Typography"
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 
-import getSymbolFromCurrency from "currency-map-symbol"
-import BalanceChart from "../Charts/BalanceChart"
-import CategoriesCharts from "../Charts/CategoriesChart"
-import Stat from "../Stat/Stat"
+import getSymbolFromCurrency from 'currency-map-symbol'
+import BalanceChart from '../Charts/BalanceChart'
+import CategoriesCharts from '../Charts/CategoriesChart'
+import Stat from '../Stat/Stat'
 
 interface AllTimeInsightContentProps {
   allTimeAggregations: AllTimeAggregations
@@ -20,10 +20,10 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
       </Typography>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          "& > *": { mr: 2 },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          '& > *': { mr: 2 }
         }}
       >
         <Stat
@@ -36,8 +36,8 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
           ).toLocaleDateString()}`}
           color={
             Math.abs(allTimeAggregations.totalMinus) > Math.abs(allTimeAggregations.totalPlus)
-              ? "error.main"
-              : "success.main"
+              ? 'error.main'
+              : 'success.main'
           }
         />
 
@@ -71,10 +71,10 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
           color="success.main"
         />
       </Box>
-      <Box sx={{ width: "100%", height: 200 }}>
+      <Box sx={{ width: '100%', height: 200 }}>
         <BalanceChart data={allTimeAggregations.transactions} />
       </Box>
-      <Box sx={{ width: "100%", height: 300 }}>
+      <Box sx={{ width: '100%', height: 300 }}>
         <CategoriesCharts categories={allTimeAggregations.categories} />
       </Box>
     </Box>

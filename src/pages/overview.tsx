@@ -1,6 +1,6 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next'
 
-import TransactionDatagridContainer from "../components/TransactionDatagrid/TransactionDatagridContainer"
+import TransactionDatagridContainer from '../components/TransactionDatagrid/TransactionDatagridContainer'
 
 export const getStaticProps = async () => {
   return { props: {} }

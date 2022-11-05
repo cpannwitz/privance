@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box"
-import IconButton from "@mui/material/IconButton"
-import TextField from "@mui/material/TextField"
-import ClearIcon from "@mui/icons-material/Clear"
-import SearchIcon from "@mui/icons-material/Search"
+import Box from '@mui/material/Box'
+import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
+import ClearIcon from '@mui/icons-material/Clear'
+import SearchIcon from '@mui/icons-material/Search'
 
 interface QuicksearchProps {
   clearSearch: () => void
@@ -15,7 +15,7 @@ const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
     <Box
       sx={{
         p: 0.5,
-        pb: 0,
+        pb: 0
       }}
     >
       <TextField
@@ -31,26 +31,26 @@ const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
               title="Clear"
               aria-label="Clear"
               size="small"
-              style={{ visibility: value ? "visible" : "hidden" }}
+              style={{ visibility: value ? 'visible' : 'hidden' }}
               onClick={clearSearch}
             >
               <ClearIcon fontSize="small" />
             </IconButton>
-          ),
+          )
         }}
         sx={{
           width: {
             xs: 1,
-            sm: "auto",
+            sm: 'auto'
           },
           m: theme => theme.spacing(1, 0.5, 1.5),
-          "& .MuiSvgIcon-root": {
-            mr: 0.5,
+          '& .MuiSvgIcon-root': {
+            mr: 0.5
           },
-          "& .MuiInput-underline:before": {
+          '& .MuiInput-underline:before': {
             borderBottom: 1,
-            borderColor: "divider",
-          },
+            borderColor: 'divider'
+          }
         }}
       />
     </Box>

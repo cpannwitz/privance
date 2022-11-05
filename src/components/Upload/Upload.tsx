@@ -1,12 +1,12 @@
-import { useState } from "react"
-import axios, { AxiosError } from "axios"
-import { useRouter } from "next/router"
-import { useSnackbar } from "notistack"
+import { useState } from 'react'
+import axios, { AxiosError } from 'axios'
+import { useRouter } from 'next/router'
+import { useSnackbar } from 'notistack'
 
-import UploadPreview from "./UploadPreview"
-import UploadCSV from "../UploadCSV/UploadCSV"
-import { AutomationRuleWithCategory, TransactionBeforeUpload } from "../../types/types"
-import { Category } from "@prisma/client"
+import UploadPreview from './UploadPreview'
+import UploadCSV from '../UploadCSV/UploadCSV'
+import { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
+import { Category } from '@prisma/client'
 
 interface UploadProps {
   automationRules: AutomationRuleWithCategory[]
@@ -17,8 +17,9 @@ const Upload = ({ automationRules, categories = [] }: UploadProps) => {
   const router = useRouter()
   const { enqueueSnackbar } = useSnackbar()
 
-  const [uploadedTransactions, setUploadedTransactions] =
-    useState<TransactionBeforeUpload[] | undefined>(undefined)
+  const [uploadedTransactions, setUploadedTransactions] = useState<
+    TransactionBeforeUpload[] | undefined
+  >(undefined)
 
   function onUpdateTransaction(transaction: TransactionBeforeUpload) {
     if (uploadedTransactions) {
@@ -44,19 +45,19 @@ const Upload = ({ automationRules, categories = [] }: UploadProps) => {
     if (uploadedTransactions) {
       // TODO: extract api call
       axios
-        .post("/api/transactions/addTransactions", uploadedTransactions)
+        .post('/api/transactions/addTransactions', uploadedTransactions)
         .then(() => {
-          enqueueSnackbar("Added your transactions", {
-            variant: "success",
+          enqueueSnackbar('Added your transactions', {
+            variant: 'success'
           })
           router.push({
-            pathname: `/overview`,
+            pathname: `/overview`
           })
         })
-        .catch((error: AxiosError) => {
+        .catch((error: AxiosError<{ error: string }>) => {
           if (error.response) {
             enqueueSnackbar(`Couldn't add your transactions: ${error.response.data.error}`, {
-              variant: "error",
+              variant: 'error'
             })
             onCancelUploadTransactions()
           }

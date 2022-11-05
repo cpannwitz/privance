@@ -1,6 +1,6 @@
-import type { InferGetStaticPropsType } from "next"
+import type { InferGetStaticPropsType } from 'next'
 
-import UploadContainer from "../components/Upload/UploadContainer"
+import UploadContainer from '../components/Upload/UploadContainer'
 
 export const getStaticProps = async () => {
   return { props: {} }

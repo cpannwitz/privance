@@ -1,10 +1,10 @@
-import { TransactionWithCategory } from "../types/types"
+import { TransactionWithCategory } from '../types/types'
 
 function sortTransactions(
   transactions: TransactionWithCategory[],
-  sortDirection: "asc" | "desc" = "desc"
+  sortDirection: 'asc' | 'desc' = 'desc'
 ) {
-  const isDesc = sortDirection === "desc"
+  const isDesc = sortDirection === 'desc'
   const sorted = [...transactions].sort((a, b) => {
     if (!a.issuedate || !b.issuedate) return 0
 

@@ -1,18 +1,18 @@
-import { useCallback } from "react"
-import Box from "@mui/material/Box"
-import axios, { AxiosError } from "axios"
-import { useSnackbar } from "notistack"
+import { useCallback } from 'react'
+import Box from '@mui/material/Box'
+import axios, { AxiosError } from 'axios'
+import { useSnackbar } from 'notistack'
 
-import useGetTransactions from "../hooks/useGetTransactions"
-import useGetCategories from "../hooks/useGetCategories"
+import useGetTransactions from '../hooks/useGetTransactions'
+import useGetCategories from '../hooks/useGetCategories'
 
-import DataIsEmpty from "../DataStates/DataIsEmpty"
-import DataIsError from "../DataStates/DataIsError"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import TransactionDatagrid from "./TransactionDatagrid"
+import DataIsEmpty from '../DataStates/DataIsEmpty'
+import DataIsError from '../DataStates/DataIsError'
+import DataIsLoading from '../DataStates/DataIsLoading'
+import TransactionDatagrid from './TransactionDatagrid'
 
-import routerLinks from "../../shared/routerLinks"
-import { TransactionWithCategory } from "../../types/types"
+import routerLinks from '../../shared/routerLinks'
+import { TransactionWithCategory } from '../../types/types'
 
 interface TransactionDatagridContainerProps {}
 const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => {
@@ -22,14 +22,14 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
     data: transactions,
     isError: isErrorTransactions,
     isLoading: isLoadingTransactions,
-    mutate: mutateTransactions,
+    mutate: mutateTransactions
   } = useGetTransactions()
 
   const {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories,
+    mutate: mutateCategories
   } = useGetCategories()
 
   const retry = useCallback(() => {
@@ -49,13 +49,13 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
 
   function onUpdateTransaction(transaction: TransactionWithCategory) {
     axios
-      .post<{ data: TransactionWithCategory }>("/api/transactions/updateTransactionCategory", {
+      .post<{ data: TransactionWithCategory }>('/api/transactions/updateTransactionCategory', {
         id: transaction.id,
-        category: transaction?.category?.id ?? undefined,
+        category: transaction?.category?.id ?? undefined
       })
       .then(res => {
         enqueueSnackbar(`Updated your Transaction!`, {
-          variant: "success",
+          variant: 'success'
         })
 
         const updatedTransaction = res.data.data
@@ -71,17 +71,17 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
           return { data }
         }, false)
       })
-      .catch((error: AxiosError) => {
+      .catch((error: AxiosError<any>) => {
         if (error.response) {
           enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
-            variant: "error",
+            variant: 'error'
           })
         }
       })
   }
 
   return (
-    <Box sx={{ height: "100%" }}>
+    <Box sx={{ height: '100%' }}>
       <TransactionDatagrid
         transactions={transactions}
         categories={categories}

@@ -1,9 +1,9 @@
-import Dialog, { DialogProps } from "@mui/material/Dialog"
-import DialogActions from "@mui/material/DialogActions"
-import DialogContent from "@mui/material/DialogContent"
-import DialogTitle from "@mui/material/DialogTitle"
+import Dialog, { DialogProps } from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogTitle from '@mui/material/DialogTitle'
 
-import { PropsWithChildren, ReactNode } from "react"
+import { PropsWithChildren, ReactNode } from 'react'
 
 interface OpenModalProps {
   onCancel: () => void
@@ -13,11 +13,11 @@ interface OpenModalProps {
 }
 
 const OpenModal = ({
-  modalTitle = "",
+  modalTitle = '',
   onCancel = () => {},
   footerChildren = null,
   modalProps,
-  children,
+  children
 }: PropsWithChildren<OpenModalProps>) => {
   return (
     <Dialog fullWidth open={true} onClose={onCancel} {...modalProps}>

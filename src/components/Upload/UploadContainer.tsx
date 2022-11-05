@@ -1,10 +1,10 @@
-import { useCallback } from "react"
+import { useCallback } from 'react'
 
-import Upload from "./Upload"
-import DataIsError from "../DataStates/DataIsError"
-import DataIsLoading from "../DataStates/DataIsLoading"
-import useGetAutomationRulesActive from "../hooks/useGetAutomationRulesActive"
-import useGetCategories from "../hooks/useGetCategories"
+import Upload from './Upload'
+import DataIsError from '../DataStates/DataIsError'
+import DataIsLoading from '../DataStates/DataIsLoading'
+import useGetAutomationRulesActive from '../hooks/useGetAutomationRulesActive'
+import useGetCategories from '../hooks/useGetCategories'
 
 interface UploadContainerProps {}
 
@@ -13,14 +13,14 @@ const UploadContainer = ({}: UploadContainerProps) => {
     data: automationRules,
     isError: isErrorAutomationRules,
     isLoading: isLoadingAutomationRules,
-    mutate: mutateAutomationRules,
+    mutate: mutateAutomationRules
   } = useGetAutomationRulesActive()
 
   const {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories,
+    mutate: mutateCategories
   } = useGetCategories()
 
   const retry = useCallback(() => {

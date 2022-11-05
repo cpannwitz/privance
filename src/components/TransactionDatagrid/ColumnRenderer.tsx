@@ -1,12 +1,12 @@
-import { GridRenderCellParams } from "@mui/x-data-grid"
-import { Category } from "@prisma/client"
+import { GridRenderCellParams } from '@mui/x-data-grid'
+import { Category } from '@prisma/client'
 
-import getSymbolFromCurrency from "currency-map-symbol"
+import getSymbolFromCurrency from 'currency-map-symbol'
 
-import Tooltip from "@mui/material/Tooltip"
-import Typography from "@mui/material/Typography"
-import { TransactionWithCategory } from "../../types/types"
-import CategorySelect from "../CategorySelect/CategorySelect"
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { TransactionWithCategory } from '../../types/types'
+import CategorySelect from '../CategorySelect/CategorySelect'
 
 interface CategoryRendererProps extends GridRenderCellParams<Category, TransactionWithCategory> {
   onUpdateTransaction?: (transaction: TransactionWithCategory) => void
@@ -15,7 +15,7 @@ interface CategoryRendererProps extends GridRenderCellParams<Category, Transacti
 export const CategoryEditRenderer = ({
   row,
   formattedValue: value,
-  onUpdateTransaction,
+  onUpdateTransaction
 }: CategoryRendererProps) => {
   function updateCategory(category: Category | null) {
     if (!onUpdateTransaction) return
@@ -29,7 +29,7 @@ interface TextRendererProps extends GridRenderCellParams<string, TransactionWith
 
 export const TextRenderer = ({ value, formattedValue }: TextRendererProps) => {
   return (
-    <Tooltip arrow enterDelay={200} placement="bottom" title={formattedValue || value || ""}>
+    <Tooltip arrow enterDelay={200} placement="bottom" title={formattedValue || value || ''}>
       <span>{formattedValue || value}</span>
     </Tooltip>
   )
@@ -42,7 +42,7 @@ export const AmountRenderer = ({ value, row }: AmountRendererProps) => {
     return null
   }
   const currency = row.amountCurrency
-  const color = value < 0 ? "error.main" : "success.main"
+  const color = value < 0 ? 'error.main' : 'success.main'
   return (
     <Typography fontWeight="bold" color={color}>
       {value.toFixed(2)}
@@ -59,7 +59,7 @@ export const BalanceRenderer = ({ value, row }: BalanceRendererProps) => {
     return null
   }
   const currency = row.balanceCurrency
-  const color = value < 0 ? "error.dark" : "grey.500"
+  const color = value < 0 ? 'error.dark' : 'grey.500'
   return (
     <Typography fontWeight="bold" color={color}>
       {value.toFixed(2)}
