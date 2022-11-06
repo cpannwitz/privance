@@ -1,4 +1,4 @@
-import { useDropzone, type Accept } from 'react-dropzone'
+import { useDropzone, Accept } from 'react-dropzone'
 import Box from '@mui/material/Box'
 
 // https://react-dropzone.js.org/

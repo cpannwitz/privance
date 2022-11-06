@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import FormHelperText from '@mui/material/FormHelperText'
 
-import type { AutomationRuleWithCategory } from '../../../types/types'
+import { AutomationRuleWithCategory } from '../../../types/types'
 
 interface ValuePickerProps {}
 

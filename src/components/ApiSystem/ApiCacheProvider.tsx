@@ -1,13 +1,13 @@
 import { SWRConfig } from 'swr'
-import axios, { type AxiosError, type AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { useNotification } from '../NotificationSystem/useNotification'
-import type { ApiResponseData } from '../../shared/apiHelpers'
+import { ApiResponseData } from '../../shared/apiHelpers'
 
 interface SWRProviderProps {
   children?: React.ReactNode
 }
 
-const SWRProvider = ({ children }: SWRProviderProps) => {
+const ApiCacheProvider = ({ children }: SWRProviderProps) => {
   const { notify } = useNotification()
   return (
     <SWRConfig
@@ -31,4 +31,4 @@ const SWRProvider = ({ children }: SWRProviderProps) => {
   )
 }
 
-export default SWRProvider
+export default ApiCacheProvider

@@ -89,23 +89,21 @@ const MonthGridItem = ({
             currency
           )}`}
           sublabel=""
-          color={
-            Math.abs(totalMonthMinus) > Math.abs(totalMonthPlus) ? 'error.main' : 'success.main'
-          }
+          isPositive={Math.abs(totalMonthMinus) < Math.abs(totalMonthPlus)}
         />
 
         <Stat
           heading="Spend"
           label={`${Number(totalMonthMinus).toFixed(2)} ${getSymbolFromCurrency(currency)}`}
           sublabel={`${Number(totalMonthMinusPercentage).toFixed(2)}%`}
-          color="error.main"
+          isPositive={false}
         />
 
         <Stat
           heading="Income"
           label={`${Number(totalMonthPlus).toFixed(2)} ${getSymbolFromCurrency(currency)}`}
           sublabel={`${Number(totalMonthPlusPercentage).toFixed(2)}%`}
-          color="success.main"
+          isPositive={true}
         />
       </Stack>
 

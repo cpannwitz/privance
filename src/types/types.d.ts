@@ -1,4 +1,4 @@
-import type { Prisma, Transaction, Category, AutomationRule } from '.prisma/client'
+import { Prisma, Transaction, Category, AutomationRule } from '@prisma/client'
 
 export type TransactionWithCategory = Transaction & {
   category: Category | null

@@ -13,8 +13,8 @@ interface OpenModalProps {
 }
 
 const OpenModal = ({
+  onCancel,
   modalTitle = '',
-  onCancel = () => {},
   footerChildren = null,
   modalProps,
   children

@@ -1,4 +1,4 @@
-import type { SubmitHandler } from 'react-hook-form'
+import { SubmitHandler } from 'react-hook-form'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
@@ -10,7 +10,7 @@ import CategoryPicker from './CategoryPicker'
 import ValuePicker from './ValuePicker'
 
 import { schema } from './FormUtils'
-import type { AutomationRuleWithCategory } from '../../../types/types'
+import { AutomationRuleWithCategory } from '../../../types/types'
 
 interface AutomationEditProps {
   onSave: (automationRule: AutomationRuleWithCategory) => void

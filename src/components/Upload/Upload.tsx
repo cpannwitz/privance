@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import axios, { type AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 
 import { useNotification } from '../NotificationSystem/useNotification'
 import UploadPreview from './UploadPreview'
 import UploadCSV from '../UploadCSV/UploadCSV'
-import type { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
-import type { Category } from '@prisma/client'
+import { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
+import { Category } from '@prisma/client'
 
 interface UploadProps {
   automationRules: AutomationRuleWithCategory[]

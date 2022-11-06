@@ -1,5 +1,5 @@
 import { SnackbarProvider } from 'notistack'
-import type { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 
 interface NotificationProviderProps {}
 

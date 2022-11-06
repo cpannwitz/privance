@@ -1,5 +1,5 @@
 import CircularProgress from '@mui/material/CircularProgress'
-import Center from '../shared/Center'
+import Center from './Center'
 
 const DataIsLoading = () => (
   <Center sx={{ height: '12rem' }}>

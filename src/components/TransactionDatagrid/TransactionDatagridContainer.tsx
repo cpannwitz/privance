@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import Box from '@mui/material/Box'
-import axios, { type AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
 import useGetTransactions from '../hooks/useGetTransactions'
 import useGetCategories from '../hooks/useGetCategories'
@@ -12,7 +12,7 @@ import TransactionDatagrid from './TransactionDatagrid'
 
 import { useNotification } from '../NotificationSystem/useNotification'
 import { routerLinks } from '../../shared/routerLinks'
-import type { TransactionWithCategory } from '../../types/types'
+import { TransactionWithCategory } from '../../types/types'
 
 interface TransactionDatagridContainerProps {}
 const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => {

@@ -1,15 +1,19 @@
-import Box from '@mui/material/Box'
-import TrendUpIcon from '@mui/icons-material/TrendingUpOutlined'
 import { ReactNode } from 'react'
 
+import Box from '@mui/material/Box'
+import TrendUpIcon from '@mui/icons-material/TrendingUpOutlined'
+import TrendDownIcon from '@mui/icons-material/TrendingDownOutlined'
+
 interface StatProps {
-  color?: string
+  isPositive?: boolean
   heading: string
   label: ReactNode
   sublabel: string
 }
 
-const Stat = ({ color = 'text.primary', heading = '', label = '', sublabel = '' }: StatProps) => {
+const Stat = ({ isPositive = true, heading = '', label = '', sublabel = '' }: StatProps) => {
+  const icon = isPositive ? TrendUpIcon : TrendDownIcon
+  const color = isPositive ? 'success.main' : 'error.main'
   return (
     <Box
       sx={{
@@ -31,7 +35,7 @@ const Stat = ({ color = 'text.primary', heading = '', label = '', sublabel = '' 
         {label}
       </Box>
       <Box
-        component={TrendUpIcon}
+        component={icon}
         sx={{
           color: color,
           fontSize: 16,

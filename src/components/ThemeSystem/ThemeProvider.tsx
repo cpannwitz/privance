@@ -1,12 +1,14 @@
+import { useMemo } from 'react'
+
 import '@fontsource/source-sans-pro'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles'
-import { CacheProvider } from '@emotion/react'
+import { CacheProvider as EmotionCacheProvider } from '@emotion/react'
 import createCache from '@emotion/cache'
-import getMuiTheme from './theme'
 
-import { useMemo } from 'react'
+import BaseLayout from './BaseLayout'
+import getMuiTheme from './theme'
 
 interface ThemeProviderProps {
   children?: React.ReactNode
@@ -22,12 +24,12 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const muiTheme = useMemo(() => getMuiTheme({ prefersDarkMode }), [prefersDarkMode])
 
   return (
-    <CacheProvider value={cache}>
+    <EmotionCacheProvider value={cache}>
       <MUIThemeProvider theme={muiTheme}>
         <CssBaseline enableColorScheme />
-        {children}
+        <BaseLayout>{children}</BaseLayout>
       </MUIThemeProvider>
-    </CacheProvider>
+    </EmotionCacheProvider>
   )
 }
 export default ThemeProvider

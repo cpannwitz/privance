@@ -1,12 +1,11 @@
 import { useState } from 'react'
-import axios, { type AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
-import type { Prisma, Category } from '.prisma/client'
+import { Prisma, Category } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import Chip from '@mui/material/Chip'
 import Badge from '@mui/material/Badge'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
@@ -23,13 +22,13 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
 import { useNotification } from '../NotificationSystem/useNotification'
 import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
-import type { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
+import { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
-import { icons, placeholderIcon } from '../../shared/iconUtils'
 
 import { useRouter } from 'next/router'
 
 import useGetAutomationRulesByCategory from '../hooks/useGetAutomationRulesByCategory'
+import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 
 interface AutomationRulesListProps {
   data: CategoryWithAutomationRules[]
@@ -230,15 +229,7 @@ const AutomationRulesCategory = ({ children, category }: AutomationRulesCategory
         '& > *': { mr: 2 }
       }}
     >
-      <Chip
-        label={category.name}
-        icon={category.icon ? icons[category.icon] : placeholderIcon}
-        sx={{
-          backgroundColor: category.color || undefined,
-          color: 'white',
-          '& .MuiChip-icon': { color: 'white' }
-        }}
-      />
+      <CategoryDisplay category={category} />
 
       {children}
     </Box>

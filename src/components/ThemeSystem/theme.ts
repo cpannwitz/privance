@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
-import type {} from '@mui/x-data-grid/themeAugmentation'
+import {} from '@mui/x-data-grid/themeAugmentation'
 
 declare module '@mui/material/styles' {
   interface Theme {

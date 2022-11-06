@@ -1,4 +1,4 @@
-import { Category, Prisma } from '.prisma/client'
+import { Category, Prisma } from '@prisma/client'
 import { SubmitHandler } from 'react-hook-form'
 
 import ColorPicker from './ColorPicker'

@@ -34,10 +34,8 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
           sublabel={`${new Date(allTimeAggregations.startDate).toLocaleDateString()} - ${new Date(
             allTimeAggregations.endDate
           ).toLocaleDateString()}`}
-          color={
-            Math.abs(allTimeAggregations.totalMinus) > Math.abs(allTimeAggregations.totalPlus)
-              ? 'error.main'
-              : 'success.main'
+          isPositive={
+            Math.abs(allTimeAggregations.totalMinus) < Math.abs(allTimeAggregations.totalPlus)
           }
         />
 
@@ -51,6 +49,9 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
           sublabel={`${Number(allTimeAggregations.preBalance).toFixed(2)} ${getSymbolFromCurrency(
             allTimeAggregations.currency
           )} pre-existent`}
+          isPositive={
+            Math.abs(allTimeAggregations.totalMinus) < Math.abs(allTimeAggregations.totalPlus)
+          }
         />
 
         <Stat
@@ -59,7 +60,7 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
             allTimeAggregations.currency
           )}`}
           sublabel={`${Number(allTimeAggregations.totalMinusPercentage).toFixed(2)}%`}
-          color="error.main"
+          isPositive={false}
         />
 
         <Stat
@@ -68,7 +69,7 @@ const AllTimeInsightContent = ({ allTimeAggregations }: AllTimeInsightContentPro
             allTimeAggregations.currency
           )}`}
           sublabel={`${Number(allTimeAggregations.totalPlusPercentage).toFixed(2)}%`}
-          color="success.main"
+          isPositive={true}
         />
       </Box>
       <Box sx={{ width: '100%', height: 200 }}>

@@ -1,7 +1,7 @@
-import type { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig } from 'axios'
 import { useMemo } from 'react'
 import useSWR from 'swr'
-import type { TransactionWithCategory } from '../../types/types'
+import { TransactionWithCategory } from '../../types/types'
 
 export default function useGetAutomationRuleTransactions(rule: number) {
   const requestConfig: AxiosRequestConfig = useMemo(() => ({ params: { rule } }), [rule])
