@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, startTransition } from 'react'
 import {
+  GridColDef,
   DataGrid,
   GridCellParams,
   GridFilterInputSingleSelect,
@@ -10,7 +11,6 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector
 } from '@mui/x-data-grid'
-import { GridColDef } from '@mui/x-data-grid'
 
 import Box from '@mui/material/Box'
 
