@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import Center from '../shared/Center'
+import Center from './Center'
 
 const DataIsEmpty = ({ linkUrl }: { linkUrl?: string }) => {
   const router = useRouter()
