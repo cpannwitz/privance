@@ -9,12 +9,12 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import SvgIcon from '@mui/material/SvgIcon'
-import { useSnackbar } from 'notistack'
 
 import EditIcon from '@mui/icons-material/EditOutlined'
 import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
+import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 import { icons, placeholderIcon } from '../../shared/iconUtils'
@@ -33,7 +33,7 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
   const { mutate: mutateCategories } = useGetCategoriesTransactions()
 
   const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
   const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined)
 
   function onAddCategory() {
@@ -53,15 +53,11 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
       axios
         .post('/api/categories/upsertCategory', category)
         .then(() => {
-          enqueueSnackbar(`Added or updated your category!`, {
-            variant: 'success'
-          })
+          notify(`Added or updated your category!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(`Couldn't add/update your category: ${error.response.data.error}`, {
-              variant: 'error'
-            })
+            notify(`Couldn't add/update your category: ${error.response.data.error}`, 'error')
           }
         })
         .finally(() => {
@@ -78,15 +74,11 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
           params: { id: category.id }
         })
         .then(() => {
-          enqueueSnackbar(`Deleted your Category!`, {
-            variant: 'success'
-          })
+          notify(`Deleted your Category!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(`Couldn't delete your category: ${error.response.data.error}`, {
-              variant: 'error'
-            })
+            notify(`Couldn't delete your category: ${error.response.data.error}`, 'error')
           }
         })
         .finally(() => {

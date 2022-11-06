@@ -14,7 +14,7 @@ import UploadIcon from '@mui/icons-material/CloudUpload'
 import CategoriesIcon from '@mui/icons-material/CategoryOutlined'
 import AutomationRuleIcon from '@mui/icons-material/MotionPhotosAutoOutlined'
 
-import routerLinks from '../../shared/routerLinks'
+import { routerLinks } from '../../shared/routerLinks'
 
 const NavbarLinks = () => {
   const router = useRouter()

@@ -7,5 +7,3 @@ export const routerLinks = {
   OVERVIEW: `/overview`,
   UPLOAD: `/upload`
 }
-
-export default routerLinks

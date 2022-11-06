@@ -1,5 +1,4 @@
 import '@fontsource/source-sans-pro'
-import { SnackbarProvider } from 'notistack'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider as MUIThemeProvider } from '@mui/material/styles'
@@ -25,10 +24,8 @@ const ThemeProvider = ({ children }: ThemeProviderProps) => {
   return (
     <CacheProvider value={cache}>
       <MUIThemeProvider theme={muiTheme}>
-        <SnackbarProvider maxSnack={3}>
-          <CssBaseline enableColorScheme />
-          {children}
-        </SnackbarProvider>
+        <CssBaseline enableColorScheme />
+        {children}
       </MUIThemeProvider>
     </CacheProvider>
   )

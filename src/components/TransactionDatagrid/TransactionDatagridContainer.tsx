@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 import Box from '@mui/material/Box'
-import axios, { AxiosError } from 'axios'
-import { useSnackbar } from 'notistack'
+import axios, { type AxiosError } from 'axios'
 
 import useGetTransactions from '../hooks/useGetTransactions'
 import useGetCategories from '../hooks/useGetCategories'
@@ -11,12 +10,13 @@ import DataIsError from '../DataStates/DataIsError'
 import DataIsLoading from '../DataStates/DataIsLoading'
 import TransactionDatagrid from './TransactionDatagrid'
 
-import routerLinks from '../../shared/routerLinks'
-import { TransactionWithCategory } from '../../types/types'
+import { useNotification } from '../NotificationSystem/useNotification'
+import { routerLinks } from '../../shared/routerLinks'
+import type { TransactionWithCategory } from '../../types/types'
 
 interface TransactionDatagridContainerProps {}
 const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => {
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
 
   const {
     data: transactions,
@@ -54,9 +54,7 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
         category: transaction?.category?.id ?? undefined
       })
       .then(res => {
-        enqueueSnackbar(`Updated your Transaction!`, {
-          variant: 'success'
-        })
+        notify(`Updated your Transaction!`, 'success')
 
         const updatedTransaction = res.data.data
 
@@ -73,9 +71,7 @@ const TransactionDatagridContainer = ({}: TransactionDatagridContainerProps) => 
       })
       .catch((error: AxiosError<any>) => {
         if (error.response) {
-          enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
-            variant: 'error'
-          })
+          notify(`Couldn't update your transaction: ${error.response.data.error}`, 'error')
         }
       })
   }
