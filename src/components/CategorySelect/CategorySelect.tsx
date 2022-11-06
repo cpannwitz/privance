@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Category } from '.prisma/client'
+import { Category } from '@prisma/client'
 
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'

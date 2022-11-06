@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import axios, { type AxiosError } from 'axios'
-import type { Category, Transaction, Prisma } from '.prisma/client'
+import type { Category, Transaction, Prisma } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'

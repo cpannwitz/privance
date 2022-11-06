@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import { Datum, ResponsiveLine, PointTooltipProps as TooltipType, Point } from '@nivo/line'
 
 import getSymbolFromCurrency from 'currency-map-symbol'
-import { Transaction } from '.prisma/client'
+import { Transaction } from '@prisma/client'
 
 function lineChartTransformer(data: Transaction[]): Datum[] {
   return data.map(t => ({

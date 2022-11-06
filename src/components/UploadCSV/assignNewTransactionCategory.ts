@@ -1,5 +1,5 @@
 import type { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
-import type { Category } from '.prisma/client'
+import type { Category } from '@prisma/client'
 
 function assignNewTransactionCategory(
   transactions: TransactionBeforeUpload[],

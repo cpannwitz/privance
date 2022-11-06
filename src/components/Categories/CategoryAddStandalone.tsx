@@ -1,5 +1,5 @@
 import axios, { type AxiosError } from 'axios'
-import type { Category, Prisma } from '.prisma/client'
+import type { Category, Prisma } from '@prisma/client'
 
 import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'

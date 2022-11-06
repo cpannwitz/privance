@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { Category } from '.prisma/client'
+import { Category } from '@prisma/client'
 
 export default function useGetCategories() {
   const { data, error, isValidating, mutate } = useSWR<{ data: Category[] }>(

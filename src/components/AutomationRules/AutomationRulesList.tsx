@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios, { type AxiosError } from 'axios'
 
-import type { Prisma, Category } from '.prisma/client'
+import type { Prisma, Category } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'

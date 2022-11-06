@@ -1,25 +1,25 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
-import type { Category } from '.prisma/client';
-import { prisma } from '../../../shared/database';
+import type { NextApiRequest, NextApiResponse } from 'next'
+import type { Category } from '@prisma/client'
+import { prisma } from '../../../shared/database'
 
 export type ResponseData = {
-  error?: string;
-  data?: Category;
-};
+  error?: string
+  data?: Category
+}
 
 export default async function deleteCategory(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method !== 'DELETE') {
-    return res.status(405).json({ error: 'wrong http method' });
+    return res.status(405).json({ error: 'wrong http method' })
   }
 
-  const { id } = req.query;
+  const { id } = req.query
 
   if (!id) {
-    return res.status(400).json({ error: 'missing argument' });
+    return res.status(400).json({ error: 'missing argument' })
   }
 
   try {
@@ -27,10 +27,10 @@ export default async function deleteCategory(
       where: {
         id: Number(id)
       }
-    });
-    res.json({ data });
+    })
+    res.json({ data })
   } catch (err) {
-    console.error(`ERROR | deleteCategory: `, err);
-    res.status(500).json({ error: 'Internal error | Could not delete category' });
+    console.error(`ERROR | deleteCategory: `, err)
+    res.status(500).json({ error: 'Internal error | Could not delete category' })
   }
 }
