@@ -4,18 +4,17 @@ import { useRouter } from 'next/router'
 import { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types'
 import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
 
-import { icons, placeholderIcon } from '../../shared/iconUtils'
 import { useNotification } from '../NotificationSystem/useNotification'
 
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
-import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
 
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
 import CancelIcon from '@mui/icons-material/CancelOutlined'
 import { Category } from '@prisma/client'
+import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 
 interface AutomationRuleApplyPreviewProps {
   automationRule: AutomationRuleWithCategory
@@ -63,18 +62,7 @@ const AutomationRuleApplyPreview = ({
           Could apply following category to <b>{transactions.length}</b> transactions:
         </Box>
 
-        <Chip
-          key={automationRule.id}
-          label={automationRule.category.name}
-          icon={
-            automationRule.category.icon ? icons[automationRule.category.icon] : placeholderIcon
-          }
-          sx={{
-            backgroundColor: automationRule.category.color || undefined,
-            color: 'white',
-            '& .MuiChip-icon': { color: 'white' }
-          }}
-        />
+        <CategoryDisplay category={automationRule.category} />
       </Alert>
 
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>

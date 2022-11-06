@@ -3,12 +3,10 @@ import axios, { AxiosError } from 'axios'
 import { Category, Transaction, Prisma } from '@prisma/client'
 
 import Box from '@mui/material/Box'
-import Avatar from '@mui/material/Avatar'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import SvgIcon from '@mui/material/SvgIcon'
 
 import EditIcon from '@mui/icons-material/EditOutlined'
 import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
@@ -17,9 +15,9 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
-import { icons, placeholderIcon } from '../../shared/iconUtils'
 import { CategoriesStatistics, CategoryWithTransactions } from '../../types/types'
 import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions'
+import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 
 const getTransactionsBalance = (transactions: Transaction[]) =>
   Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0))
@@ -150,7 +148,6 @@ interface CategoryListItemProps {
 }
 
 export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListItemProps) => {
-  const { name, color, icon } = category
   function onEditCategory() {
     onEdit(category)
   }
@@ -169,11 +166,8 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
           minWidth: '26rem'
         }}
       >
-        <Avatar sx={{ bgcolor: color || 'grey.100', mr: 2 }}>
-          <SvgIcon htmlColor="white">{icon ? icons[icon] : placeholderIcon}</SvgIcon>
-        </Avatar>
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-          <Typography fontSize={20}>{name}</Typography>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+          <CategoryDisplay category={category} />
           <Typography color="GrayText" fontSize={16}>
             {getTransactionsBalance(category.transactions)} €
           </Typography>

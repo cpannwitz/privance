@@ -2,18 +2,15 @@ import { useState } from 'react'
 import { Category } from '@prisma/client'
 
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import SvgIcon from '@mui/material/SvgIcon'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 
 import { useTheme } from '@mui/material/styles'
 
 import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from 'react-select'
 
-import { icons, placeholderIcon } from '../../shared/iconUtils'
 import useGetCategories from '../hooks/useGetCategories'
 import CategoryAddStandalone from '../Categories/CategoryAddStandalone'
+import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 
 interface CategorySelectProps {
   value?: Category | null
@@ -53,17 +50,7 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
         <CategoryAddStandalone onClose={onCloseAddCategory} onAddCategory={onAddCategory} />
       ) : null}
 
-      {/* // TODO: Extract into own comp */}
-      <Chip
-        label={value?.name ?? 'Choose Category'}
-        icon={value?.icon ? icons[value.icon] : placeholderIcon}
-        onClick={toggleIsSelectOpen}
-        sx={{
-          backgroundColor: value?.color || '#bbbbbb',
-          color: 'white',
-          '& .MuiChip-icon': { color: 'white' }
-        }}
-      />
+      <CategoryDisplay category={value} onClick={toggleIsSelectOpen} />
 
       {isSelectOpen && (
         <ClickAwayListener onClickAway={setSelectOpenFalse}>
@@ -91,7 +78,7 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
               container: base => ({ ...base, position: 'absolute' }),
               control: base => ({
                 ...base,
-                width: '14rem'
+                width: '12rem'
               }),
               option: base => ({
                 ...base,
@@ -130,18 +117,10 @@ const CategorySelect = ({ value, onChange }: CategorySelectProps) => {
 
 export default CategorySelect
 
-const SelectOption = ({
-  children,
-  data,
-  ...props
-}: OptionProps<Category, false, GroupBase<Category>>) => {
+const SelectOption = ({ data, ...props }: OptionProps<Category, false, GroupBase<Category>>) => {
   return (
     <components.Option {...props} data={data}>
-      <SvgIcon htmlColor={data.color || undefined}>
-        {data.icon ? icons[data.icon] : placeholderIcon}
-        {children}
-      </SvgIcon>
-      <Typography sx={{ ml: 1 }}>{data.name}</Typography>
+      <CategoryDisplay category={data} />
     </components.Option>
   )
 }
