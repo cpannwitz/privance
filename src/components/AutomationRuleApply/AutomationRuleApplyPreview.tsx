@@ -5,14 +5,13 @@ import type { AutomationRuleWithCategory, TransactionWithCategory } from '../../
 import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
 
 import { icons, placeholderIcon } from '../../shared/iconUtils'
+import { useNotification } from '../NotificationSystem/useNotification'
 
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Chip from '@mui/material/Chip'
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-
-import { useSnackbar } from 'notistack'
 
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
 import CancelIcon from '@mui/icons-material/CancelOutlined'
@@ -34,7 +33,7 @@ const AutomationRuleApplyPreview = ({
     router.push(`/automationrules`)
   }
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
   function onApplyCategory() {
     const bodyData = transactions.map(transaction => ({
       id: transaction.id,
@@ -47,16 +46,12 @@ const AutomationRuleApplyPreview = ({
         bodyData
       )
       .then(() => {
-        enqueueSnackbar(`Updated your transactions!`, {
-          variant: 'success'
-        })
+        notify(`Updated your transactions!`, 'success')
         router.push(`/overview`)
       })
       .catch((error: AxiosError<any>) => {
         if (error.response) {
-          enqueueSnackbar(`Couldn't update your transactions: ${error.response.data.error}`, {
-            variant: 'error'
-          })
+          notify(`Couldn't update your transactions: ${error.response.data.error}`, 'error')
         }
       })
   }

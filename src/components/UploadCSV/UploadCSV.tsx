@@ -2,10 +2,9 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
-import { useSnackbar } from 'notistack'
-
 import ChartIcon from '@mui/icons-material/AddchartOutlined'
 
+import { useNotification } from '../NotificationSystem/useNotification'
 import parseCSVToTransactions from './parseCSVToJSON'
 import normalizeCSVTransactions from './normalizeCSVTransactions'
 
@@ -24,38 +23,30 @@ const UploadCSV = ({
     return
   }
 }: UploadCSVProps) => {
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
 
   async function onDrop(files: File[]) {
     if (!files || files.length > 1) {
-      enqueueSnackbar('Please upload only one file.', {
-        variant: 'error'
-      })
+      notify('Please upload only one file.', 'error')
       return
     }
 
     const file = files[0]
 
     if (file.type !== 'text/csv') {
-      enqueueSnackbar('Wrong file format', {
-        variant: 'error'
-      })
+      notify('Wrong file format', 'error')
       return
     }
 
     const parsedCSVTransactions = await parseCSVToTransactions(file)
 
     if (!parsedCSVTransactions.data) {
-      enqueueSnackbar('No data found OR not able to process ', {
-        variant: 'error'
-      })
+      notify('No data found OR not able to process ', 'error')
       return
     }
 
     if (parsedCSVTransactions.error) {
-      enqueueSnackbar(parsedCSVTransactions.error.message, {
-        variant: 'error'
-      })
+      notify(parsedCSVTransactions.error.message, 'error')
       console.error(`ERROR |  ~ onDrop ~ UploadCSV )`, parsedCSVTransactions.error)
       return
     }

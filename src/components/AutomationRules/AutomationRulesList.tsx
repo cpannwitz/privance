@@ -3,7 +3,6 @@ import axios, { type AxiosError } from 'axios'
 
 import type { Prisma, Category } from '.prisma/client'
 
-import { useSnackbar } from 'notistack'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
@@ -22,6 +21,7 @@ import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/EditOutlined'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
+import { useNotification } from '../NotificationSystem/useNotification'
 import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
 import type { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
@@ -37,7 +37,7 @@ interface AutomationRulesListProps {
 
 const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
   const { mutate: mutateAutomationRules } = useGetAutomationRulesByCategory()
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
 
   const [editedAutomationRule, setEditedAutomationRule] =
     useState<AutomationRuleWithCategory | null>(null)
@@ -64,17 +64,13 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       axios
         .post('/api/automationrules/addAutomationRule', automationRuleCreateInput)
         .then(() => {
-          enqueueSnackbar(`Added or updated your automation rule!`, {
-            variant: 'success'
-          })
+          notify(`Added or updated your automation rule!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(
+            notify(
               `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              {
-                variant: 'error'
-              }
+              'error'
             )
           }
         })
@@ -91,17 +87,13 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       axios
         .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
         .then(() => {
-          enqueueSnackbar(`Added or updated your automation rule!`, {
-            variant: 'success'
-          })
+          notify(`Added or updated your automation rule!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(
+            notify(
               `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              {
-                variant: 'error'
-              }
+              'error'
             )
           }
         })
@@ -120,15 +112,11 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
           params: { id: automationRule.id }
         })
         .then(() => {
-          enqueueSnackbar(`Deleted your Automation Rule!`, {
-            variant: 'success'
-          })
+          notify(`Deleted your Automation Rule!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(`Couldn't delete your automation rule: ${error.response.data.error}`, {
-              variant: 'error'
-            })
+            notify(`Couldn't delete your automation rule: ${error.response.data.error}`, 'error')
           }
         })
         .finally(() => {
@@ -152,15 +140,11 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       axios
         .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
         .then(() => {
-          enqueueSnackbar(`Updated your automation rule!`, {
-            variant: 'success'
-          })
+          notify(`Updated your automation rule!`, 'success')
         })
         .catch((error: AxiosError<any>) => {
           if (error.response) {
-            enqueueSnackbar(`Couldn't update your automation rule: ${error.response.data.error}`, {
-              variant: 'error'
-            })
+            notify(`Couldn't update your automation rule: ${error.response.data.error}`, 'error')
           }
         })
         .finally(() => {

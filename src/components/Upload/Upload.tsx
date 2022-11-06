@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import axios, { AxiosError } from 'axios'
+import axios, { type AxiosError } from 'axios'
 import { useRouter } from 'next/router'
-import { useSnackbar } from 'notistack'
 
+import { useNotification } from '../NotificationSystem/useNotification'
 import UploadPreview from './UploadPreview'
 import UploadCSV from '../UploadCSV/UploadCSV'
-import { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
-import { Category } from '@prisma/client'
+import type { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
+import type { Category } from '@prisma/client'
 
 interface UploadProps {
   automationRules: AutomationRuleWithCategory[]
@@ -15,7 +15,7 @@ interface UploadProps {
 
 const Upload = ({ automationRules, categories = [] }: UploadProps) => {
   const router = useRouter()
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
 
   const [uploadedTransactions, setUploadedTransactions] = useState<
     TransactionBeforeUpload[] | undefined
@@ -47,18 +47,14 @@ const Upload = ({ automationRules, categories = [] }: UploadProps) => {
       axios
         .post('/api/transactions/addTransactions', uploadedTransactions)
         .then(() => {
-          enqueueSnackbar('Added your transactions', {
-            variant: 'success'
-          })
+          notify('Added your transactions', 'success')
           router.push({
             pathname: `/overview`
           })
         })
         .catch((error: AxiosError<{ error: string }>) => {
           if (error.response) {
-            enqueueSnackbar(`Couldn't add your transactions: ${error.response.data.error}`, {
-              variant: 'error'
-            })
+            notify(`Couldn't add your transactions: ${error.response.data.error}`, 'error')
             onCancelUploadTransactions()
           }
         })

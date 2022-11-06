@@ -4,15 +4,15 @@ import MonthlyInsightGrid from './MonthlyInsightGrid'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 import DataIsError from '../DataStates/DataIsError'
 import DataIsLoading from '../DataStates/DataIsLoading'
-import routerLinks from '../../shared/routerLinks'
-import { TransactionWithCategory } from '../../types/types'
-import { useSnackbar } from 'notistack'
-import axios, { AxiosError } from 'axios'
+import { routerLinks } from '../../shared/routerLinks'
+import type { TransactionWithCategory } from '../../types/types'
+import { useNotification } from '../NotificationSystem/useNotification'
+import axios, { type AxiosError } from 'axios'
 
 interface MonthlyInsightProps {}
 
 const MonthlyInsight = ({}: MonthlyInsightProps) => {
-  const { enqueueSnackbar } = useSnackbar()
+  const { notify } = useNotification()
 
   const {
     data: monthlyAggregations,
@@ -42,9 +42,7 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
         category: transaction?.category?.id ?? undefined
       })
       .then(res => {
-        enqueueSnackbar(`Updated your Transaction!`, {
-          variant: 'success'
-        })
+        notify(`Updated your Transaction!`, 'success')
 
         const updatedTransaction = res.data.data
 
@@ -66,9 +64,7 @@ const MonthlyInsight = ({}: MonthlyInsightProps) => {
       })
       .catch((error: AxiosError<any>) => {
         if (error.response) {
-          enqueueSnackbar(`Couldn't update your transaction: ${error.response.data.error}`, {
-            variant: 'error'
-          })
+          notify(`Couldn't update your transaction: ${error.response.data.error}`, 'error')
         }
       })
   }
