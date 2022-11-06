@@ -1,5 +1,5 @@
 import createTransactionIdentifier from '../../shared/createTransactionIdentifier'
-import type { ParsedCSVTransactions, TransactionBeforeUpload } from '../../types/types'
+import { ParsedCSVTransactions, TransactionBeforeUpload } from '../../types/types'
 
 // expects "19.03.2020"
 // returns "2020-03-19T00:00:00+00:00"

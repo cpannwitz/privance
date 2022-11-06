@@ -1,4 +1,4 @@
-import type { TransactionBeforeUpload } from '../types/types'
+import { TransactionBeforeUpload } from '../types/types'
 
 function createTransactionIdentifier(transaction: Partial<TransactionBeforeUpload>) {
   return (

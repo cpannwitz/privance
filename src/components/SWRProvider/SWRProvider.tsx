@@ -1,7 +1,7 @@
 import { SWRConfig } from 'swr'
-import axios, { type AxiosError, type AxiosRequestConfig } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { useNotification } from '../NotificationSystem/useNotification'
-import type { ApiResponseData } from '../../shared/apiHelpers'
+import { ApiResponseData } from '../../shared/apiHelpers'
 
 interface SWRProviderProps {
   children?: React.ReactNode

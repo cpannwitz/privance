@@ -1,7 +1,7 @@
-import axios, { type AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 
-import type { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types'
+import { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types'
 import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
 
 import { icons, placeholderIcon } from '../../shared/iconUtils'
@@ -15,7 +15,7 @@ import Button from '@mui/material/Button'
 
 import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
 import CancelIcon from '@mui/icons-material/CancelOutlined'
-import type { Category } from '@prisma/client'
+import { Category } from '@prisma/client'
 
 interface AutomationRuleApplyPreviewProps {
   automationRule: AutomationRuleWithCategory

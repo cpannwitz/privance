@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { Prisma } from '@prisma/client'
-import type { AutomationRuleWithCategory } from '../../../types/types'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { Prisma } from '@prisma/client'
+import { AutomationRuleWithCategory } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 
 export type ResponseData = {

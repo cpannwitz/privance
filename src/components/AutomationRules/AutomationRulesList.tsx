@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import axios, { type AxiosError } from 'axios'
+import axios, { AxiosError } from 'axios'
 
-import type { Prisma, Category } from '@prisma/client'
+import { Prisma, Category } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
 import { useNotification } from '../NotificationSystem/useNotification'
 import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
-import type { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
+import { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 import { icons, placeholderIcon } from '../../shared/iconUtils'
 

@@ -1,4 +1,4 @@
-import type { InferGetStaticPropsType } from 'next'
+import { InferGetStaticPropsType } from 'next'
 
 import Categories from '../components/Categories/Categories'
 

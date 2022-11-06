@@ -1,4 +1,4 @@
-import { enqueueSnackbar, type VariantType } from 'notistack'
+import { enqueueSnackbar, VariantType } from 'notistack'
 
 function notify(message: string, variant: VariantType = 'info') {
   return enqueueSnackbar(message, {

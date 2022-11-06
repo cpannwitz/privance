@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react'
+import { PropsWithChildren } from 'react'
 import {
   type FieldValues,
   type SubmitHandler,
@@ -7,7 +7,7 @@ import {
   useForm
 } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import type Yup from 'yup'
+import Yup from 'yup'
 
 interface FormWrapperProps<T extends FieldValues> {
   onSubmit: SubmitHandler<T>

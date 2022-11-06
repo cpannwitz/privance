@@ -10,7 +10,7 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector
 } from '@mui/x-data-grid'
-import type { GridColDef } from '@mui/x-data-grid'
+import { GridColDef } from '@mui/x-data-grid'
 
 import Box from '@mui/material/Box'
 

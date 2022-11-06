@@ -1,5 +1,5 @@
-import type { Method } from 'axios'
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
+import { Method } from 'axios'
+import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
 type Middleware = (req: NextApiRequest, res: NextApiResponse) => unknown
 export type ApiResponseData<T> = {

@@ -1,5 +1,5 @@
 import { Controller, useFormContext } from 'react-hook-form'
-import type { AutomationRuleWithCategory } from '../../../types/types'
+import { AutomationRuleWithCategory } from '../../../types/types'
 
 import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'

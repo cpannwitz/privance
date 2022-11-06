@@ -1,5 +1,5 @@
-import type { Method } from 'axios'
-import type { TransactionWithCategory } from '../types/types'
+import { Method } from 'axios'
+import { TransactionWithCategory } from '../types/types'
 
 export const apiDir = {
   transactions: {

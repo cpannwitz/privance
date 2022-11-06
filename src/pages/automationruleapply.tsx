@@ -1,4 +1,4 @@
-import type { InferGetStaticPropsType } from 'next'
+import { InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 
 import AutomationRuleApply from '../components/AutomationRuleApply/AutomationRuleApply'

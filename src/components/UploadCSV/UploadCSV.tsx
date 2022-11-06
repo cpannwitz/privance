@@ -10,7 +10,7 @@ import normalizeCSVTransactions from './normalizeCSVTransactions'
 
 import Dropzone from './Dropzone'
 import assignNewTransactionCategory from './assignNewTransactionCategory'
-import type { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
+import { AutomationRuleWithCategory, TransactionBeforeUpload } from '../../types/types'
 
 interface UploadCSVProps {
   onUpload?: (transaction: TransactionBeforeUpload[]) => void

@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import axios, { type AxiosError } from 'axios'
-import type { Category, Transaction, Prisma } from '@prisma/client'
+import axios, { AxiosError } from 'axios'
+import { Category, Transaction, Prisma } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
@@ -18,7 +18,7 @@ import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 import { icons, placeholderIcon } from '../../shared/iconUtils'
-import type { CategoriesStatistics, CategoryWithTransactions } from '../../types/types'
+import { CategoriesStatistics, CategoryWithTransactions } from '../../types/types'
 import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions'
 
 const getTransactionsBalance = (transactions: Transaction[]) =>

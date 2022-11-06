@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
-import type { AllTimeAggregations } from '../../../types/types'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { AllTimeAggregations } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 import sortTransactions from '../../../shared/sortTransactions'
 
