@@ -7,7 +7,7 @@ interface SWRProviderProps {
   children?: React.ReactNode
 }
 
-const SWRProvider = ({ children }: SWRProviderProps) => {
+const ApiCacheProvider = ({ children }: SWRProviderProps) => {
   const { notify } = useNotification()
   return (
     <SWRConfig
@@ -31,4 +31,4 @@ const SWRProvider = ({ children }: SWRProviderProps) => {
   )
 }
 
-export default SWRProvider
+export default ApiCacheProvider

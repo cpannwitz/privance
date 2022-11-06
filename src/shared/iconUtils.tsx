@@ -35,7 +35,7 @@ export function getIconByName(name: string) {
 
 export const placeholderIcon = <PlaceholderIcon />
 
-// add more Icons, liek paypal, amazon etc
+// TODO: add more Icons, like paypal, amazon etc
 
 export const icons: { [key: string]: ReactElement } = {
   anchor: <AnchorIcon />,
