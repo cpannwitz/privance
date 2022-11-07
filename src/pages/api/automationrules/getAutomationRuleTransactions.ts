@@ -39,12 +39,14 @@ export default async function getAutomationRuleTransactions(
         OR: [
           {
             issuer: {
-              contains: automationRuleValue
+              contains: automationRuleValue,
+              mode: 'insensitive'
             }
           },
           {
             purpose: {
-              contains: automationRuleValue
+              contains: automationRuleValue,
+              mode: 'insensitive'
             }
           }
         ]
