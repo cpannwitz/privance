@@ -51,6 +51,7 @@ const TransactionDatagrid = ({
     setRows(transactions)
   }, [transactions])
 
+  // TODO: broken!
   const [searchText, setSearchText] = useState('')
   function requestSearch(searchValue: string) {
     setSearchText(searchValue)

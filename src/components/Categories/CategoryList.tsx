@@ -169,7 +169,7 @@ export const CategoryListItem = ({ category, onEdit, onDelete }: CategoryListIte
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
           <CategoryDisplay category={category} />
           <Typography color="GrayText" fontSize={16}>
-            {getTransactionsBalance(category.transactions)} €
+            {getTransactionsBalance(category.transactions).toFixed(2)} €
           </Typography>
           <Typography color="GrayText" fontSize={14}>
             {category._count.transactions} transactions

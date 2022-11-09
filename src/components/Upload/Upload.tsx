@@ -43,6 +43,10 @@ const Upload = ({ automationRules, categories = [] }: UploadProps) => {
   }
   function onUploadTransactions() {
     if (uploadedTransactions) {
+      console.log(
+        `LOG |  ~ file: Upload.tsx ~ line 46 ~ onUploadTransactions ~ uploadedTransactions`,
+        uploadedTransactions
+      )
       // TODO: extract api call
       axios
         .post('/api/transactions/addTransactions', uploadedTransactions)

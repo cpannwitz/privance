@@ -36,7 +36,7 @@ const AutomationRuleApplyPreview = ({
   function onApplyCategory() {
     const bodyData = transactions.map(transaction => ({
       id: transaction.id,
-      categoryConnect: transaction.category?.id
+      categoryConnect: automationRule.categoryId
     }))
 
     axios
@@ -44,7 +44,8 @@ const AutomationRuleApplyPreview = ({
         '/api/transactions/updateTransactionsCategory',
         bodyData
       )
-      .then(() => {
+      .then(res => {
+        console.log(`LOG |  ~ file: AutomationRuleApplyPreview.tsx ~ line 48 ~ .then ~ res`, res)
         notify(`Updated your transactions!`, 'success')
         router.push(`/overview`)
       })
