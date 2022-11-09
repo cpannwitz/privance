@@ -7,12 +7,19 @@
     "name": "Christian Pannwitz",
     "url": "https://pnwtz.me"
   },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
   "scripts": {
     "dev": "next dev",
-    "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "yarn db:prepare",
+    "db:prepare": "prisma format && prisma generate",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop --backup",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@emotion/react": "~11.10.5",
@@ -56,6 +63,8 @@
     "eslint-plugin-import": "^2.26.0",
     "prettier": "^2.7.1",
     "prisma": "^4.5.0",
+    "supabase": "^1.11.7",
+    "ts-node": "^10.9.1",
     "typescript": "4.8.4"
   }
 }

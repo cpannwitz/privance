@@ -13,7 +13,7 @@ export default async function updateAutomationRule(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  if (req.method !== 'GET') {
+  if (req.method !== 'POST') {
     return res.status(405).json({ error: 'wrong http method' })
   }
   const automationRuleToUpdate = req.body as Prisma.AutomationRuleUpdateInput &
@@ -24,6 +24,7 @@ export default async function updateAutomationRule(
   }
 
   const { id, ...rest } = automationRuleToUpdate
+  console.log(`LOG |  ~ file: updateAutomationRule.ts ~ line 27 ~ rest`, rest)
 
   try {
     const data = await prisma.automationRule.update({

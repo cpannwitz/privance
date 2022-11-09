@@ -81,7 +81,7 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
       const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
         Prisma.AutomationRuleWhereUniqueInput = {
         ...automationRule,
-        category: { connect: { id: automationRule.categoryId } }
+        category: { connect: { id: automationRule.category.id } }
       }
       axios
         .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
