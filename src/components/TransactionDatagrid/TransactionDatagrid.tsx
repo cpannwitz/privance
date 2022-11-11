@@ -21,7 +21,8 @@ import {
   TextRenderer,
   AmountRenderer,
   BalanceRenderer,
-  CategoryEditRenderer
+  CategoryEditRenderer,
+  AutomationRuleCreateRenderer
 } from './ColumnRenderer'
 import { Category } from '@prisma/client'
 import CategorySelect from '../CategorySelect/CategorySelect'
@@ -59,7 +60,7 @@ const TransactionDatagrid = ({
       const searchRegex = new RegExp(escapeRegExp(searchValue), 'i')
       const filteredRows = transactions.filter((row: any) => {
         return Object.keys(row).some((field: any) => {
-          if (!row[field]) return true
+          if (!row[field]) return false
           return searchRegex.test(row[field].toString())
         })
       })
@@ -68,6 +69,9 @@ const TransactionDatagrid = ({
   }
 
   const [multiTransactionSelection, setMultiTransactionSelection] = useState<GridSelectionModel>([])
+  function clearMultiTransactionSelection() {
+    setMultiTransactionSelection([])
+  }
 
   function onMultiCategoryChange(category: Category | null) {
     if (onUpdateTransaction && multiTransactionSelection.length > 0) {
@@ -81,7 +85,7 @@ const TransactionDatagrid = ({
       })
     }
 
-    setMultiTransactionSelection([])
+    clearMultiTransactionSelection()
   }
 
   const columns = useMemo(
@@ -128,7 +132,7 @@ const TransactionDatagrid = ({
           headerName: 'Category',
           description: 'Category',
           field: 'category',
-          flex: 0.1,
+          flex: 0.15,
           type: 'singleSelect',
           valueOptions: categories ? categories.map(c => c.name) : [],
           filterOperators: [
@@ -197,6 +201,14 @@ const TransactionDatagrid = ({
           flex: 0.1,
           renderHeader: p => <b>{p.colDef.headerName}</b>,
           renderCell: AmountRenderer
+        },
+        {
+          headerName: 'Rule',
+          description: 'Rule',
+          field: '',
+          flex: 0.05,
+          renderHeader: p => <b>{p.colDef.headerName}</b>,
+          renderCell: AutomationRuleCreateRenderer
         }
       ] as GridColDef[],
     [onUpdateTransaction, categories]

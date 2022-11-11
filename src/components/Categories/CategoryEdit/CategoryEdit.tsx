@@ -7,6 +7,7 @@ import NameEdit from './NameEdit'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
 import FormWrapper from '../../FormWrapper/FormWrapper'
 import OpenModal from '../../OpenModal/OpenModal'
@@ -61,6 +62,7 @@ const CategoryAddEdit = ({ onSave, onCancel, formValue }: CategoryAddEditProps) 
         defaultValues={defaultValues}
       >
         <Stack spacing={5}>
+          <Typography variant="h6">Create New Category</Typography>
           <NameEdit />
           <ColorPicker />
           <IconPicker />

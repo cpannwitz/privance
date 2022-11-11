@@ -2,6 +2,7 @@ import { SubmitHandler } from 'react-hook-form'
 
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 
 import FormWrapper from '../../FormWrapper/FormWrapper'
 import OpenModal from '../../OpenModal/OpenModal'
@@ -15,7 +16,7 @@ import { AutomationRuleWithCategory } from '../../../types/types'
 interface AutomationEditProps {
   onSave: (automationRule: AutomationRuleWithCategory) => void
   onCancel: () => void
-  formValue?: AutomationRuleWithCategory
+  formValue?: Partial<AutomationRuleWithCategory>
 }
 
 const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) => {
@@ -53,6 +54,7 @@ const AutomationEdit = ({ onSave, onCancel, formValue }: AutomationEditProps) =>
         schema={schema}
       >
         <Stack spacing={5}>
+          <Typography variant="h6">Create New Automation Rule</Typography>
           <ValuePicker />
           <CategoryPicker />
         </Stack>

@@ -3,6 +3,8 @@ import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import ClearIcon from '@mui/icons-material/Clear'
 import SearchIcon from '@mui/icons-material/Search'
+import { useState } from 'react'
+import { debounce } from '@mui/material'
 
 interface QuicksearchProps {
   clearSearch: () => void
@@ -11,6 +13,13 @@ interface QuicksearchProps {
 }
 
 const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
+  const [textValue, setTextValue] = useState(value)
+  function onTextChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTextValue(e.target.value)
+    onDebouncedChange(e)
+  }
+
+  const onDebouncedChange = debounce(event => onChange(event), 500)
   return (
     <Box
       sx={{
@@ -21,8 +30,8 @@ const Quicksearch = ({ clearSearch, onChange, value }: QuicksearchProps) => {
       <TextField
         autoFocus={true}
         variant="standard"
-        value={value}
-        onChange={onChange}
+        value={textValue}
+        onChange={onTextChange}
         placeholder="Search…"
         InputProps={{
           startAdornment: <SearchIcon fontSize="small" />,
