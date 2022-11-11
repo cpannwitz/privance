@@ -23,7 +23,7 @@ const ValuePicker = ({}: ValuePickerProps) => {
   }, [unregister])
   return (
     <FormControl error={!!errors.value}>
-      <FormLabel>Insert value</FormLabel>
+      <FormLabel>Text Matcher</FormLabel>
       <TextField {...register('value', {})} />
       <FormHelperText>{errors.value?.message}</FormHelperText>
     </FormControl>

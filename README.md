@@ -41,9 +41,9 @@
   - [x] Ordering of Categories in chart (Desc)
   - [x] Optional: uncategorized rest value as "category" in chart
 - [x] Refactoring of Automation rules
-- [ ] In-Table-Handling:
+- [x] In-Table-Handling:
   - [x] Add category from table
-  - [ ] Add automation rule from table
+  - [x] Add automation rule from table
 - [ ] Create views for questions:
   - [ ] "How much more did I spend over regular spendings?"
   - [ ] "Whats the average spending per category? per month?"

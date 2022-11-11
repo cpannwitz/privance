@@ -7,6 +7,7 @@ import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { TransactionWithCategory } from '../../types/types'
 import CategorySelect from '../CategorySelect/CategorySelect'
+import AutomationRuleAddStandalone from '../AutomationRules/AutomationRuleAddStandalone'
 
 interface CategoryRendererProps extends GridRenderCellParams<Category, TransactionWithCategory> {
   onUpdateTransaction?: (transaction: TransactionWithCategory) => void
@@ -67,4 +68,12 @@ export const BalanceRenderer = ({ value, row }: BalanceRendererProps) => {
       {getSymbolFromCurrency(currency)}
     </Typography>
   )
+}
+
+interface AutomationRuleCreateRendererProps
+  extends GridRenderCellParams<null, TransactionWithCategory> {}
+
+export const AutomationRuleCreateRenderer = ({ value, row }: AutomationRuleCreateRendererProps) => {
+  const val = `${row.issuer} | ${row.purpose}`
+  return <AutomationRuleAddStandalone initialValue={val} />
 }
