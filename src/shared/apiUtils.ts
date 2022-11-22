@@ -2,23 +2,21 @@ import { Method } from 'axios'
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next'
 
 type Middleware = (req: NextApiRequest, res: NextApiResponse) => unknown
+
 export type ApiResponseData<T> = {
-  error?: {
-    statusCode: number
-    message: string
-    timestamp: string
-    path: string
-  }
+  error?: string
   data?: T
 }
 
 export type NextApiResponseData<T> = NextApiResponse<ApiResponseData<T>>
 
-/**
- * @name withMiddleware
- * @description combine multiple middleware before handling your API endpoint
- * @param middlewares
- */
+export const API_METHOD = {
+  GET: 'GET',
+  POST: 'POST',
+  PUT: 'PUT',
+  DELETE: 'DELETE'
+}
+
 export function withMiddleware(...middlewares: Middleware[]) {
   return async function withMiddlewareHandler(req: NextApiRequest, res: NextApiResponse) {
     async function evaluateHandler(middleware: Middleware, innerMiddleware?: Middleware) {
@@ -59,11 +57,6 @@ export function withMiddleware(...middlewares: Middleware[]) {
 
 // ============================
 
-/**
- * @name withMethodsGuard
- * @description guards apifunctions from being called with wrong http method, throws
- * @param method HTTPmethod
- */
 export function withMethodsGuard(method: Method) {
   return function (req: NextApiRequest, res: NextApiResponse) {
     return async function (handler: NextApiHandler) {
@@ -77,12 +70,6 @@ export function withMethodsGuard(method: Method) {
 
 // ============================
 
-/**
- * @name ApiException
- * @description Base error class, which is used by specialized error classes in api context
- * @param statusCode number
- * @param message string
- */
 export class ApiException extends Error {
   statusCode: number
   message: string
@@ -93,21 +80,50 @@ export class ApiException extends Error {
   }
 }
 
-// TODO: 401, 403, 201, 400
+// 400
+export class BadRequestException extends ApiException {
+  constructor() {
+    super(HttpStatusCode.BadRequest, `Wrong/Missing argument`)
+  }
+}
+// 401
+export class UnauthorizedException extends ApiException {
+  constructor() {
+    super(HttpStatusCode.Unauthorized, `Please login to request resource`)
+  }
+}
+// 403
+export class ForbiddenException extends ApiException {
+  constructor() {
+    super(HttpStatusCode.Forbidden, `Missing authorization for resource`)
+  }
+}
+// 404
 export class NotFoundException extends ApiException {
   constructor() {
     super(HttpStatusCode.NotFound, `Resource does not exist`)
   }
 }
+// 405
 export class WrongMethodException extends ApiException {
   constructor() {
     super(HttpStatusCode.MethodNotAllowed, `Wrong HTTP method`)
   }
 }
+// 500
 export class InternalException extends ApiException {
   constructor(errorText: string) {
     super(HttpStatusCode.InternalServerError, `Internal Server Error | ${errorText}`)
   }
+}
+
+export const API_EXCEPTION = {
+  BadRequestException,
+  UnauthorizedException,
+  ForbiddenException,
+  NotFoundException,
+  WrongMethodException,
+  InternalException
 }
 
 // ============================
@@ -126,13 +142,7 @@ function getExceptionStack(exception: unknown) {
   return isError(exception) ? exception.stack : undefined
 }
 
-/**
- * @name withExceptionFilter
- * @description handles thrown errors in wrapped api functions
- * @param req NextApiRequest
- * @param res NextApiResponse
- */
-export function withExceptionFilter(req: NextApiRequest, res: NextApiResponse) {
+export function apiExceptionHandler(req: NextApiRequest, res: NextApiResponse) {
   return async function (handler: NextApiHandler) {
     try {
       await handler(req, res)
@@ -143,21 +153,15 @@ export function withExceptionFilter(req: NextApiRequest, res: NextApiResponse) {
       const message = getExceptionMessage(exception)
       const stack = getExceptionStack(exception)
 
-      // TODO: activate once user management is implemented
-      // const user = req.user
-      // const userId = user?.uid ?? 'Not Authenticated'
-
       const referer = headers['referer']
       const userAgent = headers['user-agent']
 
-      // this is the context being logged
       const requestContext = {
-        // userId,
         url,
         referer,
         userAgent,
         message,
-        stack // TODO: remove after log management is implemented
+        stack
       }
       console.error(requestContext)
 
@@ -167,19 +171,7 @@ export function withExceptionFilter(req: NextApiRequest, res: NextApiResponse) {
       //   logger.debug(stack)
       // }
 
-      const timestamp = new Date().toISOString()
-
-      // return just enough information without leaking any data
-      const responseBody = {
-        error: {
-          statusCode,
-          message,
-          timestamp,
-          path: req.url
-        }
-      }
-
-      return res.status(statusCode).json(responseBody)
+      return res.status(statusCode).json({ error: message })
     }
   }
 }

@@ -1,20 +1,25 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiHandler } from 'next'
 import { AllTimeAggregations } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 import sortTransactions from '../../../shared/sortTransactions'
 
-export type ResponseData = {
-  error?: string
-  data?: AllTimeAggregations | null
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function getAllTimeAggregations(
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(getAllTimeAggregations)
+export default handler
+
+async function getAllTimeAggregations(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponseData<AllTimeAggregations | null>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'wrong http method' })
+  if (req.method !== API_METHOD.GET) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
 
   try {
@@ -81,7 +86,6 @@ export default async function getAllTimeAggregations(
 
     res.json({ data })
   } catch (err) {
-    console.error(`ERROR | getAllTimeAggregations: `, err)
-    res.status(500).json({ error: 'Internal error | Could not get alltime aggregations' })
+    throw new API_EXCEPTION.InternalException(`Couldn't get full aggregations`)
   }
 }

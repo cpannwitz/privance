@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import axios, { AxiosError } from 'axios'
 
-import { Prisma, Category } from '@prisma/client'
+import { Category } from '@prisma/client'
 
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -20,23 +19,23 @@ import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import EditIcon from '@mui/icons-material/EditOutlined'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
-import { useNotification } from '../NotificationSystem/useNotification'
 import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
 import { AutomationRuleWithCategory, CategoryWithAutomationRules } from '../../types/types'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 
+import { useDeleteAutomationRule, useUpsertAutomationRule } from '../ApiSystem/api/automationrules'
+
 import { useRouter } from 'next/router'
 
-import useGetAutomationRulesByCategory from '../hooks/useGetAutomationRulesByCategory'
 import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 
 interface AutomationRulesListProps {
   data: CategoryWithAutomationRules[]
 }
 
-const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
-  const { mutate: mutateAutomationRules } = useGetAutomationRulesByCategory()
-  const { notify } = useNotification()
+const AutomationRulesList = ({ data: automationRulesByCategory }: AutomationRulesListProps) => {
+  const { mutateAsync: upsertAutomationRule } = useUpsertAutomationRule()
+  const { mutate: deleteAutomationRule } = useDeleteAutomationRule()
 
   const [editedAutomationRule, setEditedAutomationRule] =
     useState<AutomationRuleWithCategory | null>(null)
@@ -53,104 +52,32 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
     setEditedAutomationRule(null)
   }
 
-  // TODO: badly needs better structure / external api requests
   function onSaveAddEdit(automationRule: AutomationRuleWithCategory) {
-    if (!automationRule.id) {
-      const automationRuleCreateInput: Prisma.AutomationRuleCreateInput = {
-        ...automationRule,
-        category: { connect: { id: automationRule.category.id } }
-      }
-      axios
-        .post('/api/automationrules/addAutomationRule', automationRuleCreateInput)
-        .then(() => {
-          notify(`Added or updated your automation rule!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(
-              `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              'error'
-            )
-          }
-        })
-        .finally(() => {
-          mutateAutomationRules()
-          setEditedAutomationRule(null)
-        })
-    } else {
-      const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
-        Prisma.AutomationRuleWhereUniqueInput = {
-        ...automationRule,
-        category: { connect: { id: automationRule.category.id } }
-      }
-      axios
-        .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
-        .then(() => {
-          notify(`Added or updated your automation rule!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(
-              `Couldn't add/update your automation rule: ${error.response.data.error}`,
-              'error'
-            )
-          }
-        })
-        .finally(() => {
-          mutateAutomationRules()
-          setEditedAutomationRule(null)
-        })
+    const data = {
+      ...automationRule,
+      category: undefined,
+      categoryId: automationRule.category.id
     }
+
+    upsertAutomationRule(data).finally(() => {
+      setEditedAutomationRule(null)
+    })
   }
 
-  // TODO: badly needs external api requests
   function onDeleteAutomationRule(automationRule: AutomationRuleWithCategory) {
-    if (automationRule?.id) {
-      axios
-        .delete('/api/automationrules/deleteAutomationRule', {
-          params: { id: automationRule.id }
-        })
-        .then(() => {
-          notify(`Deleted your Automation Rule!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(`Couldn't delete your automation rule: ${error.response.data.error}`, 'error')
-          }
-        })
-        .finally(() => {
-          mutateAutomationRules()
-        })
-    }
+    deleteAutomationRule(automationRule.id)
   }
 
   function onToggleAutomationRuleOnUploadRun(automationRule: AutomationRuleWithCategory) {
-    if (automationRule?.id) {
-      // TODO: better removal of unused property
-      const { categoryId, ...automationRuleSafe } = automationRule
-      const automationRuleUpdateInput: Prisma.AutomationRuleUpdateInput &
-        Prisma.AutomationRuleWhereUniqueInput = {
-        ...automationRuleSafe,
-        category: {
-          connect: { id: automationRule.category.id }
-        },
-        activeOnUpload: !automationRule.activeOnUpload
-      }
-      axios
-        .post('/api/automationrules/updateAutomationRule', automationRuleUpdateInput)
-        .then(() => {
-          notify(`Updated your automation rule!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(`Couldn't update your automation rule: ${error.response.data.error}`, 'error')
-          }
-        })
-        .finally(() => {
-          mutateAutomationRules()
-          setEditedAutomationRule(null)
-        })
+    const data = {
+      ...automationRule,
+      category: undefined,
+      activeOnUpload: !automationRule.activeOnUpload
     }
+
+    upsertAutomationRule(data).finally(() => {
+      setEditedAutomationRule(null)
+    })
   }
 
   const router = useRouter()
@@ -184,11 +111,11 @@ const AutomationRulesList = ({ data }: AutomationRulesListProps) => {
           Add Automation Rule
         </Button>
       </Box>
-      {data.length < 1 ? (
+      {automationRulesByCategory.length < 1 ? (
         <DataIsEmpty />
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', '& > *': { mb: 3 } }}>
-          {data.map(automationRuleCategory => {
+          {automationRulesByCategory.map(automationRuleCategory => {
             const { automationRules, ...category } = automationRuleCategory
             return (
               <AutomationRulesCategory key={automationRuleCategory.id} category={category}>

@@ -1,8 +1,7 @@
-import axios, { AxiosError } from 'axios'
 import { Category, Prisma } from '@prisma/client'
 
-import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
+import { useUpsertCategory } from '../ApiSystem/api/categories'
 
 interface CategoryAddStandaloneProps {
   onAddCategory: (category: Category | null) => void
@@ -10,22 +9,12 @@ interface CategoryAddStandaloneProps {
 }
 
 const CategoryAddStandalone = ({ onAddCategory, onClose }: CategoryAddStandaloneProps) => {
-  const { notify } = useNotification()
+  const { mutateAsync: upsertCategory } = useUpsertCategory()
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
-    axios
-      .post('/api/categories/upsertCategory', category)
-      .then(res => {
-        const category = res.data.data
-        notify(`Added or updated your category!`, 'success')
-        onAddCategory(category)
-      })
-      .catch((error: AxiosError<any>) => {
-        if (error.response) {
-          notify(`Couldn't add/update your category: ${error.response.data.error}`, 'error')
-        }
-        onAddCategory(null)
-      })
+    upsertCategory(category)
+      .then(newCategory => onAddCategory(newCategory))
+      .catch(() => onAddCategory(null))
   }
 
   return <CategoryEdit onSave={onSaveAddEdit} onCancel={onClose} />

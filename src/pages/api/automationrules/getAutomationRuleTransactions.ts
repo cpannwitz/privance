@@ -1,36 +1,41 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiHandler } from 'next'
 import { TransactionWithCategory } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 
-export type ResponseData = {
-  error?: string
-  data?: TransactionWithCategory[]
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function getAutomationRuleTransactions(
+const handler: NextApiHandler = (req, res) =>
+  apiExceptionHandler(req, res)(getAutomationRuleTransactions)
+export default handler
+
+async function getAutomationRuleTransactions(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponseData<TransactionWithCategory[]>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'wrong http method' })
-  }
-  const { rule } = req.query
-  if (!rule || !Number(rule)) {
-    return res.status(400).json({ error: 'missing argument' })
+  if (req.method !== API_METHOD.GET) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
 
-  const automationRuleId = Number(rule)
+  const { id } = req.query
+  if (!id || !Number(id)) {
+    throw new API_EXCEPTION.BadRequestException()
+  }
 
   try {
     const data = await prisma.automationRule.findFirst({
       where: {
-        id: automationRuleId
+        id: Number(id)
       }
     })
 
     if (!data) {
-      return res.status(400).json({ error: 'no automation rule with this id exists' })
+      throw new API_EXCEPTION.BadRequestException()
     }
     const automationRuleValue = data.value
 
@@ -58,7 +63,6 @@ export default async function getAutomationRuleTransactions(
 
     return res.json({ data: matchingTransactions })
   } catch (err) {
-    console.error(`ERROR | getAutomationRuleTransactions: `, err)
-    res.status(500).json({ error: 'Internal error | Could not get automation rule transactions' })
+    throw new API_EXCEPTION.InternalException(`Couldn't get automation rule transactions`)
   }
 }

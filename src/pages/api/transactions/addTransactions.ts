@@ -1,26 +1,31 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler, NextApiRequest } from 'next'
 import { TransactionBeforeUpload, TransactionWithCategory } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 import createTransactionIdentifier from '../../../shared/createTransactionIdentifier'
 
-export type ResponseData = {
-  error?: string
-  data?: TransactionWithCategory[]
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function addTransactions(
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(addTransactions)
+export default handler
+
+async function addTransactions(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponseData<TransactionWithCategory[]>
 ) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'wrong http method' })
+  if (req.method !== API_METHOD.POST) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
 
   const transactions = req.body as TransactionBeforeUpload[]
 
   if (!transactions || !Array.isArray(transactions)) {
-    return res.status(400).json({ error: 'missing argument' })
+    throw new API_EXCEPTION.BadRequestException()
   }
 
   const finalTransactions = transactions.map(transaction => ({
@@ -30,23 +35,22 @@ export default async function addTransactions(
   }))
 
   try {
-    const insertedData = await prisma.$transaction(
-      finalTransactions.map(data =>
+    const data = await prisma.$transaction(
+      finalTransactions.map(transaction =>
         prisma.transaction.upsert({
           where: {
-            identifier: data.identifier ?? undefined
+            identifier: transaction.identifier ?? undefined
           },
-          update: data,
-          create: data,
+          update: transaction,
+          create: transaction,
           include: {
             category: true
           }
         })
       )
     )
-    res.json({ data: insertedData })
+    res.json({ data })
   } catch (err) {
-    console.error(`ERROR | addTransactions: `, err)
-    res.status(500).json({ error: 'Internal error | Could not add transactions' })
+    throw new API_EXCEPTION.InternalException(`Could not add transaction`)
   }
 }

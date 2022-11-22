@@ -18,6 +18,7 @@ interface UploadPreviewProps {
   onCancel: () => void
   onUpload: () => void
   onUpdateTransaction?: (transaction: TransactionBeforeUpload) => void
+  isLoading?: boolean
 }
 
 const UploadPreview = ({
@@ -25,9 +26,8 @@ const UploadPreview = ({
   categories = [],
   onCancel,
   onUpload,
-  onUpdateTransaction = () => {
-    return
-  }
+  onUpdateTransaction,
+  isLoading
 }: UploadPreviewProps) => {
   return (
     <>
@@ -57,6 +57,7 @@ const UploadPreview = ({
           transactions={transactions as TransactionWithCategory[]}
           categories={categories}
           onUpdateTransaction={onUpdateTransaction}
+          isLoading={isLoading}
         />
       </Box>
     </>

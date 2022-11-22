@@ -8,7 +8,7 @@ import { useTheme } from '@mui/material/styles'
 
 import Select, { ActionMeta, components, GroupBase, MenuListProps, OptionProps } from 'react-select'
 
-import useGetCategories from '../hooks/useGetCategories'
+import { useGetCategories } from '../ApiSystem//api/categories'
 import CategoryAddStandalone from '../Categories/CategoryAddStandalone'
 import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
 

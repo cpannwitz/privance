@@ -1,26 +1,33 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest } from 'next'
-import { apiDir } from '../../../shared/apiDir'
-import {
-  type NextApiResponseData,
-  withExceptionFilter,
-  withMethodsGuard,
-  withMiddleware
-} from '../../../shared/apiHelpers'
-
+import { NextApiHandler, NextApiRequest } from 'next'
 import { prisma } from '../../../shared/database'
 import sortTransactions from '../../../shared/sortTransactions'
+import { TransactionWithCategory } from '../../../types/types'
 
-export default function handler(req: NextApiRequest, res: NextApiResponseData<typeof api.type>) {
-  return withExceptionFilter(req, res)(withMiddleware(withMethodsGuard(api.method), apiFunction))
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-const api = apiDir.transactions.getTransactions
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(getTransactions)
+export default handler
 
-async function apiFunction(_req: NextApiRequest, res: NextApiResponseData<typeof api.type>) {
-  const data = await prisma.transaction.findMany({
-    include: { category: true }
-  })
-  const sortedData = sortTransactions(data, 'desc')
-  res.json({ data: sortedData })
+async function getTransactions(
+  req: NextApiRequest,
+  res: NextApiResponseData<TransactionWithCategory[]>
+) {
+  if (req.method !== API_METHOD.GET) {
+    throw new API_EXCEPTION.WrongMethodException()
+  }
+  try {
+    const data = await prisma.transaction.findMany({
+      include: { category: true }
+    })
+    const sortedData = sortTransactions(data, 'desc')
+    res.json({ data: sortedData })
+  } catch {
+    throw new API_EXCEPTION.InternalException(`Couldn't fetch transactions`)
+  }
 }

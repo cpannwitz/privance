@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import axios, { AxiosError } from 'axios'
 import { Prisma } from '@prisma/client'
 
-import { useNotification } from '../NotificationSystem/useNotification'
 import AutomationRulesEdit from './AutomationRulesEdit/AutomationRulesEdit'
 import { AutomationRuleWithCategory } from '../../types/types'
 
 import IconButton from '@mui/material/IconButton'
 import AutomationRuleIcon from '@mui/icons-material/MotionPhotosAutoOutlined'
+import { useUpsertAutomationRule } from '../ApiSystem/api/automationrules'
 
 interface AutomationRuleAddStandaloneProps {
   onAddAutomationRule?: (automationRule: AutomationRuleWithCategory | null) => void
@@ -20,24 +19,19 @@ const AutomationRuleAddStandalone = ({
   onClose,
   initialValue
 }: AutomationRuleAddStandaloneProps) => {
-  const { notify } = useNotification()
+  const { mutateAsync: upsertAutomationRule } = useUpsertAutomationRule()
 
   function onSaveAddEdit(automationRule: AutomationRuleWithCategory) {
-    const automationRuleCreateInput: Prisma.AutomationRuleCreateInput = {
+    const data: Prisma.AutomationRuleUncheckedCreateInput = {
       ...automationRule,
-      category: { connect: { id: automationRule.category.id } }
+      categoryId: automationRule.category.id
     }
-    axios
-      .post('/api/automationrules/addAutomationRule', automationRuleCreateInput)
-      .then(res => {
-        const automationRule = res.data.data
-        notify(`Added or updated your automation rule!`, 'success')
+
+    upsertAutomationRule(data)
+      .then(() => {
         if (onAddAutomationRule) onAddAutomationRule(automationRule)
       })
-      .catch((error: AxiosError<any>) => {
-        if (error.response) {
-          notify(`Couldn't add/update your automation rule: ${error.response.data.error}`, 'error')
-        }
+      .catch(() => {
         if (onAddAutomationRule) onAddAutomationRule(null)
       })
   }

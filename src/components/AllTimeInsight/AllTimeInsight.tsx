@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import useGetAllTimeAggregations from '../hooks/useGetAllTimeAggregations'
+import { useGetAllTimeAggregations } from '../ApiSystem/api/aggregations'
 import AllTimeInsightContent from './AllTimeInsightContent'
 import DataIsLoading from '../DataStates/DataIsLoading'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
@@ -13,12 +13,12 @@ const AllTimeInsight = ({}: AllTimeInsightProps) => {
     data: allTimeAggregations,
     isError: isErrorAllTimeAggregations,
     isLoading: isLoadingAllTimeAggregations,
-    mutate: mutateAllTimeAggregations
+    refetch: retryAllTimeAggregations
   } = useGetAllTimeAggregations()
 
   const retry = useCallback(() => {
-    mutateAllTimeAggregations()
-  }, [mutateAllTimeAggregations])
+    retryAllTimeAggregations()
+  }, [retryAllTimeAggregations])
 
   if (isLoadingAllTimeAggregations) {
     return <DataIsLoading />

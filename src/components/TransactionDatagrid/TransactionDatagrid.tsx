@@ -33,6 +33,7 @@ interface TransactionDatagridProps {
   categories?: Category[]
   transformedTransactions?: number[]
   onUpdateTransaction?: (transcation: TransactionWithCategory) => void
+  isLoading?: boolean
 }
 
 const DEFAULTTRANSFORMEDTRANSACTIONS: number[] = []
@@ -45,7 +46,8 @@ const TransactionDatagrid = ({
   transactions,
   categories = [],
   transformedTransactions = DEFAULTTRANSFORMEDTRANSACTIONS,
-  onUpdateTransaction
+  onUpdateTransaction,
+  isLoading = false
 }: TransactionDatagridProps) => {
   const [rows, setRows] = useState<TransactionWithCategory[]>(transactions)
   useEffect(() => {
@@ -237,6 +239,7 @@ const TransactionDatagrid = ({
           autoPageSize
           pagination
           disableSelectionOnClick
+          loading={isLoading}
           components={{
             Toolbar
           }}
@@ -256,6 +259,7 @@ const TransactionDatagrid = ({
     </Box>
   )
 }
+
 interface ToolbarProps {
   multiSelectionEnabled: boolean
   onMultiCategoryChange: (category: Category | null) => void

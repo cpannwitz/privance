@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import axios, { AxiosError } from 'axios'
 import { Category, Transaction, Prisma } from '@prisma/client'
 
 import Box from '@mui/material/Box'
@@ -12,12 +11,11 @@ import EditIcon from '@mui/icons-material/EditOutlined'
 import AddIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import DeleteIcon from '@mui/icons-material/DeleteOutlineOutlined'
 
-import { useNotification } from '../NotificationSystem/useNotification'
 import CategoryEdit from './CategoryEdit/CategoryEdit'
 import DataIsEmpty from '../DataStates/DataIsEmpty'
 import { CategoriesStatistics, CategoryWithTransactions } from '../../types/types'
-import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions'
 import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
+import { useDeleteCategory, useUpsertCategory } from '../ApiSystem/api/categories'
 
 const getTransactionsBalance = (transactions: Transaction[]) =>
   Math.abs(transactions.reduce((sum, t) => (sum += t.amount || 0), 0))
@@ -28,10 +26,10 @@ interface CategoryListProps {
 }
 
 const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) => {
-  const { mutate: mutateCategories } = useGetCategoriesTransactions()
+  const { mutateAsync: upsertCategory } = useUpsertCategory()
+  const { mutate: deleteCategory } = useDeleteCategory()
 
   const { allTransactionsCount, uncategorizedTransactionsCount } = categoriesStatistics
-  const { notify } = useNotification()
   const [editedCategory, setEditedCategory] = useState<Category | undefined>(undefined)
 
   function onAddCategory() {
@@ -48,40 +46,13 @@ const CategoryList = ({ categories, categoriesStatistics }: CategoryListProps) =
 
   function onSaveAddEdit(category: Prisma.CategoryUncheckedCreateInput) {
     if (editedCategory) {
-      axios
-        .post('/api/categories/upsertCategory', category)
-        .then(() => {
-          notify(`Added or updated your category!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(`Couldn't add/update your category: ${error.response.data.error}`, 'error')
-          }
-        })
-        .finally(() => {
-          mutateCategories()
-          setEditedCategory(undefined)
-        })
+      upsertCategory(category).finally(() => setEditedCategory(undefined))
     }
   }
 
   function onDeleteCategory(category: Category) {
     if (category?.id) {
-      axios
-        .delete('/api/categories/deleteCategory', {
-          params: { id: category.id }
-        })
-        .then(() => {
-          notify(`Deleted your Category!`, 'success')
-        })
-        .catch((error: AxiosError<any>) => {
-          if (error.response) {
-            notify(`Couldn't delete your category: ${error.response.data.error}`, 'error')
-          }
-        })
-        .finally(() => {
-          mutateCategories()
-        })
+      deleteCategory(category.id)
     }
   }
 

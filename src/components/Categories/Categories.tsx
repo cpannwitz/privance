@@ -1,6 +1,8 @@
 import React, { useCallback } from 'react'
-import useGetCategoriesTransactions from '../hooks/useGetCategoriesTransactions'
-import useGetCategoriesStatistics from '../hooks/useGetCategoriesStatistics'
+import {
+  useGetCategoriesStatistics,
+  useGetCategoriesTransactions
+} from '../ApiSystem/api/categories'
 import CategoryList from './CategoryList'
 import DataIsLoading from '../DataStates/DataIsLoading'
 import DataIsError from '../DataStates/DataIsError'
@@ -12,20 +14,20 @@ const Categories = ({}: CategoriesProps) => {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories
+    refetch: retryCategories
   } = useGetCategoriesTransactions()
 
   const {
     data: categoriesStatistics,
     isError: isErrorCategoriesStatistics,
     isLoading: isLoadingCategoriesStatistics,
-    mutate: mutateCategoriesStatistics
+    refetch: retryCategoriesStatistics
   } = useGetCategoriesStatistics()
 
   const retry = useCallback(() => {
-    mutateCategories()
-    mutateCategoriesStatistics()
-  }, [mutateCategories, mutateCategoriesStatistics])
+    retryCategories()
+    retryCategoriesStatistics()
+  }, [retryCategories, retryCategoriesStatistics])
 
   if (isLoadingCategories || isLoadingCategoriesStatistics) {
     return <DataIsLoading />

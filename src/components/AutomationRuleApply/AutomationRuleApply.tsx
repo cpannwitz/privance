@@ -1,11 +1,13 @@
 import { useCallback } from 'react'
-import useGetAutomationRuleById from '../hooks/useGetAutomationRuleById'
-import useGetAutomationRuleTransactions from '../hooks/useGetAutomationRuleTransactions'
+import {
+  useGetAutomationRuleTransactions,
+  useGetAutomationRuleById
+} from '../ApiSystem/api/automationrules'
+import { useGetCategories } from '../ApiSystem/api/categories'
 import AutomationRuleApplyPreview from './AutomationRuleApplyPreview'
 
 import DataIsLoading from '../DataStates/DataIsLoading'
 import DataIsError from '../DataStates/DataIsError'
-import useGetCategories from '../hooks/useGetCategories'
 
 interface AutomationRuleApplyProps {
   rule: number
@@ -16,28 +18,28 @@ const AutomationRuleApply = ({ rule }: AutomationRuleApplyProps) => {
     data: categories,
     isError: isErrorCategories,
     isLoading: isLoadingCategories,
-    mutate: mutateCategories
+    refetch: retryCategories
   } = useGetCategories()
 
   const {
     data: automationRule,
     isError: isErrorAutomationRule,
     isLoading: isLoadingAutomationRule,
-    mutate: mutateAutomationRule
+    refetch: retryAutomationRule
   } = useGetAutomationRuleById(rule)
 
   const {
     data: transactions,
     isError: isErrorTransactions,
     isLoading: isLoadingTransactions,
-    mutate: mutateTransactions
+    refetch: retryTransactions
   } = useGetAutomationRuleTransactions(rule)
 
   const retry = useCallback(() => {
-    mutateTransactions()
-    mutateAutomationRule()
-    mutateCategories()
-  }, [mutateTransactions, mutateAutomationRule, mutateCategories])
+    retryTransactions()
+    retryAutomationRule()
+    retryCategories()
+  }, [retryTransactions, retryAutomationRule, retryCategories])
 
   if (isLoadingAutomationRule || isLoadingTransactions || isLoadingCategories) {
     return <DataIsLoading />

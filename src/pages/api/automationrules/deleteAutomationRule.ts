@@ -1,24 +1,26 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiHandler } from 'next'
 import { AutomationRule } from '@prisma/client'
 import { prisma } from '../../../shared/database'
 
-export type ResponseData = {
-  error?: string
-  data?: AutomationRule
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function deleteAutomationRule(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
-  if (req.method !== 'DELETE') {
-    return res.status(405).json({ error: 'wrong http method' })
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(deleteAutomationRule)
+export default handler
+
+async function deleteAutomationRule(req: NextApiRequest, res: NextApiResponseData<AutomationRule>) {
+  if (req.method !== API_METHOD.DELETE) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
   const { id } = req.query
 
   if (!id) {
-    return res.status(400).json({ error: 'missing argument' })
+    throw new API_EXCEPTION.BadRequestException()
   }
 
   try {
@@ -29,7 +31,6 @@ export default async function deleteAutomationRule(
     })
     res.json({ data })
   } catch (err) {
-    console.error(`ERROR | deleteAutomationRule: `, err)
-    res.status(500).json({ error: 'Internal error | Could not delete automation rule' })
+    throw new API_EXCEPTION.InternalException(`Could not delete automation rule`)
   }
 }

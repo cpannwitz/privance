@@ -1,21 +1,26 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiHandler } from 'next'
 import { CategoryWithTransactions, MonthlyAggregations } from '../../../types/types'
 import { prisma } from '../../../shared/database'
 import sortTransactions from '../../../shared/sortTransactions'
 import categoryUncategorized from '../../../shared/categoryUncategorized'
 
-export type ResponseData = {
-  error?: string
-  data?: MonthlyAggregations | null
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function getMonthlyAggregations(
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(getMonthlyAggregations)
+export default handler
+
+async function getMonthlyAggregations(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponseData<MonthlyAggregations | null>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'wrong http method' })
+  if (req.method !== API_METHOD.GET) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
 
   try {
@@ -130,7 +135,6 @@ export default async function getMonthlyAggregations(
 
     res.json({ data: monthlyData })
   } catch (err) {
-    console.error(`ERROR | getMonthlyAggregations: `, err)
-    res.status(500).json({ error: 'Internal error | Could not get monthly aggregations' })
+    throw new API_EXCEPTION.InternalException(`Couldn't get monthly aggregations`)
   }
 }

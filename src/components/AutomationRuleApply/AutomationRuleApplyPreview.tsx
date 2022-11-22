@@ -1,10 +1,7 @@
-import axios, { AxiosError } from 'axios'
 import { useRouter } from 'next/router'
 
 import { AutomationRuleWithCategory, TransactionWithCategory } from '../../types/types'
 import TransactionDatagrid from '../TransactionDatagrid/TransactionDatagrid'
-
-import { useNotification } from '../NotificationSystem/useNotification'
 
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -15,6 +12,7 @@ import PlayIcon from '@mui/icons-material/PlayArrowOutlined'
 import CancelIcon from '@mui/icons-material/CancelOutlined'
 import { Category } from '@prisma/client'
 import CategoryDisplay from '../CategoryDisplay/CategoryDisplay'
+import { useUpdateTransactionsCategory } from '../ApiSystem/api/transactions'
 
 interface AutomationRuleApplyPreviewProps {
   automationRule: AutomationRuleWithCategory
@@ -32,28 +30,14 @@ const AutomationRuleApplyPreview = ({
     router.push(`/automationrules`)
   }
 
-  const { notify } = useNotification()
+  const { mutateAsync: updateTransactions } = useUpdateTransactionsCategory()
   function onApplyCategory() {
-    const bodyData = transactions.map(transaction => ({
+    const data = transactions.map(transaction => ({
       id: transaction.id,
-      categoryConnect: automationRule.categoryId
+      category: automationRule.categoryId
     }))
 
-    axios
-      .post<{ data: TransactionWithCategory[] }>(
-        '/api/transactions/updateTransactionsCategory',
-        bodyData
-      )
-      .then(res => {
-        console.log(`LOG |  ~ file: AutomationRuleApplyPreview.tsx ~ line 48 ~ .then ~ res`, res)
-        notify(`Updated your transactions!`, 'success')
-        router.push(`/overview`)
-      })
-      .catch((error: AxiosError<any>) => {
-        if (error.response) {
-          notify(`Couldn't update your transactions: ${error.response.data.error}`, 'error')
-        }
-      })
+    updateTransactions(data).then(() => router.push(`/overview`))
   }
 
   return (

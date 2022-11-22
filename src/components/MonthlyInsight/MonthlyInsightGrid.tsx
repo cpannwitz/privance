@@ -17,13 +17,17 @@ import TableIcon from '@mui/icons-material/TableChartOutlined'
 
 interface MonthlyInsightGridProps {
   monthlyAggregations: MonthlyAggregations
-  onUpdateTransaction: (year: string, month: string, transaction: TransactionWithCategory) => void
+  onUpdateTransaction: (transaction: TransactionWithCategory) => void
 }
 
 const MonthlyInsightGrid = ({
   monthlyAggregations,
   onUpdateTransaction
 }: MonthlyInsightGridProps) => {
+  console.log(
+    `LOG |  ~ file: MonthlyInsightGrid.tsx ~ line 27 ~ monthlyAggregations`,
+    monthlyAggregations
+  )
   return (
     <Stack direction="column" sx={{ p: 5 }}>
       {Object.keys(monthlyAggregations.years)
@@ -43,9 +47,7 @@ const MonthlyInsightGrid = ({
                       <MonthGridItem
                         key={month + year}
                         currency={monthlyAggregations.currency}
-                        onUpdateTransaction={transaction =>
-                          onUpdateTransaction(year, month, transaction)
-                        }
+                        onUpdateTransaction={onUpdateTransaction}
                         {...monthStats}
                       />
                     )

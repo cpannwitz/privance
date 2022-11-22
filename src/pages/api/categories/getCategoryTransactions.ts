@@ -1,24 +1,30 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiHandler } from 'next'
 import { prisma } from '../../../shared/database'
 import { CategoryWithTransactions } from '../../../types/types'
 
-export type ResponseData = {
-  error?: string
-  data?: CategoryWithTransactions | null
-}
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 
-export default async function getCategoryTransactions(
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(getCategoryTransactions)
+export default handler
+
+async function getCategoryTransactions(
   req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
+  res: NextApiResponseData<CategoryWithTransactions | null>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'wrong http method' })
+  if (req.method !== API_METHOD.GET) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
+
   const { id } = req.query
 
   if (!id) {
-    return res.status(400).json({ error: 'missing argument' })
+    throw new API_EXCEPTION.BadRequestException()
   }
   try {
     const data = await prisma.category.findFirst({
@@ -33,7 +39,6 @@ export default async function getCategoryTransactions(
 
     res.json({ data })
   } catch (err) {
-    console.error(`ERROR | getCategoryTransactions: `, err)
-    res.status(500).json({ error: 'Internal error | Could not get category transactions' })
+    throw new API_EXCEPTION.InternalException(`Could not get category transactions`)
   }
 }

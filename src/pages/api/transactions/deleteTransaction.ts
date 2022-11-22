@@ -1,25 +1,26 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiHandler, NextApiRequest } from 'next'
+import {
+  type NextApiResponseData,
+  API_METHOD,
+  API_EXCEPTION,
+  apiExceptionHandler
+} from '../../../shared/apiUtils'
 import { Transaction } from '@prisma/client'
 import { prisma } from '../../../shared/database'
 
-export type ResponseData = {
-  error?: string
-  data?: Transaction
-}
+const handler: NextApiHandler = (req, res) => apiExceptionHandler(req, res)(deleteTransaction)
+export default handler
 
-export default async function deleteTransaction(
-  req: NextApiRequest,
-  res: NextApiResponse<ResponseData>
-) {
-  if (req.method === 'DELETE') {
-    return res.status(405).json({ error: 'wrong http method' })
+async function deleteTransaction(req: NextApiRequest, res: NextApiResponseData<Transaction>) {
+  if (req.method !== API_METHOD.DELETE) {
+    throw new API_EXCEPTION.WrongMethodException()
   }
 
-  const { id } = req.query
+  const { id } = req.body as { id: number[] }
 
   if (!id) {
-    return res.status(400).json({ error: 'missing argument' })
+    throw new API_EXCEPTION.BadRequestException()
   }
 
   try {
@@ -28,9 +29,9 @@ export default async function deleteTransaction(
         id: Number(id)
       }
     })
+
     res.json({ data })
   } catch (err) {
-    console.error(`ERROR | deleteTransaction: `, err)
-    res.status(500).json({ error: 'Internal error | Could not delete transaction' })
+    throw new API_EXCEPTION.InternalException(`Could not delete transaction`)
   }
 }
